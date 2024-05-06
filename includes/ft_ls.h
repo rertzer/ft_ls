@@ -50,12 +50,12 @@ typedef struct {
 typedef struct
 {
   char  name[256];
-}  t_entry;
+}  t_file_data;
 
 typedef struct
 {
-  int (*sorting)(t_entry);
-  int (*setTime)(t_entry);
+  int (*sorting)(t_file_data);
+  int (*setTime)(t_file_data);
 }  t_strategies;
 
 // option handler
@@ -63,7 +63,9 @@ int set_options(t_options *opt, int argc, char **argv);
 int set_strategies(t_options *opt, t_strategies *strat);
 // list_path
 int list_all_path(t_strategies *strat, int argc, char **argv);
-int list_path(t_strategies strats, char* path);
+int list_path(t_strategies *strats, char* path);
+// directory content
+int get_dir_content(t_strategies *strat, t_list **dir_content, char *path);
 // error handling
 void  print_char_error(char *message, char param);
 

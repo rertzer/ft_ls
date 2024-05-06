@@ -16,6 +16,8 @@ LIBFT := $(LIBFT_DIR)libft.a
 SOURCES := \
 	errors.c \
 	options.c \
+	pathlisting.c \
+	dircontent.c \
 	main.c
 
 OBJ := $(SOURCES:.c=.o)

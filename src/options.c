@@ -20,7 +20,7 @@ int set_options(t_options *opt, int argc, char **argv)
 {
   int ret = OK;
   init_options(opt);
-  for (int i = 0; i < argc; ++i)
+  for (int i = 1; i < argc; ++i)
   {
     ret = parse_arg(opt, argv[i]);
     if (ret != OK)
