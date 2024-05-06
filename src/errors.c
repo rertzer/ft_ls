@@ -1,34 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   errors.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rertzer <rertzer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/06 11:44:08 by rertzer           #+#    #+#             */
-/*   Updated: 2024/05/06 11:44:14 by rertzer          ###   ########.fr       */
+/*   Created: 2024/05/06 14:34:00 by rertzer           #+#    #+#             */
+/*   Updated: 2024/05/06 14:34:02 by rertzer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-int main(int argc, char **argv)
+void  print_char_error(char *message, char param)
 {
-  int           ret = OK;
-  t_options     opt;
-//  t_strategies  strat;
-
-  //read args: set options
-  ret = set_options(&opt, argc, argv);
-    /*
-  if (ret != OK)
-    return (ret);
-  //set strategies
-  ret = set_strategies(&opt, &strat);
-  if (ret != OK)
-    return (ret);
-  //foreach path in argv call list_path
-  ret = list_all_path(&strat, int argc, char **argv);
-  */
-  return (ret);
+  char  param_string[] = "'X'\n";
+  param_string[1] = param;
+  
+  ft_putstr_fd("ft_ls: ", 2);
+  ft_putstr_fd(message, 2);
+  ft_putstr_fd(param_string, 2);
 }

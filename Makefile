@@ -13,7 +13,11 @@ INC_DIR := includes/
 
 LIBFT := $(LIBFT_DIR)libft.a
 
-SOURCES := main.c 
+SOURCES := \
+	errors.c \
+	options.c \
+	main.c
+
 OBJ := $(SOURCES:.c=.o)
 OBJS := $(addprefix $(OBJ_DIR), $(OBJ))
 DEPS := $(OBJS:.o=.d)

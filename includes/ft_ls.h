@@ -13,6 +13,11 @@
 #ifndef FT_LS_H
 # define FT_LS_H
 
+/*debug */
+#include <stdio.h>
+
+/*------*/
+
 #include <dirent.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -28,25 +33,24 @@
 #include <sys/types.h>
 #include <sys/xattr.h>
 
+#include "../libft/libft.h"
+
 # define  OK 0
 # define  MINOR_KO 1
 # define  MAJOR_KO 2
 
+//mandatory
+# define OPTIONS_NUMBER 5
+
+typedef struct {
+  char  name[OPTIONS_NUMBER];
+  bool  value[OPTIONS_NUMBER];
+} t_options;
+
 typedef struct
 {
-  bool  a;
-  bool  l;
-  bool  r;
-  bool  R;
-  bool  t;
-  bool  acl;
-  bool  color;
-  bool  d;
-  bool  f;
-  bool  g;
-  bool  G;
-  bool  u;
-}  t_options;
+  char  name[256];
+}  t_entry;
 
 typedef struct
 {
@@ -54,16 +58,14 @@ typedef struct
   int (*setTime)(t_entry);
 }  t_strategies;
 
-typedef struct
-{
-  char  name[256];
-}  t_entry;
-
 // option handler
 int set_options(t_options *opt, int argc, char **argv);
 int set_strategies(t_options *opt, t_strategies *strat);
 // list_path
 int list_all_path(t_strategies *strat, int argc, char **argv);
 int list_path(t_strategies strats, char* path);
+// error handling
+void  print_char_error(char *message, char param);
+
 
 #endif
