@@ -15,6 +15,8 @@ LIBFT := $(LIBFT_DIR)libft.a
 
 SOURCES := \
 	data.c \
+	sorting.c \
+	bubblesort.c \
 	errors.c \
 	keepentry.c \
 	options.c \

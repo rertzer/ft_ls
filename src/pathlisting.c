@@ -71,6 +71,7 @@ int list_path(t_strategies *strat, char* path)
   ret = get_dir_content(strat, &dir_content, path);
   if (ret == OK)
   {
+    bubble_sort(dir_content, strat->sorting);
     t_list *lst = dir_content;
     while(lst)
     {

@@ -14,12 +14,28 @@
 
 int set_strategies(t_options *opt, t_strategies *strat)
 {
-  if(get_option(opt, 'a'))
+  for (int i = 0; i < OPTIONS_NUMBER; ++i)
   {
-    strat->keepEntry = keep_all;
-  }
-  else {
-    strat->keepEntry = skip_dot;
+    switch(opt->name[i])
+    {
+      case 'a':
+        if (opt->value[i] == true){
+          strat->keepEntry = keep_all;
+        }
+        else {
+          strat->keepEntry = skip_dot;
+        }
+      case 'r':
+        if (opt->value[i] == true){
+          strat->sorting = sort_by_name_reverse;
+        }
+        else{
+          strat->sorting = sort_by_name;
+        }
+        break;
+      default:
+        break;
+    }
   }
   return OK;
 }

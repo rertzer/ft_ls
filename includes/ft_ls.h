@@ -55,7 +55,7 @@ typedef struct
 typedef struct
 {
   bool (*keepEntry)(struct dirent*);
-  int (*sorting)(t_data);
+  bool (*sorting)(void *, void *);
   int (*setTime)(t_data);
 }  t_strategies;
 
@@ -66,6 +66,10 @@ int   set_options(t_options *opt, int argc, char **argv);
 bool  get_option(t_options *opt, char arg);
 //strategies
 int set_strategies(t_options *opt, t_strategies *strat);
+//sorting
+int   bubble_sort(t_list* list, bool(*sorting)(void*, void*));
+bool  sort_by_name(void *a, void *b);
+bool  sort_by_name_reverse(void *a, void *b);
 //keepentry
 bool  keep_all(struct dirent* entry);
 bool  skip_dot(struct dirent* entry);
