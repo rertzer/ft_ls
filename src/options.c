@@ -74,3 +74,18 @@ static int  parse_option(t_options *opt, char arg)
   }
   return (ret);
 }
+
+bool  get_option(t_options *opt, char arg)
+{
+  bool  value = false;
+
+  for (int i = 0; i < OPTIONS_NUMBER; ++i)
+  {
+    if (opt->name[i] == arg)
+    {
+      value = opt->value[i];
+      break;
+    }
+  }
+  return (value);
+}

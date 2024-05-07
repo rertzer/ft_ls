@@ -12,12 +12,11 @@
 
 #include "ft_ls.h"
 
-static int read_entry(t_startegies *strat, t_list **dir_content, struct dirent *dir_entry);
+static int add_entry(t_strategies *strat, t_list **dir_content, struct dirent *dir_entry);
 
-int get_dir_content(t_startegies *strat, t_list **dir_content, char *path)
+int get_dir_content(t_strategies *strat, t_list **dir_content, char *path)
 {
   int ret = OK;
-  t_list  *newlist = NULL;
   struct dirent *dir_entry = NULL;
   errno = 0;
   DIR *dir_stream = opendir(path);
@@ -29,21 +28,48 @@ int get_dir_content(t_startegies *strat, t_list **dir_content, char *path)
   else {
     while (true)
     {
+      errno = 0;
       dir_entry = readdir(dir_stream);
       if (dir_entry == NULL)
         break;
-      ret = read_entry(strat, dir_content, dir_entry);
-      if (ret != OK)
-        break;
+      if (strat->keepEntry(dir_entry))
+      {
+        ret = add_entry(strat, dir_content, dir_entry);
+        if (ret != OK)
+          break;
+      }
     }
+    if (errno != 0 && ret == OK) //readdir error
+      {
+        ret = MAJOR_KO;
+        perror("ft_ls: readdir: ");
+      }
   }
+  closedir(dir_stream);
   return (ret);
 }
      
-static int read_entry(t_startegies *strat, t_list **dir_content, struct dirent *dir_entry)
+static int add_entry(t_strategies *strat, t_list **dir_content, struct dirent *dir_entry)
 {
-  t_file_data *data = malloc(sizeof(t_file_data));
-  if (data == NULL)
-    break;
+  (void)strat;
+  t_list  *newlst = NULL;
 
+  errno = 0;
+  t_data *data = malloc(sizeof(t_data));
+  if (data == NULL)
+  {
+    perror("ft_ls: malloc: ");
+    return (MAJOR_KO);
+  }
+  ft_strcpy(data->name, dir_entry->d_name);
+  errno = 0;
+  newlst = ft_lstnew(data);
+  if (newlst == NULL)
+  {
+    perror("ft_ls: malloc: ");
+    free(data);
+    return (MAJOR_KO);
+  }
+  ft_lstadd_front(dir_content, newlst);
+  return (OK);
 }

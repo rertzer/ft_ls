@@ -14,8 +14,11 @@ INC_DIR := includes/
 LIBFT := $(LIBFT_DIR)libft.a
 
 SOURCES := \
+	data.c \
 	errors.c \
+	keepentry.c \
 	options.c \
+	strategies.c \
 	pathlisting.c \
 	dircontent.c \
 	main.c
@@ -39,7 +42,7 @@ $(OBJ_DIR):
 	mkdir  $(OBJ_DIR)
 
 $(LIBFT):
-	make -C $(LIBFT_DIR)
+	make -C $(LIBFT_DIR) bonus
 
 clean:
 	rm -f $(OBJS)

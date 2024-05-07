@@ -50,17 +50,25 @@ typedef struct {
 typedef struct
 {
   char  name[256];
-}  t_file_data;
+}  t_data;
 
 typedef struct
 {
-  int (*sorting)(t_file_data);
-  int (*setTime)(t_file_data);
+  bool (*keepEntry)(struct dirent*);
+  int (*sorting)(t_data);
+  int (*setTime)(t_data);
 }  t_strategies;
 
+// data handling
+void  data_del(void*);
 // option handler
-int set_options(t_options *opt, int argc, char **argv);
+int   set_options(t_options *opt, int argc, char **argv);
+bool  get_option(t_options *opt, char arg);
+//strategies
 int set_strategies(t_options *opt, t_strategies *strat);
+//keepentry
+bool  keep_all(struct dirent* entry);
+bool  skip_dot(struct dirent* entry);
 // list_path
 int list_all_path(t_strategies *strat, int argc, char **argv);
 int list_path(t_strategies *strats, char* path);
