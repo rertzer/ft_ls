@@ -42,6 +42,8 @@
 //mandatory
 # define OPTIONS_NUMBER 5
 
+typedef enum {REG, DIREC, CHR, BLKL, FIFO, LNK, SOCK} e_type; 
+
 typedef struct {
   char  name[OPTIONS_NUMBER];
   bool  value[OPTIONS_NUMBER];
@@ -49,7 +51,17 @@ typedef struct {
 
 typedef struct
 {
-  char  name[256];
+  e_type  type;
+  mode_t  mode;
+  nlink_t links;
+  uid_t   uid;
+  git_t   gid;
+  size_t  total_size;
+  size_t  block_size;
+  size_t  block_nb;
+  t_time  time;
+  char    name[256];
+
 }  t_data;
 
 typedef struct
@@ -78,6 +90,10 @@ int list_all_path(t_strategies *strat, int argc, char **argv);
 int list_path(t_strategies *strats, char* path);
 // directory content
 int get_dir_content(t_strategies *strat, t_list **dir_content, char *path);
+// time
+t_time  last_modif(struct stat *stat_buffer);
+// stats
+int add_stats(t_strategies *strat, t_data *data);
 // error handling
 void  print_char_error(char *message, char param);
 

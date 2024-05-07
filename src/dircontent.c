@@ -53,6 +53,7 @@ static int add_entry(t_strategies *strat, t_list **dir_content, struct dirent *d
 {
   (void)strat;
   t_list  *newlst = NULL;
+  int ret = OK;
 
   errno = 0;
   t_data *data = malloc(sizeof(t_data));
@@ -62,6 +63,9 @@ static int add_entry(t_strategies *strat, t_list **dir_content, struct dirent *d
     return (MAJOR_KO);
   }
   ft_strcpy(data->name, dir_entry->d_name);
+  ret = add_stats(strat, data);
+  if (ret != OK)
+    return (ret);
   errno = 0;
   newlst = ft_lstnew(data);
   if (newlst == NULL)
@@ -71,5 +75,5 @@ static int add_entry(t_strategies *strat, t_list **dir_content, struct dirent *d
     return (MAJOR_KO);
   }
   ft_lstadd_front(dir_content, newlst);
-  return (OK);
+  return (ret);
 }

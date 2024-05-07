@@ -14,6 +14,8 @@
 
 int set_strategies(t_options *opt, t_strategies *strat)
 {
+  strat->getTime = last_modif;
+  
   for (int i = 0; i < OPTIONS_NUMBER; ++i)
   {
     switch(opt->name[i])
