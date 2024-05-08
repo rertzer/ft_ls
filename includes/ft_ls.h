@@ -114,6 +114,13 @@ int  compute_stats(t_strategies *strat, t_data *data);
 // dictonnary
 int insert_key(t_list *dict[HASH_SIZE], unsigned int key, char *value);
 char* get_value_by_key(t_list *dict[HASH_SIZE], unsigned int key);
+void  init_dict(t_list *dict[HASH_SIZE]);
+void  free_dict(t_list *dict[HASH_SIZE]);
+//ids
+void  init_ids(t_strategies *strat);
+void  free_ids(t_strategies *strat);
+char *get_user_name(t_strategies *strat, uid_t id);
+char *get_group_name(t_strategies *strat, gid_t id);
 // error handling
 void  print_char_error(char *message, char param);
 #endif

@@ -27,8 +27,10 @@ int main(int argc, char **argv)
   ret = set_strategies(&opt, &strat);
   if (ret != OK)
     return (ret);
-  
+  init_ids(&strat);
+
   //foreach path in argv call list_path
   ret = list_all_path(&strat, argc, argv);
+  free_ids(&strat);
   return (ret);
 }

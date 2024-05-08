@@ -15,7 +15,9 @@ LIBFT := $(LIBFT_DIR)libft.a
 
 SOURCES := \
 	data.c \
+	dictionnary.c \
 	directory.c \
+	ids.c \
 	sorting.c \
 	bubblesort.c \
 	errors.c \

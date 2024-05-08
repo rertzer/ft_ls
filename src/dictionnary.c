@@ -13,6 +13,7 @@
 #include "ft_ls.h"
 
 static inline unsigned int  get_hash(unsigned int key);
+static void  del_ids(void *ids);
 
 int insert_key(t_list *dict[HASH_SIZE], unsigned int key, char *value)
 {
@@ -34,6 +35,7 @@ int insert_key(t_list *dict[HASH_SIZE], unsigned int key, char *value)
     return (MAJOR_KO);
   }
   ft_lstadd_front(&dict[hash], newlst);
+  printf("%u %s inserted at %u\n", key, value, hash);
   return (OK);
 }
 
@@ -45,9 +47,10 @@ char* get_value_by_key(t_list *dict[HASH_SIZE], unsigned int key)
 
   while (lst)
   {
-    if (lst->content->key == key)
+    t_id  *id = (t_id*)lst->content;
+    if (id->id == key)
     {
-      value = lst->content->value;
+      value = id->value;
       break;
     }
     lst = lst->next;
@@ -59,4 +62,30 @@ static inline unsigned int  get_hash(unsigned int key)
 {
   unsigned int hash = HASH_A * key;
   return (hash >> HASH_SHIFT);
+}
+
+void  init_dict(t_list *dict[HASH_SIZE])
+{
+  for (int i = 0; i < HASH_SIZE; ++i)
+  {
+    dict[i] = NULL;
+  }
+}
+
+void  free_dict(t_list *dict[HASH_SIZE])
+{
+  for (int i = 0; i < HASH_SIZE; ++i)
+  {
+    if (dict[i] != NULL)
+    {
+      ft_lstclear(&dict[i], del_ids);
+    }
+  }
+}
+
+static void  del_ids(void *ids)
+{
+  t_id *id = (t_id*)ids;
+  free(id->value);
+  free(id);
 }
