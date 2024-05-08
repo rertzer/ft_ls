@@ -64,15 +64,15 @@ static int add_entry(t_strategies *strat, t_directory *dir, struct dirent *dir_e
   }
   ft_strcpy(data->name, dir_entry->d_name);
   errno = 0;
-  char *entry_path = ft_pathjoin(dir->path, data->name);
-  if (entry_path == NULL)
+  data->path = ft_pathjoin(dir->path, data->name);
+  if (data->path == NULL)
   {
     free(data->name);
     free(data);
     perror("ft_ls: malloc: ");
     return (MAJOR_KO);
   }
-  ret = add_stats(strat, entry_path, data);
+  ret = add_stats(strat, data->path, data);
   if (ret != OK)
     return (ret);
   ret = compute_stats(strat, data);
@@ -87,6 +87,5 @@ static int add_entry(t_strategies *strat, t_directory *dir, struct dirent *dir_e
     return (MAJOR_KO);
   }
   ft_lstadd_front(&dir->content, newlst);
-  free(entry_path);
   return (ret);
 }

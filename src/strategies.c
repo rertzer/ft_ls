@@ -34,6 +34,13 @@ int set_strategies(t_options *opt, t_strategies *strat)
         else{
           strat->sorting = sort_by_name;
         }
+      case 'R':
+        if (opt->value[i] == true){
+          strat->recurse = recursive;
+        }
+        else{
+          strat->recurse = no_recursion;
+        }
         break;
       default:
         break;

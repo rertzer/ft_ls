@@ -15,5 +15,9 @@
 void  data_del(void * v_data)
 {
   t_data* data = (t_data*)v_data;
+  if (data != NULL)
+  {
+    free(data->path);
+  }
   free(data);
 }

@@ -25,6 +25,7 @@ SOURCES := \
 	options.c \
 	strategies.c \
 	pathlisting.c \
+	recursion.c \
 	stats.c \
 	time.c \
 	dircontent.c \

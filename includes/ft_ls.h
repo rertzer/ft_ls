@@ -54,14 +54,6 @@ typedef struct {
 } t_options;
 
 typedef struct {
-  bool (*keepEntry)(struct dirent*);
-  bool (*sorting)(void *, void *);
-  time_t (*setTime)(struct stat*);
-  t_list* users[HASH_SIZE];
-  t_list* groups[HASH_SIZE];
-}  t_strategies;
-
-typedef struct {
   unsigned int  id;
   char *        value;
 } t_id;
@@ -77,12 +69,22 @@ typedef struct {
   size_t  block_nb;
   time_t  time;
   char    name[256];
+  char    *path;
 }  t_data;
 
 typedef struct {
   char  *path;
   t_list *content;
 } t_directory;
+
+typedef struct s_strategies {
+  bool (*keepEntry)(struct dirent*);
+  bool (*sorting)(void *, void *);
+  time_t (*setTime)(struct stat*);
+  int (*recurse)(struct s_strategies*, t_directory*);
+  t_list* users[HASH_SIZE];
+  t_list* groups[HASH_SIZE];
+}  t_strategies;
 
 
 // data handling
@@ -99,6 +101,9 @@ bool  sort_by_name_reverse(void *a, void *b);
 //keepentry
 bool  keep_all(struct dirent* entry);
 bool  skip_dot(struct dirent* entry);
+//recursion
+int no_recursion(t_strategies *strat, t_directory *dir);
+int recursive(t_strategies *strat, t_directory *dir);
 // list_path
 int list_all_path(t_strategies *strat, int argc, char **argv);
 int list_path(t_strategies *strats, char* path);
