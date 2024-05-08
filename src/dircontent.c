@@ -75,6 +75,9 @@ static int add_entry(t_strategies *strat, t_directory *dir, struct dirent *dir_e
   ret = add_stats(strat, entry_path, data);
   if (ret != OK)
     return (ret);
+  ret = compute_stats(strat, data);
+  if (ret != OK)
+    return (ret);
   errno = 0;
   newlst = ft_lstnew(data);
   if (newlst == NULL)

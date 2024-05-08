@@ -41,7 +41,7 @@
 
 //mandatory
 # define OPTIONS_NUMBER 5
-
+# define MODES_NB 7
 typedef enum {REG, DIREC, CHR, BLKL, FIFO, LNK, SOCK} e_type; 
 
 typedef struct {
@@ -99,6 +99,7 @@ int get_dir_content(t_strategies *strat, t_directory *dir);
 time_t  last_modif(struct stat *stat_buffer);
 // stats
 int add_stats(t_strategies *strat, char *entry_path, t_data *data);
+int  compute_stats(t_strategies *strat, t_data *data);
 // error handling
 void  print_char_error(char *message, char param);
 #endif

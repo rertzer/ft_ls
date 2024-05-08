@@ -78,7 +78,7 @@ int list_path(t_strategies *strat, char* path)
     while(lst)
     {
       t_data* d = (t_data*)lst->content;
-      printf("file: %s %u %zu\n", d->name, d->uid, d->total_size);
+      printf("file: %s %d %u %zu\n", d->name, d->type, d->uid, d->total_size);
       lst = lst->next;
     }
   }
