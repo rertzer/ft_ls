@@ -12,14 +12,14 @@
 
 #include "ft_ls.h"
 
-static int add_entry(t_strategies *strat, t_list **dir_content, struct dirent *dir_entry);
+static int add_entry(t_strategies *strat, t_directory *dir, struct dirent *dir_entry);
 
-int get_dir_content(t_strategies *strat, t_list **dir_content, char *path)
+int get_dir_content(t_strategies *strat, t_directory *dir)
 {
   int ret = OK;
   struct dirent *dir_entry = NULL;
   errno = 0;
-  DIR *dir_stream = opendir(path);
+  DIR *dir_stream = opendir(dir->path);
   if (dir_stream == NULL)
   {
     perror("ft_ls: opendir: ");
@@ -34,7 +34,7 @@ int get_dir_content(t_strategies *strat, t_list **dir_content, char *path)
         break;
       if (strat->keepEntry(dir_entry))
       {
-        ret = add_entry(strat, dir_content, dir_entry);
+        ret = add_entry(strat, dir, dir_entry);
         if (ret != OK)
           break;
       }
@@ -49,7 +49,7 @@ int get_dir_content(t_strategies *strat, t_list **dir_content, char *path)
   return (ret);
 }
      
-static int add_entry(t_strategies *strat, t_list **dir_content, struct dirent *dir_entry)
+static int add_entry(t_strategies *strat, t_directory *dir, struct dirent *dir_entry)
 {
   (void)strat;
   t_list  *newlst = NULL;
@@ -63,7 +63,16 @@ static int add_entry(t_strategies *strat, t_list **dir_content, struct dirent *d
     return (MAJOR_KO);
   }
   ft_strcpy(data->name, dir_entry->d_name);
-  ret = add_stats(strat, data);
+  errno = 0;
+  char *entry_path = ft_pathjoin(dir->path, data->name);
+  if (entry_path == NULL)
+  {
+    free(data->name);
+    free(data);
+    perror("ft_ls: malloc: ");
+    return (MAJOR_KO);
+  }
+  ret = add_stats(strat, entry_path, data);
   if (ret != OK)
     return (ret);
   errno = 0;
@@ -74,6 +83,7 @@ static int add_entry(t_strategies *strat, t_list **dir_content, struct dirent *d
     free(data);
     return (MAJOR_KO);
   }
-  ft_lstadd_front(dir_content, newlst);
+  ft_lstadd_front(&dir->content, newlst);
+  free(entry_path);
   return (ret);
 }

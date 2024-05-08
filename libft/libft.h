@@ -76,5 +76,6 @@ t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void(*del)(void *));
 /*extra functions*/
 char	**ft_split_clean(char **splited);
 char	*ft_strcpy(char *dest, const char *src);
+char	*ft_pathjoin(char const *s1, char const *s2);
 bool	ft_is_inset(const char c, const char *set);
 #endif

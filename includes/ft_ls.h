@@ -49,27 +49,30 @@ typedef struct {
   bool  value[OPTIONS_NUMBER];
 } t_options;
 
-typedef struct
-{
+typedef struct {
+  bool (*keepEntry)(struct dirent*);
+  bool (*sorting)(void *, void *);
+  time_t (*setTime)(struct stat*);
+}  t_strategies;
+
+typedef struct {
   e_type  type;
   mode_t  mode;
   nlink_t links;
   uid_t   uid;
-  git_t   gid;
+  gid_t   gid;
   size_t  total_size;
   size_t  block_size;
   size_t  block_nb;
-  t_time  time;
+  time_t  time;
   char    name[256];
-
 }  t_data;
 
-typedef struct
-{
-  bool (*keepEntry)(struct dirent*);
-  bool (*sorting)(void *, void *);
-  int (*setTime)(t_data);
-}  t_strategies;
+typedef struct {
+  char  *path;
+  t_list *content;
+} t_directory;
+
 
 // data handling
 void  data_del(void*);
@@ -88,14 +91,14 @@ bool  skip_dot(struct dirent* entry);
 // list_path
 int list_all_path(t_strategies *strat, int argc, char **argv);
 int list_path(t_strategies *strats, char* path);
+//directory
+void  free_directory(t_directory *dir);
 // directory content
-int get_dir_content(t_strategies *strat, t_list **dir_content, char *path);
+int get_dir_content(t_strategies *strat, t_directory *dir);
 // time
-t_time  last_modif(struct stat *stat_buffer);
+time_t  last_modif(struct stat *stat_buffer);
 // stats
-int add_stats(t_strategies *strat, t_data *data);
+int add_stats(t_strategies *strat, char *entry_path, t_data *data);
 // error handling
 void  print_char_error(char *message, char param);
-
-
 #endif

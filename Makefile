@@ -15,6 +15,7 @@ LIBFT := $(LIBFT_DIR)libft.a
 
 SOURCES := \
 	data.c \
+	directory.c \
 	sorting.c \
 	bubblesort.c \
 	errors.c \
@@ -22,6 +23,8 @@ SOURCES := \
 	options.c \
 	strategies.c \
 	pathlisting.c \
+	stats.c \
+	time.c \
 	dircontent.c \
 	main.c
 

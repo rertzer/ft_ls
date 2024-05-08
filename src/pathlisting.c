@@ -64,23 +64,24 @@ static int  default_path(t_strategies *strat)
 
 int list_path(t_strategies *strat, char* path)
 {
-  (void)strat;
   int ret = OK;
-  t_list  *dir_content = NULL;
-  printf("path is %s\n", path);
-  ret = get_dir_content(strat, &dir_content, path);
+  t_directory dir;
+  dir.path = path;
+  dir.content = NULL;
+  printf("path is %s\n", dir.path);
+
+  ret = get_dir_content(strat, &dir);
   if (ret == OK)
   {
-    bubble_sort(dir_content, strat->sorting);
-    t_list *lst = dir_content;
+    bubble_sort(dir.content, strat->sorting);
+    t_list *lst = dir.content;
     while(lst)
     {
       t_data* d = (t_data*)lst->content;
-      printf("file: %s\n", d->name);
+      printf("file: %s %u %zu\n", d->name, d->uid, d->total_size);
       lst = lst->next;
     }
   }
-  free(path);
-  ft_lstclear(&dir_content, data_del);
+  ft_lstclear(&dir.content, data_del);
   return (ret);
 }
