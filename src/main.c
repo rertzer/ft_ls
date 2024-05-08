@@ -16,21 +16,26 @@ int main(int argc, char **argv)
 {
   int           ret = OK;
   t_options     opt;
+  t_list        *all_paths = NULL;
   t_strategies  strat;
 
   //read args: set options
-  ret = set_options(&opt, argc, argv);
+  ret = parse_all_args(&opt, &all_paths, argc, argv);
   if (ret != OK)
     return (ret);
    
   //set strategies
   ret = set_strategies(&opt, &strat);
   if (ret != OK)
+  {
+    ft_lstclear(&all_paths, del_all_path);
     return (ret);
+  }
   init_ids(&strat);
 
   //foreach path in argv call list_path
-  ret = list_all_path(&strat, argc, argv);
+  ret = list_all_path(&strat, all_paths);
+  ft_lstclear(&all_paths, del_all_path);
   free_ids(&strat);
   return (ret);
 }

@@ -18,6 +18,7 @@ SOURCES := \
 	dictionnary.c \
 	directory.c \
 	ids.c \
+	format.c \
 	sorting.c \
 	bubblesort.c \
 	errors.c \

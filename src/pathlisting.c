@@ -14,29 +14,30 @@
 
 static int  default_path(t_strategies *strat);
 
-int list_all_path(t_strategies *strat, int argc, char **argv)
+int list_all_path(t_strategies *strat, t_list *all_paths)
 {
   int   ret = OK;
   char  *path = NULL;
   bool  path_exist = false;
 
-  for (int i = 1; i < argc; ++i)
+  while (all_paths != NULL)
   {
-    if (argv[i][0] != '-')
+    errno = 0;
+    path = ft_strdup((char*)all_paths->content);
+    if (path == NULL)
     {
-      path_exist = true;
-      errno = 0;
-      path = ft_strdup(argv[i]);
-      if (path == NULL)
-      {
-        perror("ft_ls: malloc: ");
-        ret = MAJOR_KO;
-        break;
-      }
-      ret = list_path(strat, path);
-      if (ret != OK)
-        break;
+      perror("ft_ls: malloc: ");
+      ret = MAJOR_KO;
+      break;
     }
+    if (path_exist == true)
+      ft_putchar_fd('\n', 1);
+    print_path(path);
+    ret = list_path(strat, path);
+    if (ret != OK)
+      break;
+    path_exist = true;
+    all_paths = all_paths->next;
   }
   if (path_exist == false && ret == OK)
   {
@@ -68,22 +69,13 @@ int list_path(t_strategies *strat, char* path)
   t_directory dir;
   dir.path = path;
   dir.content = NULL;
-  printf("path is %s\n", dir.path);
 
   ret = get_dir_content(strat, &dir);
   if (ret == OK)
   {
     bubble_sort(dir.content, strat->sorting);
-    t_list *lst = dir.content;
-    while(lst)
-    {
-      t_data* d = (t_data*)lst->content;
-      printf("file: %s %d %u %zu\n", d->name, d->type, d->uid, d->total_size);
-      //printf("\tuser is : %s\n", get_user_name(strat, d->uid));
-      //printf("\tgroup is: %s\n", get_group_name(strat, d->gid));
-      lst = lst->next;
-    }
-  }
+    strat->format(strat, &dir);
+      }
   ret = strat->recurse(strat, &dir);
   free_directory(&dir);
   return (ret);

@@ -36,6 +36,7 @@ int recursive(t_strategies *strat, t_directory *dir)
         ret = MAJOR_KO;
         break;
       }
+      print_path(path);
       ret = list_path(strat, path);
       if (ret != OK)
         break;

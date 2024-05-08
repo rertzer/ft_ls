@@ -27,6 +27,15 @@ int set_strategies(t_options *opt, t_strategies *strat)
         else {
           strat->keepEntry = skip_dot;
         }
+        break;
+      case 'l':
+        if (opt->value[i] == true){
+          strat->format = longlist;
+        }
+        else{
+          strat->format = simple;
+        }
+        break;
       case 'r':
         if (opt->value[i] == true){
           strat->sorting = sort_by_name_reverse;
@@ -34,6 +43,7 @@ int set_strategies(t_options *opt, t_strategies *strat)
         else{
           strat->sorting = sort_by_name;
         }
+        break;
       case 'R':
         if (opt->value[i] == true){
           strat->recurse = recursive;

@@ -82,6 +82,7 @@ typedef struct s_strategies {
   bool (*sorting)(void *, void *);
   time_t (*setTime)(struct stat*);
   int (*recurse)(struct s_strategies*, t_directory*);
+  int (*format)(struct s_strategies*, t_directory*);
   t_list* users[HASH_SIZE];
   t_list* groups[HASH_SIZE];
 }  t_strategies;
@@ -90,8 +91,9 @@ typedef struct s_strategies {
 // data handling
 void  data_del(void*);
 // option handler
-int   set_options(t_options *opt, int argc, char **argv);
+int   parse_all_args(t_options *opt, t_list **paths, int argc, char **argv);
 bool  get_option(t_options *opt, char arg);
+void  del_all_path(void *v_path);
 //strategies
 int set_strategies(t_options *opt, t_strategies *strat);
 //sorting
@@ -104,8 +106,12 @@ bool  skip_dot(struct dirent* entry);
 //recursion
 int no_recursion(t_strategies *strat, t_directory *dir);
 int recursive(t_strategies *strat, t_directory *dir);
+// formating
+int longlist(t_strategies *strat, t_directory *dir);
+int simple(t_strategies *strat, t_directory *dir);
+void  print_path(char *path);
 // list_path
-int list_all_path(t_strategies *strat, int argc, char **argv);
+int list_all_path(t_strategies *strat, t_list *all_paths);
 int list_path(t_strategies *strats, char* path);
 //directory
 void  free_directory(t_directory *dir);

@@ -13,16 +13,16 @@
 #include "ft_ls.h"
 
 static void init_options(t_options *opt);
-static int  parse_arg(t_options *opt, char *arg);
+static int  parse_arg(t_options *opt, t_list **paths, char *arg);
 static int  parse_option(t_options *opt, char arg);
 
-int set_options(t_options *opt, int argc, char **argv)
+int parse_all_args(t_options *opt, t_list **paths, int argc, char **argv)
 {
   int ret = OK;
   init_options(opt);
   for (int i = 1; i < argc; ++i)
   {
-    ret = parse_arg(opt, argv[i]);
+    ret = parse_arg(opt, paths, argv[i]);
     if (ret != OK)
       break;
   }
@@ -40,11 +40,14 @@ static void  init_options(t_options *opt)
   }
 }
 
-static int  parse_arg(t_options *opt, char *arg)
+static int  parse_arg(t_options *opt, t_list **paths, char *arg)
 {
   int ret = OK;
+
+  if (arg == NULL)
+    return (ret);
   
-  if (arg != NULL && arg[0] == '-')
+  if (arg[0] == '-')
   {
     for (int i = 1; arg[i] != '\0'; ++i)
     {
@@ -55,6 +58,16 @@ static int  parse_arg(t_options *opt, char *arg)
         break;
       }
     }
+  }
+  else {
+    errno = 0;
+    t_list *newlst = ft_lstnew(arg);
+    if (newlst == NULL)
+    {
+      perror("ft_ls: malloc:");
+      ret = MAJOR_KO;
+    }
+    ft_lstadd_front(paths, newlst);
   }
   return (ret);
 }
@@ -88,4 +101,9 @@ bool  get_option(t_options *opt, char arg)
     }
   }
   return (value);
+}
+
+void  del_all_path(void * v_path)
+{
+  (void)v_path;
 }
