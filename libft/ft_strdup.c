@@ -18,9 +18,13 @@ char	*ft_strdup(const char *src)
 	char	*dup;
 
 	len = ft_strlen(src);
-	dup = malloc(sizeof(char) * (len + 1));
-	if (dup == NULL)
-		return (NULL);
-	dup = ft_strcpy(dup, src);
-	return (dup);
+  errno = 0;
+	dup = malloc(sizeof(char) *(len + 1));
+  if (dup == NULL){
+        perror("ft_ls: malloc: ");
+	}
+  else {
+	  dup = ft_strcpy(dup, src);
+	}
+  return (dup);
 }

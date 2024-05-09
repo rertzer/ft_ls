@@ -23,18 +23,23 @@ int recursive(t_strategies *strat, t_directory *dir)
 {
   t_list  *lst = dir->content;
   int ret = OK;
+  bool  first = true;
   while (lst)
   {
     t_data *data = (t_data*)lst->content;
     if (data->type == DIREC)
     {
-      errno = 0;
       char *path = ft_strdup(data->path);
       if (path == NULL)
       {
-        perror("ft_ls: malloc: ");
         ret = MAJOR_KO;
         break;
+      }
+      if (first){
+        first = false;
+      }
+      else{
+        ft_putchar_fd('\n', 1);
       }
       print_path(path);
       ret = list_path(strat, path);

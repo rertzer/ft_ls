@@ -28,14 +28,18 @@ int main(int argc, char **argv)
   ret = set_strategies(&opt, &strat);
   if (ret != OK)
   {
-    ft_lstclear(&all_paths, del_all_path);
+    ft_lstclear(&all_paths, data_del);
     return (ret);
   }
   init_ids(&strat);
+  ret = add_all_stats(&strat, all_paths);
+  if (ret == OK){
+    bubble_sort(all_paths, strat.sorting);
 
-  //foreach path in argv call list_path
-  ret = list_all_path(&strat, all_paths);
-  ft_lstclear(&all_paths, del_all_path);
+    //foreach path in argv call list_path
+    ret = list_all_path(&strat, all_paths);
+  }
+  ft_lstclear(&all_paths, data_del);
   free_ids(&strat);
   return (ret);
 }

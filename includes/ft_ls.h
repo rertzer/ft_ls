@@ -89,11 +89,11 @@ typedef struct s_strategies {
 
 
 // data handling
+int add_new_data(t_list **lst, char const * const name, char const * const path);
 void  data_del(void*);
 // option handler
 int   parse_all_args(t_options *opt, t_list **paths, int argc, char **argv);
 bool  get_option(t_options *opt, char arg);
-void  del_all_path(void *v_path);
 //strategies
 int set_strategies(t_options *opt, t_strategies *strat);
 //sorting
@@ -120,7 +120,8 @@ int get_dir_content(t_strategies *strat, t_directory *dir);
 // time
 time_t  last_modif(struct stat *stat_buffer);
 // stats
-int add_stats(t_strategies *strat, char *entry_path, t_data *data);
+int add_all_stats(t_strategies *strat, t_list *all_paths);
+int add_stats(t_strategies *strat, t_data *data);
 int  compute_stats(t_strategies *strat, t_data *data);
 // dictonnary
 int insert_key(t_list *dict[HASH_SIZE], unsigned int key, char *value);

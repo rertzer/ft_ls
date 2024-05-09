@@ -14,16 +14,32 @@
 
 static int set_type(t_data *data);
 
-int add_stats(t_strategies *strat, char *path, t_data *data)
+
+int add_all_stats(t_strategies *strat, t_list *all_paths)
+{
+  int ret = OK;
+  t_data  *data = NULL;
+  while (all_paths != NULL)
+  {
+    data = (t_data*)all_paths->content;
+    ret = add_stats(strat, data);
+    if (ret != OK)
+      break;
+    all_paths = all_paths->next;
+  }
+  return (ret);
+}
+
+int add_stats(t_strategies *strat, t_data *data)
 {
   int ret = OK;
   struct stat stat_buffer;
     
   errno = 0;
-  if (lstat(path, &stat_buffer) != 0) {
+  if (lstat(data->path, &stat_buffer) != 0) {
     ret = MAJOR_KO;
     ft_putstr_fd("ft_ls: lstat: ", 2);
-    perror(path);
+    perror(data->path);
   }
   else {
     data->mode = stat_buffer.st_mode;
@@ -45,17 +61,7 @@ int  compute_stats(t_strategies *strat, t_data *data)
   //if (ret != OK)
     return (ret);
 }
-/*
-S_IFMT     0170000   bit mask for the file type bit field
 
-           S_IFSOCK   0140000   socket
-           S_IFLNK    0120000   symbolic link
-           S_IFREG    0100000   regular file
-           S_IFBLK    0060000   block device
-           S_IFDIR    0040000   directory
-           S_IFCHR    0020000   character device
-           S_IFIFO    0010000   FIFO
-*/
 static int set_type(t_data *data)
 {
   int ret = MAJOR_KO;

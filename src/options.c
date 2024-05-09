@@ -60,14 +60,7 @@ static int  parse_arg(t_options *opt, t_list **paths, char *arg)
     }
   }
   else {
-    errno = 0;
-    t_list *newlst = ft_lstnew(arg);
-    if (newlst == NULL)
-    {
-      perror("ft_ls: malloc:");
-      ret = MAJOR_KO;
-    }
-    ft_lstadd_front(paths, newlst);
+    ret = add_new_data(paths, arg, NULL);
   }
   return (ret);
 }
@@ -101,9 +94,4 @@ bool  get_option(t_options *opt, char arg)
     }
   }
   return (value);
-}
-
-void  del_all_path(void * v_path)
-{
-  (void)v_path;
 }

@@ -16,10 +16,14 @@ t_list	*ft_lstnew(void *content)
 {
 	t_list	*lst;
 
+  errno = 0;
 	lst = malloc(sizeof(t_list));
-	if (! lst)
-		return (NULL);
-	lst->content = content;
-	lst->next = NULL;
+	if (lst == NULL){
+    perror("ft_ls: malloc: ");
+  }
+	else{
+    lst->content = content;
+    lst->next = NULL;
+  }
 	return (lst);
 }

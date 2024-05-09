@@ -31,11 +31,10 @@ int insert_key(t_list *dict[HASH_SIZE], unsigned int key, char *value)
   if (newlst == NULL)
   {
     free(newid);
-    perror("ft_ls: malloc: ");
     return (MAJOR_KO);
   }
   ft_lstadd_front(&dict[hash], newlst);
-  printf("%u %s inserted at %u\n", key, value, hash);
+  //printf("%u %s inserted at %u\n", key, value, hash);
   return (OK);
 }
 

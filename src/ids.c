@@ -61,9 +61,6 @@ static char  *getpw_username(uid_t id)
   }
   else {
     name = ft_strdup(psw->pw_name);
-    if (name == NULL){
-      perror("ft_ls: malloc: ");
-    }
   }
   return (name);
 }
@@ -78,9 +75,6 @@ static char  *getgr_groupname(gid_t id)
   }
   else {
     name = ft_strdup(grp->gr_name);
-    if (name == NULL){
-      perror("ft_ls: malloc: ");
-    }
   }
   return (name);
 }

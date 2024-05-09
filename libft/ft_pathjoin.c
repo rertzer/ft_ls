@@ -20,11 +20,15 @@ char	*ft_pathjoin(char const *s1, char const *s2)
 
 	len_s1 = ft_strlen(s1);
 	len_s2 = ft_strlen(s2);
+  errno = 0;
 	dest = malloc(sizeof(char) *(len_s1 + len_s2 + 2));
-	if (NULL == dest)
-		return (NULL);
+	if (NULL == dest){
+    perror("ft_ls: malloc: ");
+  }
+  else{
 	ft_strcpy(dest, s1);
   dest[len_s1]= '/';
 	ft_strcpy(&dest[len_s1 + 1], s2);
+  }
 	return (dest);
 }

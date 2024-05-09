@@ -22,11 +22,10 @@ int list_all_path(t_strategies *strat, t_list *all_paths)
 
   while (all_paths != NULL)
   {
-    errno = 0;
-    path = ft_strdup((char*)all_paths->content);
+    t_data  *data = (t_data*)all_paths->content;
+    path = ft_strdup(data->path);
     if (path == NULL)
     {
-      perror("ft_ls: malloc: ");
       ret = MAJOR_KO;
       break;
     }
@@ -50,11 +49,9 @@ int list_all_path(t_strategies *strat, t_list *all_paths)
 static int  default_path(t_strategies *strat)
 {
   int ret = OK;
-  errno = 0;
   char  *path = strdup(".");
   if (path == NULL)
   {
-    perror("ft_ls: malloc: ");
     ret = MAJOR_KO;
   }
   else {

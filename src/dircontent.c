@@ -52,40 +52,13 @@ int get_dir_content(t_strategies *strat, t_directory *dir)
 static int add_entry(t_strategies *strat, t_directory *dir, struct dirent *dir_entry)
 {
   (void)strat;
-  t_list  *newlst = NULL;
   int ret = OK;
-
-  errno = 0;
-  t_data *data = malloc(sizeof(t_data));
-  if (data == NULL)
-  {
-    perror("ft_ls: malloc: ");
-    return (MAJOR_KO);
-  }
-  ft_strcpy(data->name, dir_entry->d_name);
-  errno = 0;
-  data->path = ft_pathjoin(dir->path, data->name);
-  if (data->path == NULL)
-  {
-    free(data->name);
-    free(data);
-    perror("ft_ls: malloc: ");
-    return (MAJOR_KO);
-  }
-  ret = add_stats(strat, data->path, data);
+  ret = add_new_data(&dir->content, dir_entry->d_name, dir->path);
   if (ret != OK)
     return (ret);
-  ret = compute_stats(strat, data);
+  ret = add_stats(strat, (t_data*)dir->content->content);
   if (ret != OK)
     return (ret);
-  errno = 0;
-  newlst = ft_lstnew(data);
-  if (newlst == NULL)
-  {
-    perror("ft_ls: malloc: ");
-    free(data);
-    return (MAJOR_KO);
-  }
-  ft_lstadd_front(&dir->content, newlst);
+  ret = compute_stats(strat, (t_data*)dir->content->content);
   return (ret);
 }
