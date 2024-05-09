@@ -68,7 +68,7 @@ typedef struct {
   size_t  block_size;
   size_t  block_nb;
   time_t  time;
-  char    name[256];
+  char    *name;
   char    *path;
 }  t_data;
 
@@ -83,6 +83,8 @@ typedef struct s_strategies {
   time_t (*setTime)(struct stat*);
   int (*recurse)(struct s_strategies*, t_directory*);
   int (*format)(struct s_strategies*, t_directory*);
+  bool  default_path;
+  bool  previous_print;
   t_list* users[HASH_SIZE];
   t_list* groups[HASH_SIZE];
 }  t_strategies;
@@ -90,6 +92,7 @@ typedef struct s_strategies {
 
 // data handling
 int add_new_data(t_list **lst, char const * const name, char const * const path);
+t_data  *new_data();
 void  data_del(void*);
 // option handler
 int   parse_all_args(t_options *opt, t_list **paths, int argc, char **argv);
@@ -111,6 +114,8 @@ int longlist(t_strategies *strat, t_directory *dir);
 int simple(t_strategies *strat, t_directory *dir);
 void  print_path(char *path);
 // list_path
+int  default_path(t_strategies *strat);
+int list_all_files(t_strategies *strat, t_list **all_paths);
 int list_all_path(t_strategies *strat, t_list *all_paths);
 int list_path(t_strategies *strats, char* path);
 //directory

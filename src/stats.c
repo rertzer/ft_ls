@@ -25,6 +25,9 @@ int add_all_stats(t_strategies *strat, t_list *all_paths)
     ret = add_stats(strat, data);
     if (ret != OK)
       break;
+    ret = compute_stats(strat, data);
+    if (ret != OK)
+      break;
     all_paths = all_paths->next;
   }
   return (ret);

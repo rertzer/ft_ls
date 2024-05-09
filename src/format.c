@@ -12,12 +12,15 @@
 
 #include "ft_ls.h"
 
+static void  previous_print(t_strategies *strat);
+
 int simple(t_strategies *strat, t_directory *dir)
 {
-  (void)strat;
   int ret = OK;
   t_list *lst = dir->content;
-  while(lst)
+  previous_print(strat);
+  print_path(dir->path);
+  while (lst)
   {
     t_data* d = (t_data*)lst->content;
     ft_putstr_fd(d->name, 1);
@@ -30,14 +33,28 @@ int simple(t_strategies *strat, t_directory *dir)
 
 int longlist(t_strategies *strat, t_directory *dir)
 {
-  (void)strat;
   (void)dir;
+  previous_print(strat);
   int ret = OK;
   return (ret);
 }
 
+static void  previous_print(t_strategies *strat)
+{
+  if (strat->previous_print)
+    {
+      ft_putchar_fd('\n', 1);
+    }
+    else{
+      strat->previous_print = true;
+    }
+}
+
 void  print_path(char *path)
 {
-  ft_putstr_fd(path, 1);
-  ft_putstr_fd(":\n", 1);
+  if (path != NULL && ft_strcmp(path, "."))
+  {
+    ft_putstr_fd(path, 1);
+    ft_putstr_fd(":\n", 1);
+  }
 }

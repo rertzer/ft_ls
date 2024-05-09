@@ -15,6 +15,8 @@
 int set_strategies(t_options *opt, t_strategies *strat)
 {
   strat->setTime = last_modif;
+  strat->default_path = false;
+  strat->previous_print = false;
   
   for (int i = 0; i < OPTIONS_NUMBER; ++i)
   {

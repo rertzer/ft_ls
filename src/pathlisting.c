@@ -12,13 +12,55 @@
 
 #include "ft_ls.h"
 
-static int  default_path(t_strategies *strat);
+
+int list_all_files(t_strategies *strat, t_list **all_paths)
+{
+  int ret = OK;
+  t_directory dir;
+  dir.path = NULL;
+  dir.content = NULL;
+
+  t_list *current = *all_paths;
+  t_list *files_prev = NULL;
+  t_list *path_prev = NULL;
+  t_list  *next = NULL;
+
+  while (current != NULL)
+  {
+    t_data* data = (t_data*)current->content;
+    if (data->type != DIREC)
+    {
+      if (files_prev == NULL)
+        dir.content = current;
+      else {
+        files_prev->next = current;
+      }
+      files_prev = current;
+      if (path_prev == NULL)
+        *all_paths = current->next;
+      else{
+        path_prev->next = current->next;
+      }
+      next = current->next;
+      current->next = NULL;
+    }
+    else{
+      path_prev = current;
+      next = current->next;
+    }
+    current = next;
+  }
+  if (dir.content != NULL){
+    strat->format(strat, &dir);
+    free_directory(&dir);
+  }
+  return (ret);
+}
 
 int list_all_path(t_strategies *strat, t_list *all_paths)
 {
   int   ret = OK;
   char  *path = NULL;
-  bool  path_exist = false;
 
   while (all_paths != NULL)
   {
@@ -29,27 +71,19 @@ int list_all_path(t_strategies *strat, t_list *all_paths)
       ret = MAJOR_KO;
       break;
     }
-    if (path_exist == true)
-      ft_putchar_fd('\n', 1);
-    print_path(path);
     ret = list_path(strat, path);
     if (ret != OK)
       break;
-    path_exist = true;
     all_paths = all_paths->next;
   }
-  if (path_exist == false && ret == OK)
-  {
-    ret = default_path(strat);
-  }
-
-  return (ret);
+    return (ret);
 }
 
-static int  default_path(t_strategies *strat)
+int  default_path(t_strategies *strat)
 {
   int ret = OK;
   char  *path = strdup(".");
+  strat->default_path = true; 
   if (path == NULL)
   {
     ret = MAJOR_KO;

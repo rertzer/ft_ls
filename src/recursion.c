@@ -12,6 +12,8 @@
 
 #include "ft_ls.h"
 
+static bool not_a_dot(t_strategies *strat, char *name);
+
 int no_recursion(t_strategies *strat, t_directory *dir)
 {
   (void)strat;
@@ -23,11 +25,10 @@ int recursive(t_strategies *strat, t_directory *dir)
 {
   t_list  *lst = dir->content;
   int ret = OK;
-  bool  first = true;
   while (lst)
   {
     t_data *data = (t_data*)lst->content;
-    if (data->type == DIREC)
+    if (data->type == DIREC && not_a_dot(strat, data->name))
     {
       char *path = ft_strdup(data->path);
       if (path == NULL)
@@ -35,13 +36,6 @@ int recursive(t_strategies *strat, t_directory *dir)
         ret = MAJOR_KO;
         break;
       }
-      if (first){
-        first = false;
-      }
-      else{
-        ft_putchar_fd('\n', 1);
-      }
-      print_path(path);
       ret = list_path(strat, path);
       if (ret != OK)
         break;
@@ -49,4 +43,18 @@ int recursive(t_strategies *strat, t_directory *dir)
     lst = lst->next;
   }
   return (ret);
+}
+
+static bool not_a_dot(t_strategies *strat, char *name)
+{
+  bool  is_not = true;
+  if (strat->default_path == true)
+  {
+    strat->default_path = false;
+  }
+  else{
+      if (!(ft_strcmp(name, ".") && ft_strcmp(name, "..")))
+      is_not = false;
+  }
+  return (is_not);
 }

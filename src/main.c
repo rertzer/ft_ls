@@ -24,7 +24,6 @@ int main(int argc, char **argv)
   if (ret != OK)
     return (ret);
    
-  //set strategies
   ret = set_strategies(&opt, &strat);
   if (ret != OK)
   {
@@ -32,12 +31,19 @@ int main(int argc, char **argv)
     return (ret);
   }
   init_ids(&strat);
-  ret = add_all_stats(&strat, all_paths);
-  if (ret == OK){
-    bubble_sort(all_paths, strat.sorting);
 
-    //foreach path in argv call list_path
-    ret = list_all_path(&strat, all_paths);
+  if (all_paths == NULL)
+  {
+    ret = default_path(&strat);
+  }
+  else {
+    ret = add_all_stats(&strat, all_paths);
+    if (ret == OK){
+      bubble_sort(all_paths, strat.sorting);
+      ret = list_all_files(&strat, &all_paths);
+      if (ret == OK)
+      ret = list_all_path(&strat, all_paths);
+    }
   }
   ft_lstclear(&all_paths, data_del);
   free_ids(&strat);
