@@ -46,7 +46,7 @@
 # define HASH_A 2654435769
 # define HASH_SHIFT 23
 
-typedef enum {REG, DIREC, CHR, BLKL, FIFO, LNK, SOCK} e_type; 
+typedef enum {REG, DIREC, CHR, BLK, FIFO, LNK, SOCK} e_type; 
 
 typedef struct {
   char  name[OPTIONS_NUMBER];
@@ -60,6 +60,7 @@ typedef struct {
 
 typedef struct {
   e_type  type;
+  dev_t   dev;
   mode_t  mode;
   nlink_t links;
   uid_t   uid;
@@ -73,7 +74,34 @@ typedef struct {
 }  t_data;
 
 typedef struct {
+  char  mode[12];
+  char  links[20];
+  char  *user;
+  char  *group;
+  char  size[20];
+  char  minor[11];
+  char  major[11];
+  char  date[13];
+  char  *name;
   char  *path;
+} t_format_data;
+
+typedef struct {
+  unsigned int  mode;
+  unsigned int  links;
+  unsigned int  user;
+  unsigned int  group;
+  unsigned int  size;
+  unsigned int  minor;
+  unsigned int  major;
+  unsigned int  date;
+  unsigned int  name;
+  unsigned int  path;
+} t_format_sizes;
+
+typedef struct {
+  char  *path;
+  unsigned int  entry_nb;
   t_list *content;
 } t_directory;
 
@@ -121,6 +149,7 @@ int list_path(t_strategies *strats, char* path);
 //directory
 void  free_directory(t_directory *dir);
 // directory content
+void  init_dir(t_directory *dir);
 int get_dir_content(t_strategies *strat, t_directory *dir);
 // time
 time_t  last_modif(struct stat *stat_buffer);

@@ -10,6 +10,7 @@ SRC_DIR := ./
 INC_DIR := ./
 
 SOURCES := ft_atoi.c	\
+	ft_buffercpy.c \
 	ft_bzero.c	\
 	ft_calloc.c	\
 	ft_is_inset.c \
@@ -19,6 +20,7 @@ SOURCES := ft_atoi.c	\
 	ft_isdigit.c	\
 	ft_isprint.c	\
 	ft_itoa.c	\
+	ft_itoa_dec.c \
 	ft_memchr.c	\
 	ft_memcmp.c	\
 	ft_memcpy.c	\

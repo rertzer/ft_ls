@@ -6,7 +6,7 @@
 /*   By: rertzer <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 11:20:30 by rertzer           #+#    #+#             */
-/*   Updated: 2024/05/09 15:06:42 by rertzer          ###   ########.fr       */
+/*   Updated: 2024/05/11 12:43:37 by rertzer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_strtrim(char const *s1, char const *set);
 char	**ft_split(char const *s, char c);
 char	*ft_itoa(int n);
+size_t	ft_itoa_dec(size_t n, char *buffer);
 char	*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 void	ft_striteri(char *s, void (*f)(unsigned int, char*));
 void	ft_putchar_fd(char c, int fd);
@@ -78,6 +79,7 @@ void	ft_lstiter(t_list *lst, void (*f)(void *));
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void(*del)(void *));
 /*extra functions*/
 char	**ft_split_clean(char **splited);
+char	*ft_buffercpy(char *dest, const char *src);
 char	*ft_strcpy(char *dest, const char *src);
 char	*ft_pathjoin(char const *s1, char const *s2);
 bool	ft_is_inset(const char c, const char *set);

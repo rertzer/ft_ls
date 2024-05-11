@@ -1,27 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   directory.c                                        :+:      :+:    :+:   */
+/*   ft_buffercpy.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rertzer <rertzer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/08 09:38:58 by rertzer           #+#    #+#             */
-/*   Updated: 2024/05/08 09:39:00 by rertzer          ###   ########.fr       */
+/*   Created: 2024/03/16 10:51:12 by rertzer           #+#    #+#             */
+/*   Updated: 2024/05/11 12:41:47 by rertzer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
 
-#include "ft_ls.h"
+char	*ft_buffercpy(char *dest, const char *src)
+{
+	size_t	i;
 
-void  init_dir(t_directory *dir)
-{
-  dir->path = NULL;
-  dir->entry_nb = 0;
-  dir->content = NULL;
-}
-  void  free_directory(t_directory *dir)
-{
-  free(dir->path);
-  dir->path = NULL;
-  ft_lstclear(&dir->content, data_del);
+	i = 0;
+	while (src[i] != '\0')
+	{
+		dest[i] = src[i];
+		++i;
+	}
+	return (dest);
 }

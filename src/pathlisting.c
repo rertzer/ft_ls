@@ -17,13 +17,12 @@ int list_all_files(t_strategies *strat, t_list **all_paths)
 {
   int ret = OK;
   t_directory dir;
-  dir.path = NULL;
-  dir.content = NULL;
-
   t_list *current = *all_paths;
   t_list *files_prev = NULL;
   t_list *path_prev = NULL;
   t_list  *next = NULL;
+
+  init_dir(&dir);
 
   while (current != NULL)
   {
@@ -98,8 +97,8 @@ int list_path(t_strategies *strat, char* path)
 {
   int ret = OK;
   t_directory dir;
+  init_dir(&dir);
   dir.path = path;
-  dir.content = NULL;
 
   ret = get_dir_content(strat, &dir);
   if (ret == OK)

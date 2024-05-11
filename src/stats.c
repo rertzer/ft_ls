@@ -45,6 +45,7 @@ int add_stats(t_strategies *strat, t_data *data)
     perror(data->path);
   }
   else {
+    data->dev = stat_buffer.st_dev;
     data->mode = stat_buffer.st_mode;
     data->uid = stat_buffer.st_uid;
     data->gid = stat_buffer.st_gid;
