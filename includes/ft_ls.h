@@ -29,6 +29,7 @@
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
+#include <sys/sysmacros.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/xattr.h>
@@ -61,6 +62,8 @@ typedef struct {
 typedef struct {
   e_type  type;
   dev_t   dev;
+  dev_t   rdev;
+  bool    xattr;
   mode_t  mode;
   nlink_t links;
   uid_t   uid;

@@ -13,7 +13,7 @@
 #include "ft_ls.h"
 
 static int set_type(t_data *data);
-
+static int  add_xattr(t_data *data);
 
 int add_all_stats(t_strategies *strat, t_list *all_paths)
 {
@@ -46,6 +46,8 @@ int add_stats(t_strategies *strat, t_data *data)
   }
   else {
     data->dev = stat_buffer.st_dev;
+    data->rdev = stat_buffer.st_rdev;
+    data->links = stat_buffer.st_nlink;
     data->mode = stat_buffer.st_mode;
     data->uid = stat_buffer.st_uid;
     data->gid = stat_buffer.st_gid;
@@ -54,7 +56,25 @@ int add_stats(t_strategies *strat, t_data *data)
     data->block_nb = stat_buffer.st_blocks;
     data->time = strat->setTime(&stat_buffer);
   }
+  ret = add_xattr(data);
   return (ret);
+}
+
+static int  add_xattr(t_data *data)
+{
+  errno = 0;
+  ssize_t xattr_nb = listxattr(data->path, NULL, 0);
+  if (xattr_nb < 0){
+    perror("ft_ls: listxattr: ");
+    return (MAJOR_KO);
+  }
+  else if (xattr_nb == 16 || xattr_nb == 0){
+    data->xattr = false;
+  }
+  else{
+    data->xattr = true;
+  }
+  return (OK); 
 }
 
 int  compute_stats(t_strategies *strat, t_data *data)

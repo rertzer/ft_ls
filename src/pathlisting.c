@@ -16,13 +16,13 @@
 int list_all_files(t_strategies *strat, t_list **all_paths)
 {
   int ret = OK;
-  t_directory dir;
+  t_directory reg_files;
   t_list *current = *all_paths;
   t_list *files_prev = NULL;
   t_list *path_prev = NULL;
   t_list  *next = NULL;
 
-  init_dir(&dir);
+  init_dir(&reg_files);
 
   while (current != NULL)
   {
@@ -30,7 +30,7 @@ int list_all_files(t_strategies *strat, t_list **all_paths)
     if (data->type != DIREC)
     {
       if (files_prev == NULL)
-        dir.content = current;
+        reg_files.content = current;
       else {
         files_prev->next = current;
       }
@@ -42,6 +42,7 @@ int list_all_files(t_strategies *strat, t_list **all_paths)
       }
       next = current->next;
       current->next = NULL;
+      ++reg_files.entry_nb;
     }
     else{
       path_prev = current;
@@ -49,9 +50,9 @@ int list_all_files(t_strategies *strat, t_list **all_paths)
     }
     current = next;
   }
-  if (dir.content != NULL){
-    strat->format(strat, &dir);
-    free_directory(&dir);
+  if (reg_files.content != NULL){
+    strat->format(strat, &reg_files);
+    free_directory(&reg_files);
   }
   return (ret);
 }

@@ -6,7 +6,7 @@
 /*   By: rertzer <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 11:20:30 by rertzer           #+#    #+#             */
-/*   Updated: 2024/05/11 12:43:37 by rertzer          ###   ########.fr       */
+/*   Updated: 2024/05/13 17:14:58 by rertzer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void(*del)(void *));
 /*extra functions*/
 char	**ft_split_clean(char **splited);
 char	*ft_buffercpy(char *dest, const char *src);
+char	*ft_bufferncpy(char *dest, const char *src, unsigned int n);
 char	*ft_strcpy(char *dest, const char *src);
 char	*ft_pathjoin(char const *s1, char const *s2);
 bool	ft_is_inset(const char c, const char *set);
