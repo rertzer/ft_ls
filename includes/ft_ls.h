@@ -40,6 +40,8 @@
 # define  MINOR_KO 1
 # define  MAJOR_KO 2
 
+# define  FT_LS_BLOCK_SIZE 16384
+
 //mandatory
 # define OPTIONS_NUMBER 5
 # define MODES_NB 7
@@ -104,6 +106,7 @@ typedef struct {
 
 typedef struct {
   char  *path;
+  size_t  total_block_size;
   unsigned int  entry_nb;
   t_list *content;
 } t_directory;
@@ -154,6 +157,8 @@ void  free_directory(t_directory *dir);
 // directory content
 void  init_dir(t_directory *dir);
 int get_dir_content(t_strategies *strat, t_directory *dir);
+// recent
+bool recent(char *time_string);
 // time
 time_t  last_modif(struct stat *stat_buffer);
 // stats

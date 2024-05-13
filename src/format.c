@@ -16,7 +16,7 @@ static void  previous_print(t_strategies *strat);
 static void init_format_sizes(t_format_sizes *format_sizes);
 static int  load_all_format_data(t_strategies *strat, t_directory *dir, t_format_sizes *format_sizes, t_format_data * all_format_data);
 static int  load_format_data(t_strategies *strat, t_data *data, t_format_sizes *format_sizes, t_format_data *format_data);
-static int  print_all_format_data(t_strategies *strat, unsigned int entry_nb, t_format_sizes *format_sizes, t_format_data *all_format_data);
+static int  print_all_format_data(t_strategies *strat, t_directory *dir, t_format_sizes *format_sizes, t_format_data *all_format_data);
 static int print_format_data(t_strategies *strat, t_format_data *format_data, t_format_sizes *format_sizes);
 static unsigned int format_mode(char *buffer, t_data *data);
 static unsigned int format_links(char *buffer, t_data *data);
@@ -26,12 +26,6 @@ static unsigned int format_size(char *buffer, t_data *data);
 static unsigned int format_minor(char *buffer, t_data *data);
 static unsigned int format_major(char *buffer, t_data *data);
 static unsigned int format_time(char *buffer, t_data *data);
-static bool recent(char *time_string);
-static bool  recent_year(char *time_string, char *now_string, int year_offset);
-static bool  recent_six_month_ago(char *time_string, char *now_string);
-static int  getMonth(char *time);
-static int  getYear(char *time);
-static int getDay(char *time);
 static unsigned int format_recent_time(char *buffer, char *time_string);
 static unsigned int format_late_time(char *buffer, char *time_string);
 static void set_max_size(unsigned int *max, unsigned int size);
@@ -69,7 +63,7 @@ int longlist(t_strategies *strat, t_directory *dir)
   else {
     ret = load_all_format_data(strat, dir, &format_sizes, all_format_data);
     if (ret == OK){
-      ret = print_all_format_data(strat, dir->entry_nb, &format_sizes, all_format_data);
+      ret = print_all_format_data(strat, dir, &format_sizes, all_format_data);
     }
   }
   return (ret);
@@ -82,17 +76,18 @@ static int  load_all_format_data(t_strategies *strat, t_directory *dir, t_format
   while (entry != NULL)
   {
     t_data  *data = (t_data*)entry->content;
+    dir->total_block_size +=  data->block_nb * data->block_size;
     load_format_data(strat, data, format_sizes, &all_format_data[i]);
     entry = entry->next;
     ++i;
   }
+  dir->total_block_size /= FT_LS_BLOCK_SIZE;
   set_max_size(&format_sizes->size, format_sizes->minor + format_sizes->major + 2);
   return (OK);
 }
 
 static int  load_format_data(t_strategies *strat, t_data *data, t_format_sizes *format_sizes, t_format_data *format_data)
 {
-  (void)strat;
   size_t  size = 0;
   
   size = format_mode(format_data->mode, data);
@@ -235,78 +230,6 @@ static unsigned int format_time(char *buffer, t_data *data)
   return (size);
 }
 
-static bool recent(char *time_string)
-{
-  bool recent = false;
-  errno = 0;
-  time_t now = time(NULL);
-  if (now == -1)
-  {
-    perror("ft_ls: time: ");
-    return (0);
-  }
-  char  *now_string = ctime(&now);
-  if (now_string == NULL)
-  {
-    perror("ft_ls: ctime: ");
-    return (0);
-  }
-   int time_year = getYear(&time_string[20]);
-   int now_year = getYear(&now_string[20]);
-   recent = recent_year(time_string, now_string, now_year - time_year);
- 
-  return recent;
-}
-
-static  bool  recent_year(char *time_string, char *now_string, int year_offset)
-{
-  bool  recent = false;
-  int time_month = getMonth(&time_string[4]);
-  int now_month = getMonth(&now_string[4]);
-
-  int month_ago = now_month - time_month + 12 * year_offset;
-  if (month_ago < 6)
-      recent = true;
-  else if (month_ago == 6){
-    recent = recent_six_month_ago(time_string, now_string);
-  }
-  return (recent);
-}
-
-static  bool  recent_six_month_ago(char *time_string, char *now_string)
-{
-  bool  recent = false;
-  int time_day = getDay(&time_string[4]);
-  int now_day = getDay(&now_string[4]);
-
-  if (time_day >= now_day)
-  {
-      recent = true;
-  }
-  return (recent);
-}
-
-static int  getMonth(char *time)
-{
-  char  *month[] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
-  
-  for (int i = 0; i < 12; ++i)
-  {
-    if (ft_strncmp(time, month[i], 3) == 0)
-      return (i);
-  }
-  return (-1);
-}
-
-static  int getYear(char *time)
-{
-  return ft_atoi(time);
-}
-
-static  int getDay(char *time)
-{
-  return ft_atoi(time);
-}
 static unsigned int format_recent_time(char *buffer, char *time_string)
 {
   ft_bufferncpy(&buffer[0], &time_string[4], 12);
@@ -330,11 +253,13 @@ static void set_max_size(unsigned int *max, unsigned int size)
   }
 }
 
-static int  print_all_format_data(t_strategies *strat, unsigned int entry_nb, t_format_sizes *format_sizes, t_format_data *all_format_data)
+static int  print_all_format_data(t_strategies *strat, t_directory *dir, t_format_sizes *format_sizes, t_format_data *all_format_data)
 {
   (void)strat;
- 
-  for(unsigned int i = 0; i < entry_nb; ++i)
+  ft_putstr_fd("total: ", 1);
+  ft_putnbr_fd(dir->total_block_size, 1);
+  ft_putchar_fd('\n', 1);
+  for(unsigned int i = 0; i < dir->entry_nb; ++i)
   {
     print_format_data(strat, &all_format_data[i], format_sizes);
   }

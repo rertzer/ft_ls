@@ -24,6 +24,7 @@ SOURCES := \
 	errors.c \
 	keepentry.c \
 	options.c \
+	recent.c \
 	strategies.c \
 	pathlisting.c \
 	recursion.c \
