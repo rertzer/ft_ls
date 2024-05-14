@@ -24,6 +24,7 @@ static unsigned int	format_time(char *buffer, t_data *data);
 static unsigned int	format_recent_time(char *buffer, char *time_string);
 static unsigned int	format_late_time(char *buffer, char *time_string);
 static unsigned int	format_name(char **buffer, t_data *data);
+static void			format_symlink(char **buffer, t_data *data);
 static void			set_max_size(unsigned int *max, unsigned int size);
 
 int  load_all_format_data(t_strategies *strat, t_directory *dir, t_format_sizes *format_sizes, t_format_data * all_format_data)
@@ -83,7 +84,8 @@ static int  load_format_data(t_strategies *strat, t_data *data, t_format_sizes *
 
 	size = format_name(&format_data->name, data);
 	set_max_size(&format_sizes->name, size);
-	
+
+	format_symlink(&format_data->target, data);
 	return (OK);
 }
 
@@ -233,6 +235,11 @@ static unsigned int	format_name(char **buffer, t_data *data)
 {
 	*buffer = data->name;
 	return (ft_strlen(*buffer));
+}
+
+static void	format_symlink(char **buffer, t_data *data)
+{
+	*buffer = data->target;
 }
 
 static void set_max_size(unsigned int *max, unsigned int size)

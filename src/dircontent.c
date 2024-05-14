@@ -51,15 +51,19 @@ int get_dir_content(t_strategies *strat, t_directory *dir)
      
 static int add_entry(t_strategies *strat, t_directory *dir, struct dirent *dir_entry)
 {
-  (void)strat;
-  int ret = OK;
-  ret = add_new_data(&dir->content, dir_entry->d_name, dir->path);
-  if (ret != OK)
-    return (ret);
-  ++dir->entry_nb;
-  ret = add_stats(strat, (t_data*)dir->content->content);
-  if (ret != OK)
-    return (ret);
-  ret = compute_stats(strat, (t_data*)dir->content->content);
-  return (ret);
+	int ret = OK;
+	ret = add_new_data(&dir->content, dir_entry->d_name, dir->path);
+	if (ret != OK)
+		return (ret);
+	++dir->entry_nb;
+	ret = add_stats(strat, (t_data*)dir->content->content);
+	if (ret != OK)
+		return (ret);
+	ret = compute_stats(strat, (t_data*)dir->content->content);
+
+	if (ret == OK && ((t_data*)dir->content->content)->type == LNK)
+	{
+		ret = add_symlink((t_data*)dir->content->content);
+	}
+	return (ret);
 }

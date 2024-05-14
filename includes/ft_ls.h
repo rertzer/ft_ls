@@ -60,25 +60,26 @@ typedef struct {
 } t_options;
 
 typedef struct {
-  unsigned int  id;
-  char *        value;
+  unsigned int	id;
+  char			*value;
 } t_id;
 
 typedef struct {
-  e_type  type;
-  dev_t   dev;
-  dev_t   rdev;
-  bool    xattr;
-  mode_t  mode;
-  nlink_t links;
-  uid_t   uid;
-  gid_t   gid;
-  size_t  total_size;
-  size_t  block_size;
-  size_t  block_nb;
-  time_t  time;
-  char    *name;
-  char    *path;
+  e_type	type;
+  dev_t		dev;
+  dev_t		rdev;
+  bool		xattr;
+  mode_t	mode;
+  nlink_t	links;
+  uid_t		uid;
+  gid_t		gid;
+  size_t	total_size;
+  size_t	block_size;
+  size_t	block_nb;
+  time_t	time;
+  char		*name;
+  char		*path;
+  char		*target;
 }  t_data;
 
 typedef struct {
@@ -92,6 +93,7 @@ typedef struct {
   char  date[13];
   char  *name;
   char  *path;
+  char	*target;
 } t_format_data;
 
 typedef struct {
@@ -171,6 +173,7 @@ time_t  last_modif(struct stat *stat_buffer);
 int add_all_stats(t_strategies *strat, t_list *all_paths);
 int add_stats(t_strategies *strat, t_data *data);
 int  compute_stats(t_strategies *strat, t_data *data);
+int  add_symlink(t_data *data);
 // dictonnary
 int insert_key(t_list *dict[HASH_SIZE], unsigned int key, char *value);
 char* get_value_by_key(t_list *dict[HASH_SIZE], unsigned int key);

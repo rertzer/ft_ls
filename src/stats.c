@@ -17,20 +17,25 @@ static int  add_xattr(t_data *data);
 
 int add_all_stats(t_strategies *strat, t_list *all_paths)
 {
-  int ret = OK;
-  t_data  *data = NULL;
-  while (all_paths != NULL)
-  {
-    data = (t_data*)all_paths->content;
-    ret = add_stats(strat, data);
-    if (ret != OK)
-      break;
-    ret = compute_stats(strat, data);
-    if (ret != OK)
-      break;
-    all_paths = all_paths->next;
-  }
-  return (ret);
+	int		ret = OK;
+	t_data	*data = NULL;
+
+	while (all_paths != NULL)
+	{
+		data = (t_data*)all_paths->content;
+		ret = add_stats(strat, data);
+		if (ret != OK)
+			break;
+		ret = compute_stats(strat, data);
+		if (ret != OK)
+			break;
+		all_paths = all_paths->next;
+		if (data->type == LNK)
+		{
+			ret = add_symlink(data);
+		}
+	}
+	return (ret);
 }
 
 int add_stats(t_strategies *strat, t_data *data)
@@ -94,8 +99,8 @@ int  compute_stats(t_strategies *strat, t_data *data)
   (void)strat;
   int ret = OK;
   ret = set_type(data);
-  //if (ret != OK)
-    return (ret);
+
+  return (ret);
 }
 
 static int set_type(t_data *data)
@@ -120,4 +125,25 @@ static int set_type(t_data *data)
     ft_putstr_fd(": invalid file type\n", 2);
   }
   return (ret); 
+}
+
+int  add_symlink(t_data *data)
+{
+	int	ret = OK;
+	
+	errno = 0;
+	data->target = malloc(sizeof(char) * (data->total_size + 1));
+	if (data->target == NULL)
+	{
+		perror("ft_ls: malloc: ");
+		return (MAJOR_KO);
+	}
+	ssize_t	size = readlink(data->path, data->target, data->total_size);
+	if (size < 0 || size != (ssize_t)data->total_size)
+	{
+		perror("ft_ls: readlink: ");
+		return (MAJOR_KO);
+	}
+	data->target[data->total_size] = '\0';
+	return (ret);
 }
