@@ -77,3 +77,26 @@ void  data_del(void *v_data)
 		free(data);
 	}
 }
+
+bool	is_directory_simple(t_data *data)
+{
+	int	ret = false;
+	
+	if(data->type == DIREC || (data->type == LNK && data->target_type == DIREC))
+	{
+		ret = true;
+	}
+	return (ret);
+}
+bool	is_directory_longlist(t_data *data)
+{
+	int	ret = false;
+
+	if(data->type == DIREC)
+	{
+		ret = true;
+	}
+	return (ret);
+
+}
+

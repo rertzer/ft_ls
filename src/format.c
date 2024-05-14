@@ -13,7 +13,7 @@
 #include "ft_ls.h"
 
 static void	previous_print(t_strategies *strat);
-static void	print_path(char *path);
+static void	print_path(t_strategies *strat, char *path);
 static void	print_total(t_directory *dir);
 static void	init_format_sizes(t_format_sizes *format_sizes);
 
@@ -22,7 +22,7 @@ int simple(t_strategies *strat, t_directory *dir)
   int ret = OK;
   t_list *lst = dir->content;
   previous_print(strat);
-  print_path(dir->path);
+  print_path(strat, dir->path);
   while (lst)
   {
     t_data* d = (t_data*)lst->content;
@@ -50,11 +50,12 @@ int longlist(t_strategies *strat, t_directory *dir)
 		if (ret == OK)
 		{
 			previous_print(strat);
-			print_path(dir->path);
+			print_path(strat, dir->path);
 			print_total(dir);
 			ret = print_all_format_data(strat, dir, &format_sizes, all_format_data);
     	}
   	}
+	free(all_format_data);
 	return (ret);
 }
 
@@ -83,9 +84,9 @@ static void  previous_print(t_strategies *strat)
     }
 }
 
-static void  print_path(char *path)
+static void  print_path(t_strategies *strat, char *path)
 {
-  if (path != NULL && ft_strcmp(path, "."))
+  if (path != NULL && strat->print_path_name == true)
   {
     ft_putstr_fd(path, 1);
     ft_putstr_fd(":\n", 1);

@@ -52,80 +52,83 @@
 # define HASH_A 2654435769
 # define HASH_SHIFT 23
 
-typedef enum {REG, DIREC, CHR, BLK, FIFO, LNK, SOCK} e_type; 
+typedef enum {REG, DIREC, CHR, BLK, FIFO, LNK, SOCK, ERROR_TYPE=-1} e_type; 
 
 typedef struct {
-  char  name[OPTIONS_NUMBER];
-  bool  value[OPTIONS_NUMBER];
+	char	name[OPTIONS_NUMBER];
+	bool	value[OPTIONS_NUMBER];
 } t_options;
 
 typedef struct {
-  unsigned int	id;
-  char			*value;
+	unsigned int	id;
+	char			*value;
 } t_id;
 
 typedef struct {
-  e_type	type;
-  dev_t		dev;
-  dev_t		rdev;
-  bool		xattr;
-  mode_t	mode;
-  nlink_t	links;
-  uid_t		uid;
-  gid_t		gid;
-  size_t	total_size;
-  size_t	block_size;
-  size_t	block_nb;
-  time_t	time;
-  char		*name;
-  char		*path;
-  char		*target;
+	e_type	type;
+	dev_t	dev;
+	dev_t	rdev;
+	bool	xattr;
+	mode_t	mode;
+	nlink_t	links;
+	uid_t	uid;
+	gid_t	gid;
+	size_t	total_size;
+	size_t	block_size;
+	size_t	block_nb;
+	time_t	time;
+	char	*name;
+	char	*path;
+	char	*target;
+	e_type	target_type;
 }  t_data;
 
 typedef struct {
-  char  mode[12];
-  char  links[20];
-  char  *user;
-  char  *group;
-  char  size[20];
-  char  minor[11];
-  char  major[11];
-  char  date[13];
-  char  *name;
-  char  *path;
-  char	*target;
+	char	mode[12];
+	char	links[20];
+	char	*user;
+	char	*group;
+	char	size[20];
+	char	minor[11];
+	char	major[11];
+	char	date[13];
+	char	*name;
+	char	*path;
+	char	*target;
 } t_format_data;
 
 typedef struct {
-  unsigned int  mode;
-  unsigned int  links;
-  unsigned int  user;
-  unsigned int  group;
-  unsigned int  size;
-  unsigned int  minor;
-  unsigned int  major;
-  unsigned int  date;
-  unsigned int  name;
-  unsigned int  path;
+	unsigned int	mode;
+	unsigned int	links;
+	unsigned int	user;
+	unsigned int	group;
+	unsigned int	size;
+	unsigned int	minor;
+	unsigned int	major;
+	unsigned int	date;
+	unsigned int	name;
+	unsigned int	path;
 } t_format_sizes;
 
 typedef struct {
-  char  *path;
-  size_t  total_block_size;
-  unsigned int  entry_nb;
-  t_list *content;
+	char			*path;
+	size_t			total_block_size;
+	unsigned int	entry_nb;
+	t_list			*content;
 } t_directory;
 
 typedef struct s_strategies {
-  bool (*keepEntry)(struct dirent*);
-  bool (*sorting)(void *, void *);
-  time_t (*setTime)(struct stat*);
-  int (*recurse)(struct s_strategies*, t_directory*);
-  int (*format)(struct s_strategies*, t_directory*);
-  bool  default_path;
-  bool  previous_print;
-  t_list* users[HASH_SIZE];
-  t_list* groups[HASH_SIZE];
+	bool	(*keepEntry)(struct dirent*);
+	bool	(*sorting)(void *, void *);
+	bool	(*isdirectory)(t_data *);
+	time_t	(*setTime)(struct stat*);
+	int		(*recurse)(struct s_strategies*, t_directory*);
+	int		(*format)(struct s_strategies*, t_directory*);
+	bool	default_path;
+	bool	print_path_name;
+	bool	previous_print;
+	t_list*	users[HASH_SIZE];
+	t_list*	groups[HASH_SIZE];
 }  t_strategies;
 
 
@@ -133,6 +136,8 @@ typedef struct s_strategies {
 int add_new_data(t_list **lst, char const * const name, char const * const path);
 t_data  *new_data();
 void  data_del(void*);
+bool	is_directory_simple(t_data *data);
+bool	is_directory_longlist(t_data *data);
 // option handler
 int   parse_all_args(t_options *opt, t_list **paths, int argc, char **argv);
 bool  get_option(t_options *opt, char arg);

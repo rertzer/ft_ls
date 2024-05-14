@@ -13,7 +13,9 @@
 #include "ft_ls.h"
 
 static int set_type(t_data *data);
+static int	get_type(mode_t	mode);
 static int  add_xattr(t_data *data);
+static int	set_symlink_type(t_data *data);
 
 int add_all_stats(t_strategies *strat, t_list *all_paths)
 {
@@ -33,6 +35,10 @@ int add_all_stats(t_strategies *strat, t_list *all_paths)
 		if (data->type == LNK)
 		{
 			ret = add_symlink(data);
+		}
+		else
+		{
+			data->target_type = -1;
 		}
 	}
 	return (ret);
@@ -105,26 +111,32 @@ int  compute_stats(t_strategies *strat, t_data *data)
 
 static int set_type(t_data *data)
 {
-  int ret = MAJOR_KO;
-  
-  mode_t const modes[] = {S_IFREG, S_IFDIR, S_IFCHR, S_IFBLK, S_IFIFO, S_IFLNK, S_IFSOCK};
-  mode_t  type = data->mode & S_IFMT;
-  for (int i = 0; i < MODES_NB; ++i)
-  {
-    if(type == modes[i])
-    {
-      data->type = i;
-      ret = OK;
-      break;
-    }
-  }
-  if (ret != OK)
-  {
-    ft_putstr_fd("ft_ls: ", 2);
-    ft_putstr_fd(data->name, 2);
-    ft_putstr_fd(": invalid file type\n", 2);
-  }
-  return (ret); 
+	int	ret = OK;
+
+	data->type = get_type(data->mode);
+
+	if (data->type == ERROR_TYPE)
+	{
+		ft_putstr_fd("ft_ls: ", 2);
+		ft_putstr_fd(data->name, 2);
+		ft_putstr_fd(": invalid file type\n", 2);
+		ret = MAJOR_KO;
+	}
+	return (ret); 
+}
+
+static int	get_type(mode_t	mode)
+{
+	mode_t const modes[] = {S_IFREG, S_IFDIR, S_IFCHR, S_IFBLK, S_IFIFO, S_IFLNK, S_IFSOCK};
+	mode &= S_IFMT;
+	for (int i = 0; i < MODES_NB; ++i)
+	{
+		if(mode == modes[i])
+		{
+			return (i);
+		}
+	}
+	return (ERROR_TYPE);
 }
 
 int  add_symlink(t_data *data)
@@ -145,5 +157,32 @@ int  add_symlink(t_data *data)
 		return (MAJOR_KO);
 	}
 	data->target[data->total_size] = '\0';
+	ret = set_symlink_type(data);
+	return (ret);
+}
+
+static int	set_symlink_type(t_data *data)
+{
+	int ret = OK;
+	struct stat stat_buffer;
+    
+	errno = 0;
+	if (stat(data->path, &stat_buffer) != 0)
+	{
+		ret = MAJOR_KO;
+		ft_putstr_fd("ft_ls: stat: ", 2);
+		perror(data->path);
+	}
+	else 
+	{
+    	data->target_type = get_type(stat_buffer.st_mode);
+		if (data->target_type == ERROR_TYPE)
+		{
+			ft_putstr_fd("ft_ls: ", 2);
+			ft_putstr_fd(data->name, 2);
+			ft_putstr_fd(": invalid file type\n", 2);
+			ret = MAJOR_KO;
+		}
+	}
 	return (ret);
 }
