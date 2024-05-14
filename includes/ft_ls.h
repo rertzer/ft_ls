@@ -147,6 +147,8 @@ int set_strategies(t_options *opt, t_strategies *strat);
 int   bubble_sort(t_list* list, bool(*sorting)(void*, void*));
 bool  sort_by_name(void *a, void *b);
 bool  sort_by_name_reverse(void *a, void *b);
+bool  sort_by_time(void *a, void *b);
+bool  sort_by_time_reverse(void *a, void *b);
 //keepentry
 bool  keep_all(struct dirent* entry);
 bool  skip_dot(struct dirent* entry);
