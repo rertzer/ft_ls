@@ -62,19 +62,31 @@ int add_stats(t_strategies *strat, t_data *data)
 
 static int  add_xattr(t_data *data)
 {
-  errno = 0;
-  ssize_t xattr_nb = listxattr(data->path, NULL, 0);
-  if (xattr_nb < 0){
-    perror("ft_ls: listxattr: ");
-    return (MAJOR_KO);
-  }
-  else if (xattr_nb == 16 || xattr_nb == 0){
-    data->xattr = false;
-  }
-  else{
-    data->xattr = true;
-  }
-  return (OK); 
+	int	ret = OK;
+	errno = 0;
+	ssize_t xattr_nb = listxattr(data->path, NULL, 0);
+	if (xattr_nb < 0)
+	{
+		if (errno == ENOENT || errno == ELOOP)
+		{
+			data->xattr = false;
+		}
+		else
+		{
+			ft_putstr_fd("ft_ls: listxattr: ", 2);
+			perror(data->path);
+			ret = MAJOR_KO;
+		}
+  	}
+	else if (xattr_nb == 16 || xattr_nb == 0)
+	{
+    	data->xattr = false;
+  	}
+  	else
+	{
+    	data->xattr = true;
+  	}
+	return (ret); 
 }
 
 int  compute_stats(t_strategies *strat, t_data *data)

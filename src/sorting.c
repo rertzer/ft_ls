@@ -18,7 +18,7 @@ bool  sort_by_name(void *a, void *b)
   t_data  *data_a = (t_data*)a;
   t_data  *data_b = (t_data*)b;
   
-  if (ft_strcmp_ci(data_a->name, data_b->name) > 0)
+  if (ft_strcmp(data_a->name, data_b->name) > 0)
     ordered = false;
   return ordered;
 }
@@ -29,7 +29,7 @@ bool  sort_by_name_reverse(void *a, void *b)
   t_data  *data_a = (t_data*)a;
   t_data  *data_b = (t_data*)b;
   
-  if (ft_strcmp_ci(data_a->name, data_b->name) < 0)
+  if (ft_strcmp(data_a->name, data_b->name) < 0)
     ordered = false;
   return ordered;
 }

@@ -36,9 +36,12 @@
 
 #include "../libft/libft.h"
 
-# define  OK 0
-# define  MINOR_KO 1
-# define  MAJOR_KO 2
+# define	OK 0
+# define	MINOR_KO 1
+# define	MAJOR_KO 2
+# define	ERROR -1
+# define	TRUE 1
+# define	FALSE 0
 
 # define  FT_LS_BLOCK_SIZE 16384
 
@@ -146,7 +149,10 @@ int recursive(t_strategies *strat, t_directory *dir);
 // formating
 int longlist(t_strategies *strat, t_directory *dir);
 int simple(t_strategies *strat, t_directory *dir);
-void  print_path(char *path);
+//load format
+int  load_all_format_data(t_strategies *strat, t_directory *dir, t_format_sizes *format_sizes, t_format_data * all_format_data);
+// print format
+int  print_all_format_data(t_strategies *strat, t_directory *dir, t_format_sizes *format_sizes, t_format_data *all_format_data);
 // list_path
 int  default_path(t_strategies *strat);
 int list_all_files(t_strategies *strat, t_list **all_paths);
@@ -158,7 +164,7 @@ void  free_directory(t_directory *dir);
 void  init_dir(t_directory *dir);
 int get_dir_content(t_strategies *strat, t_directory *dir);
 // recent
-bool recent(char *time_string);
+int recent(char *time_string);
 // time
 time_t  last_modif(struct stat *stat_buffer);
 // stats

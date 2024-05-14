@@ -23,7 +23,9 @@ SOURCES := \
 	bubblesort.c \
 	errors.c \
 	keepentry.c \
+	loadformat.c \
 	options.c \
+	printformat.c \
 	recent.c \
 	strategies.c \
 	pathlisting.c \
