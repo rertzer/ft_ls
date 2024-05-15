@@ -12,6 +12,8 @@
 
 #include "ft_ls.h"
 
+static int	return_reformat(int ret);
+
 int main(int argc, char **argv)
 {
 	int           ret = OK;
@@ -19,45 +21,45 @@ int main(int argc, char **argv)
 	t_list        *all_paths = NULL;
 	t_strategies  strat;
 
-	//read args: set options
 	ret = parse_all_args(&opt, &all_paths, argc, argv);
 	if (ret != OK)
-		return (ret);
+	{
+		return (return_reformat(ret));
+	}
 
 	ret = set_strategies(&opt, &strat);
 	if (ret != OK)
 	{
 		ft_lstclear(&all_paths, data_del);
-		return (ret);
+		return (return_reformat(ret));
 	}
-	init_ids(&strat);
 
+	init_ids(&strat);
 	int	path_nb = ft_lstsize(all_paths);
 
-	if (path_nb == 0)
+	if (path_nb < 2)
 	{
 		strat.print_path_name = false;
+	}
+	if (path_nb == 0)
+	{
 		ret = default_path(&strat);
 	}
 	else
 	{
-		if (path_nb == 1)
-		{
-			strat.print_path_name = false;
-		}
-
-		ret = add_all_stats(&strat, all_paths);
-		if (ret == OK)
-		{
-			bubble_sort(all_paths, strat.sorting);
-			bubble_sort(all_paths, strat.othersorting);
-			ret = list_all_files(&strat, &all_paths);
-			if (ret == OK)
-			ret = list_all_path(&strat, all_paths);
-		}
+		ret = process_all_paths(&strat, &all_paths);
 	}
 
 	ft_lstclear(&all_paths, data_del);
 	free_ids(&strat);
+	return (return_reformat(ret));
+}
+
+static int	return_reformat(int ret)
+{
+	if (ret == INTERNAL_KO)
+	{
+		ret = MAJOR_KO;
+	}
 	return (ret);
 }

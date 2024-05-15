@@ -165,6 +165,7 @@ int  load_all_format_data(t_strategies *strat, t_directory *dir, t_format_sizes 
 // print format
 int  print_all_format_data(t_strategies *strat, t_directory *dir, t_format_sizes *format_sizes, t_format_data *all_format_data);
 // list_path
+int	process_all_paths(t_strategies *strat, t_list **all_paths);
 int  default_path(t_strategies *strat);
 int list_all_files(t_strategies *strat, t_list **all_paths);
 int list_all_path(t_strategies *strat, t_list *all_paths);
@@ -185,7 +186,7 @@ int  compute_stats(t_strategies *strat, t_data *data);
 int  add_symlink(t_data *data);
 // dictonnary
 int insert_key(t_list *dict[HASH_SIZE], unsigned int key, char *value);
-char* get_value_by_key(t_list *dict[HASH_SIZE], unsigned int key);
+char* get_value_by_key(t_list * const dict[HASH_SIZE], unsigned int key);
 void  init_dict(t_list *dict[HASH_SIZE]);
 void  free_dict(t_list *dict[HASH_SIZE]);
 //ids

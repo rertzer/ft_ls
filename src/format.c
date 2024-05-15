@@ -19,17 +19,22 @@ static void	init_format_sizes(t_format_sizes *format_sizes);
 
 int simple(t_strategies *strat, t_directory *dir)
 {
-	int ret = OK;
+	int		ret = OK;
 	t_list *lst = dir->content;
+
 	previous_print(strat);
 	print_path(strat, dir->path);
+
 	while (lst)
 	{
-		t_data* d = (t_data*)lst->content;
+		t_data*	d = (t_data*)lst->content;
+
 		ft_putstr_fd(d->name, 1);
 		ft_putchar_fd('\n', 1);
+		
 		lst = lst->next;
 	}
+
 	return (ret);
 }
 

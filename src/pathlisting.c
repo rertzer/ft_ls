@@ -13,6 +13,24 @@
 #include "ft_ls.h"
 
 
+int	process_all_paths(t_strategies *strat, t_list **all_paths)
+{
+	int	ret = OK;
+
+	ret = add_all_stats(strat, *all_paths);
+	if (ret == OK)
+	{
+		bubble_sort(*all_paths, strat->sorting);
+		bubble_sort(*all_paths, strat->othersorting);
+		ret = list_all_files(strat, all_paths);
+		if (ret == OK)
+		{
+			ret = list_all_path(strat, *all_paths);
+		}
+	}
+	return (ret);
+}
+
 int list_all_files(t_strategies *strat, t_list **all_paths)
 {
 	int ret = OK;
@@ -87,34 +105,36 @@ int list_all_path(t_strategies *strat, t_list *all_paths)
 
 int  default_path(t_strategies *strat)
 {
-  int ret = OK;
-  char  *path = strdup(".");
-  strat->default_path = true; 
-  if (path == NULL)
-  {
-    ret = MAJOR_KO;
-  }
-  else {
-    ret = list_path(strat, path);
-  }
-  return (ret);
+	int	ret = OK;
+	char	*path = strdup(".");
+
+	strat->default_path = true; 
+	if (path == NULL)
+	{
+		ret = INTERNAL_KO;
+	}
+	else
+	{
+		ret = list_path(strat, path);
+	}
+	return (ret);
 }
 
 int list_path(t_strategies *strat, char* path)
 {
-  int ret = OK;
-  t_directory dir;
-  init_dir(&dir);
-  dir.path = path;
+	int ret = OK;
+	t_directory dir;
+	init_dir(&dir);
+	dir.path = path;
 
-  ret = get_dir_content(strat, &dir);
-  if (ret == OK)
-  {
-    bubble_sort(dir.content, strat->sorting);
-    bubble_sort(dir.content, strat->othersorting);
-    strat->format(strat, &dir);
-      }
-  ret = strat->recurse(strat, &dir);
-  free_directory(&dir);
-  return (ret);
+	ret = get_dir_content(strat, &dir);
+	if (ret == OK)
+	{
+		bubble_sort(dir.content, strat->sorting);
+		bubble_sort(dir.content, strat->othersorting);
+		strat->format(strat, &dir);
+	}
+	ret = strat->recurse(strat, &dir);
+	free_directory(&dir);
+	return (ret);
 }

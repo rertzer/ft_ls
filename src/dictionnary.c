@@ -12,19 +12,22 @@
 
 #include "ft_ls.h"
 
-static inline unsigned int  get_hash(unsigned int key);
-static void  del_ids(void *ids);
+static inline unsigned int	get_hash(unsigned int key);
+static void					del_ids(void *ids);
 
 int insert_key(t_list *dict[HASH_SIZE], unsigned int key, char *value)
 {
-	unsigned int hash = get_hash(key);
-	t_id  *newid = ft_malloc(sizeof(t_id));
+	unsigned int	hash = get_hash(key);
+	t_id			*newid = ft_malloc(sizeof(t_id));
+
 	if (newid == NULL)
 	{
 		return (INTERNAL_KO);
 	}
+
 	newid->id = key;
 	newid->value = value;
+
 	t_list *newlst = ft_lstnew(newid);
 	if (newlst == NULL)
 	{
@@ -32,14 +35,15 @@ int insert_key(t_list *dict[HASH_SIZE], unsigned int key, char *value)
 		return (INTERNAL_KO);
 	}
 	ft_lstadd_front(&dict[hash], newlst);
+
 	return (OK);
 }
 
-char* get_value_by_key(t_list *dict[HASH_SIZE], unsigned int key)
+char* get_value_by_key(t_list * const dict[HASH_SIZE], unsigned int key)
 {
-	unsigned int hash = get_hash(key);
-	t_list *lst = dict[hash];
-	char  *value = NULL;
+	unsigned int	hash = get_hash(key);
+	t_list const	*lst = dict[hash];
+	char		 	*value = NULL;
 
 	while (lst)
 	{
@@ -51,7 +55,8 @@ char* get_value_by_key(t_list *dict[HASH_SIZE], unsigned int key)
 		}
 		lst = lst->next;
 	}
-	return value;
+
+	return (value);
 }
 
 static inline unsigned int  get_hash(unsigned int key)

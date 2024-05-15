@@ -14,10 +14,11 @@
 
 void  print_char_error(char *message, char param)
 {
-  char  param_string[] = "'X'\n";
-  param_string[1] = param;
-  
-  ft_putstr_fd("ft_ls: ", 2);
-  ft_putstr_fd(message, 2);
-  ft_putstr_fd(param_string, 2);
+	char	param_string[] = "'X'\n";
+	
+	param_string[1] = param;
+
+	ft_putstr_fd("ft_ls: ", 2);
+	ft_putstr_fd(message, 2);
+	ft_putstr_fd(param_string, 2);
 }

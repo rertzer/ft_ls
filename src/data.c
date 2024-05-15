@@ -21,14 +21,15 @@ int add_new_data(t_list **lst, char const * const name, char const * const path)
 	t_list  *newlst = NULL;
 
 	if ((data = new_data()) == NULL || \
-			(data->name = ft_strdup(name)) == NULL || \
-			(add_data_path(data, name, path)) != OK || \
-			(newlst = ft_lstnew(data)) == NULL)
+		(data->name = ft_strdup(name)) == NULL || \
+		(add_data_path(data, name, path)) != OK || \
+		(newlst = ft_lstnew(data)) == NULL)
 	{
 		data_del(data);
-		ret = MAJOR_KO;
+		ret = INTERNAL_KO;
 	}
-	else {
+	else
+	{
 		ft_lstadd_front(lst, newlst);
 	}
 	return (ret);
@@ -37,15 +38,17 @@ int add_new_data(t_list **lst, char const * const name, char const * const path)
 static  int add_data_path(t_data *data, char const * const name, char const * const path)
 {
 	int ret = OK;
-	if (path == NULL){
+	if (path == NULL)
+	{
 		data->path = ft_strdup(name);
 	}
-	else {
+	else
+	{
 		data->path = ft_pathjoin(path, data->name);
 	}
 	if (data->path == NULL)
 	{
-		ret = MAJOR_KO;
+		ret = INTERNAL_KO;
 	}
 	return (ret);
 }
@@ -84,6 +87,7 @@ bool	is_directory_simple(t_data *data)
 	}
 	return (ret);
 }
+
 bool	is_directory_longlist(t_data *data)
 {
 	int	ret = false;
@@ -95,4 +99,3 @@ bool	is_directory_longlist(t_data *data)
 	return (ret);
 
 }
-

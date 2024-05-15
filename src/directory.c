@@ -15,14 +15,14 @@
 
 void  init_dir(t_directory *dir)
 {
-  dir->path = NULL;
-  dir->total_block_size = 0;
-  dir->entry_nb = 0;
-  dir->content = NULL;
+	dir->path = NULL;
+	dir->total_block_size = 0;
+	dir->entry_nb = 0;
+	dir->content = NULL;
 }
   void  free_directory(t_directory *dir)
 {
-  free(dir->path);
-  dir->path = NULL;
-  ft_lstclear(&dir->content, data_del);
+	free(dir->path);
+	dir->path = NULL;
+	ft_lstclear(&dir->content, data_del);
 }

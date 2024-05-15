@@ -12,31 +12,39 @@
 
 #include "ft_ls.h"
 
+static inline void	swap(t_list *current);
+
 int bubble_sort(t_list *lst, bool(*ordered)(void *a, void *b))
 {
-  bool    sorted = false;
-  void    *tmp = NULL;
-  t_list  *current = lst;
+	bool    sorted = false;
+	t_list  *current = lst;
 
 	if (ordered == NULL)
 	{
 		return (OK);
 	}
-  while (sorted == false)
-  {
-    sorted = true;
-    current = lst;
-    while(current)
-    {
-      if (current->next && ! ordered(current->content, current->next->content))
-      {
-        tmp = current->content;
-        current->content = current->next->content;
-        current->next->content = tmp;
-        sorted = false;
-      }
-     current = current->next;
-    }
-  }
-  return (OK);
+	while (sorted == false)
+	{
+		sorted = true;
+		current = lst;
+		while(current)
+		{
+			if (current->next && ! ordered(current->content, current->next->content))
+			{
+				swap(current);
+				sorted = false;
+			}
+			current = current->next;
+		}
+	}
+	return (OK);
+}
+
+static inline void	swap(t_list *current)
+{
+	void    *tmp = NULL;
+
+	tmp = current->content;
+	current->content = current->next->content;
+	current->next->content = tmp;
 }
