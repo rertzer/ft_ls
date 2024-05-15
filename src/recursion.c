@@ -12,49 +12,51 @@
 
 #include "ft_ls.h"
 
-static bool not_a_dot(t_strategies *strat, char *name);
+static bool	not_a_dot(char *name);
 
-int no_recursion(t_strategies *strat, t_directory *dir)
+int	no_recursion(t_strategies *strat, t_directory *dir)
 {
-  (void)strat;
-  (void)dir;
-  return (OK);
+	(void)strat;
+	(void)dir;
+	return (OK);
 }
 
-int recursive(t_strategies *strat, t_directory *dir)
+int	recursive(t_strategies *strat, t_directory *dir)
 {
-  t_list  *lst = dir->content;
-  int ret = OK;
-  while (lst)
-  {
-    t_data *data = (t_data*)lst->content;
-    if (data->type == DIREC && not_a_dot(strat, data->name))
-    {
-      char *path = ft_strdup(data->path);
-      if (path == NULL)
-      {
-        ret = MAJOR_KO;
-        break;
-      }
-      ret = list_path(strat, path);
-      if (ret != OK)
-        break;
-    }
-    lst = lst->next;
-  }
-  return (ret);
+	t_list	*lst = dir->content;
+	int		ret = OK;
+
+	while (lst)
+	{
+		t_data *data = (t_data*)lst->content;
+		if (data->type == DIREC && not_a_dot(data->name))
+		{
+			char *path = ft_strdup(data->path);
+			if (path == NULL)
+			{
+				ret = MAJOR_KO;
+				break;
+			}
+
+			ret = list_path(strat, path);
+			if (ret != OK)
+			{
+				break;
+			}
+		}
+		lst = lst->next;
+	}
+	return (ret);
 }
 
-static bool not_a_dot(t_strategies *strat, char *name)
+static bool not_a_dot(char *name)
 {
-  bool  is_not = true;
-  if (strat->default_path == true)
-  {
-    strat->default_path = false;
-  }
-  else{
-      if (!(ft_strcmp(name, ".") && ft_strcmp(name, "..")))
-      is_not = false;
-  }
-  return (is_not);
+	bool	is_not = true;
+	
+	if (!(ft_strcmp(name, ".") && ft_strcmp(name, "..")))
+	{
+		is_not = false;
+	}
+	
+	return (is_not);
 }

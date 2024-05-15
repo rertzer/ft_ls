@@ -12,48 +12,30 @@
 
 #include "ft_ls.h"
 
-bool  sort_by_name(void *a, void *b)
+bool	sort_by_func(void *a, void *b, bool(*compare)(t_data *data_a, t_data *data_b))
 {
-  bool  ordered = true;
-  t_data  *data_a = (t_data*)a;
-  t_data  *data_b = (t_data*)b;
-  
-  if (ft_strcmp(data_a->name, data_b->name) > 0)
-    ordered = false;
-  return ordered;
+	t_data	*data_a = (t_data*)a;
+	t_data	*data_b = (t_data*)b;
+
+	return (compare(data_a, data_b));
 }
 
-bool  sort_by_name_reverse(void *a, void *b)
+bool	sort_by_name(t_data *a, t_data *b)
 {
-  bool  ordered = true;
-  t_data  *data_a = (t_data*)a;
-  t_data  *data_b = (t_data*)b;
-  
-  if (ft_strcmp(data_a->name, data_b->name) < 0)
-    ordered = false;
-  return ordered;
+	return (ft_strcmp(a->name, b->name) <= 0);
 }
 
-bool	sort_by_time(void *a, void *b)
+bool  sort_by_name_reverse(t_data *a, t_data *b)
 {
-	bool  ordered = true;
-	t_data  *data_a = (t_data*)a;
-	t_data  *data_b = (t_data*)b;
-
-	if (data_a->time < data_b->time)
-		ordered = false;
-	return ordered;
-
+	return (ft_strcmp(a->name, b->name) >= 0);
 }
 
-bool	sort_by_time_reverse(void *a, void *b)
+bool	sort_by_time(t_data *a, t_data *b)
 {
-	bool  ordered = true;
-	t_data  *data_a = (t_data*)a;
-	t_data  *data_b = (t_data*)b;
+	return (a->time >= b->time);
+}
 
-	if (data_a->time > data_b->time)
-		ordered = false;
-	return ordered;
-
+bool	sort_by_time_reverse(t_data *a, t_data *b)
+{
+	return (a->time <= b->time);
 }

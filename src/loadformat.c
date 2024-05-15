@@ -12,45 +12,57 @@
 
 #include "ft_ls.h"
 
-static int			load_format_data(t_strategies *strat, t_data *data, t_format_sizes *format_sizes, t_format_data *format_data);
-static unsigned int	format_mode(char *buffer, t_data *data);
-static unsigned int	format_links(char *buffer, t_data *data);
-static unsigned int	format_user(t_strategies *strat, char **buffer, t_data *data);
-static unsigned int	format_group(t_strategies *strat, char **buffer, t_data *data);
-static unsigned int	format_size(char *buffer, t_data *data);
-static unsigned int	format_minor(char *buffer, t_data *data);
-static unsigned int	format_major(char *buffer, t_data *data);
-static unsigned int	format_time(char *buffer, t_data *data);
-static unsigned int	format_recent_time(char *buffer, char *time_string);
-static unsigned int	format_late_time(char *buffer, char *time_string);
-static unsigned int	format_name(char **buffer, t_data *data);
-static void			format_symlink(char **buffer, t_data *data);
-static void			set_max_size(unsigned int *max, unsigned int size);
+static int					load_format_data(t_strategies *strat, t_data *data, t_format_sizes *format_sizes, t_format_data *format_data);
+static inline void			load_block_size(t_directory *dir, t_data *data);
+static unsigned int			format_mode(char *buffer, t_data *data);
+static inline void			format_mode_type(char *buffer, t_data *data);
+static inline void			format_mode_user(char *buffer, t_data *data);
+static inline void			format_mode_group(char *buffer, t_data *data);
+static inline void			format_mode_other(char *buffer, t_data *data);
+static inline unsigned int	format_mode_xattr(char *buffer, t_data *data, unsigned int size);
+static unsigned int			format_links(char *buffer, t_data *data);
+static unsigned int			format_user(t_strategies *strat, char **buffer, t_data *data);
+static unsigned int			format_group(t_strategies *strat, char **buffer, t_data *data);
+static unsigned int			format_size(char *buffer, t_data *data);
+static unsigned int			format_minor(char *buffer, t_data *data);
+static unsigned int			format_major(char *buffer, t_data *data);
+static unsigned int			format_time(char *buffer, t_data *data);
+static unsigned int			format_recent_time(char *buffer, char *time_string);
+static unsigned int			format_late_time(char *buffer, char *time_string);
+static unsigned int			format_name(char **buffer, t_data *data);
+static void					format_symlink(char **buffer, t_data *data);
+static void					set_max_size(unsigned int *max, unsigned int size);
 
 int  load_all_format_data(t_strategies *strat, t_directory *dir, t_format_sizes *format_sizes, t_format_data * all_format_data)
 {
-	int	ret = OK;
-	int i = 0;
-	t_list *entry = dir->content;
+	int		ret = OK;
+	int		i = 0;
+	t_list	*entry = dir->content;
 
 	while (entry != NULL)
 	{
-		t_data  *data = (t_data*)entry->content;
-		dir->total_block_size +=  data->block_nb * data->block_size;
+		t_data	*data = (t_data*)entry->content;
+
+		load_block_size(dir, data);
 		ret = load_format_data(strat, data, format_sizes, &all_format_data[i]);
 		if (ret != OK)
+		{
 			break;
+		}
 		entry = entry->next;
 		++i;
 	}
-
-	dir->total_block_size /= FT_LS_BLOCK_SIZE;
 	set_max_size(&format_sizes->size, format_sizes->minor + format_sizes->major + 2);
 
 	return (ret);
 }
 
-static int  load_format_data(t_strategies *strat, t_data *data, t_format_sizes *format_sizes, t_format_data *format_data)
+static inline void	load_block_size(t_directory *dir, t_data *data)
+{
+	dir->total_block_size +=  data->block_nb / 2;
+}
+
+static int	load_format_data(t_strategies *strat, t_data *data, t_format_sizes *format_sizes, t_format_data *format_data)
 {
 	size_t  size = 0;
 
@@ -86,15 +98,34 @@ static int  load_format_data(t_strategies *strat, t_data *data, t_format_sizes *
 	set_max_size(&format_sizes->name, size);
 
 	format_symlink(&format_data->target, data);
+
 	return (OK);
 }
 
-static unsigned int format_mode(char *buffer, t_data *data)
+static unsigned int	format_mode(char *buffer, t_data *data)
 {
-	unsigned int size = 10;
-	char  types[] = {'-', 'd', 'c', 'b', 'p', 'l', 's'};
+	unsigned int	size = 10;
+
+	format_mode_type(buffer, data);
+	format_mode_user(buffer, data);
+	format_mode_group(buffer, data);
+	format_mode_other(buffer, data);	
+	size = format_mode_xattr(buffer, data, size);
+	
+	buffer[size] = '\0';
+
+	return (size);
+}
+
+static inline void	format_mode_type(char *buffer, t_data *data)
+{
+	char	types[] = {'-', 'd', 'c', 'b', 'p', 'l', 's'};
 
 	buffer[0] = types[data->type];
+}
+
+static inline void	format_mode_user(char *buffer, t_data *data)
+{
 	buffer[1] = (data->mode & S_IRUSR) ? 'r' : '-';
 	buffer[2] = (data->mode & S_IWUSR) ? 'w' : '-';
 
@@ -106,7 +137,10 @@ static unsigned int format_mode(char *buffer, t_data *data)
 	{
 		buffer[3] = (data->mode & S_IXUSR) ? 'x' : '-';
 	}
+}
 
+static inline void	format_mode_group(char *buffer, t_data *data)
+{
 	buffer[4] = (data->mode & S_IRGRP) ? 'r' : '-';
 	buffer[5] = (data->mode & S_IWGRP) ? 'w' : '-';
 	
@@ -118,7 +152,10 @@ static unsigned int format_mode(char *buffer, t_data *data)
 	{
 		buffer[6] = (data->mode & S_IXGRP) ? 'x' : '-';
 	}
-	
+}
+
+static inline void	format_mode_other(char *buffer, t_data *data)
+{
 	buffer[7] = (data->mode & S_IROTH) ? 'r' : '-';
 	buffer[8] = (data->mode & S_IWOTH) ? 'w' : '-';
 	
@@ -130,22 +167,22 @@ static unsigned int format_mode(char *buffer, t_data *data)
 	{
 		buffer[9] = (data->mode & S_IXOTH) ? 'x' : '-';
 	}
-	
+}
+
+static inline unsigned int	format_mode_xattr(char *buffer, t_data *data, unsigned int size)
+{
 	if (data->xattr == true)
 	{
 		++size;
 		buffer[10] = '+';
 	}
 	
-	buffer[size] = '\0';
 	return (size);
 }
 
-static unsigned int format_links(char *buffer, t_data *data)
+static unsigned int	format_links(char *buffer, t_data *data)
 {
-	unsigned int  size = 0;
-	size = ft_itoa_dec(data->links, buffer);
-	return (size);
+	return (ft_itoa_dec(data->links, buffer));
 }
 
 static unsigned int format_user(t_strategies *strat, char **buffer, t_data *data)
@@ -162,49 +199,50 @@ static unsigned int format_group(t_strategies *strat, char **buffer, t_data *dat
 
 static unsigned int format_size(char *buffer, t_data *data)
 {
-	unsigned int  size = 0;
+	unsigned int	size = 0;
+
 	if (!(data->type == CHR || data->type == BLK))
 	{
 		size = ft_itoa_dec(data->total_size, buffer);
 	}
+
 	return (size);
 }
 
 static unsigned int format_minor(char *buffer, t_data *data)
 {
-	unsigned int  size = 0;
+	unsigned int	size = 0;
+
 	if (data->type == CHR || data->type == BLK)
 	{
 		size = ft_itoa_dec(minor(data->rdev), buffer);
 	}
+
 	return (size);
 }
 
 static unsigned int format_major(char *buffer, t_data *data)
 {
-	unsigned int  size = 0;
+	unsigned int	size = 0;
+
 	if (data->type == CHR || data->type == BLK)
 	{
 		size = ft_itoa_dec(major(data->rdev), buffer);
 	}
+
 	return (size);
 }
 
 static unsigned int format_time(char *buffer, t_data *data)
 {
-	unsigned int  size = 0;
-	errno = 0;
-	char  *tmp = ctime(&data->time);
-	if (tmp == NULL)
-	{
-		perror("ft_ls: ctime: ");
-		return (0);
-	}
-	char  *time_string = ft_strdup(tmp);
+	unsigned int	size = 0;
+	
+	char	*time_string = get_time_string(&data->time);
 	if (time_string == NULL)
 	{
 		return 0;
 	}
+
 	if (recent(time_string))
 	{
 		size = format_recent_time(buffer, time_string);
@@ -213,7 +251,9 @@ static unsigned int format_time(char *buffer, t_data *data)
 	{
 		size = format_late_time(buffer, time_string);
 	}
+
 	free(time_string);
+	
 	return (size);
 }
 

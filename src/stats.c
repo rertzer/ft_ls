@@ -12,12 +12,12 @@
 
 #include "ft_ls.h"
 
-static int set_type(t_data *data);
+static int	set_type(t_data *data);
 static int	get_type(mode_t	mode);
-static int  add_xattr(t_data *data);
+static int	add_xattr(t_data *data);
 static int	set_symlink_type(t_data *data);
 
-int add_all_stats(t_strategies *strat, t_list *all_paths)
+int	add_all_stats(t_strategies *strat, t_list *all_paths)
 {
 	int		ret = OK;
 	t_data	*data = NULL;
@@ -25,88 +25,86 @@ int add_all_stats(t_strategies *strat, t_list *all_paths)
 	while (all_paths != NULL)
 	{
 		data = (t_data*)all_paths->content;
+
 		ret = add_stats(strat, data);
 		if (ret != OK)
+		{
 			break;
+		}
+		
 		ret = compute_stats(strat, data);
 		if (ret != OK)
+		{
 			break;
-		all_paths = all_paths->next;
+		}
+		
 		if (data->type == LNK)
 		{
 			ret = add_symlink(data);
 		}
-		else
-		{
-			data->target_type = -1;
-		}
+		
+		all_paths = all_paths->next;
 	}
+
 	return (ret);
 }
 
 int add_stats(t_strategies *strat, t_data *data)
 {
-  int ret = OK;
-  struct stat stat_buffer;
-    
-  errno = 0;
-  if (lstat(data->path, &stat_buffer) != 0) {
-    ret = MAJOR_KO;
-    ft_putstr_fd("ft_ls: lstat: ", 2);
-    perror(data->path);
-  }
-  else {
-    data->dev = stat_buffer.st_dev;
-    data->rdev = stat_buffer.st_rdev;
-    data->links = stat_buffer.st_nlink;
-    data->mode = stat_buffer.st_mode;
-    data->uid = stat_buffer.st_uid;
-    data->gid = stat_buffer.st_gid;
-    data->total_size = stat_buffer.st_size;
-    data->block_size = stat_buffer.st_blksize;
-    data->block_nb = stat_buffer.st_blocks;
-    data->time = strat->setTime(&stat_buffer);
-  }
-  ret = add_xattr(data);
-  return (ret);
+	int			ret = OK;
+	struct stat	stat_buffer;
+		
+	errno = 0;
+	if (lstat(data->path, &stat_buffer) != 0)
+	{
+		ret = MAJOR_KO;
+		ft_putstr_fd("ft_ls: lstat: ", 2);
+		perror(data->path);
+	}
+	else
+	{
+		data->dev = stat_buffer.st_dev;
+		data->rdev = stat_buffer.st_rdev;
+		data->links = stat_buffer.st_nlink;
+		data->mode = stat_buffer.st_mode;
+		data->uid = stat_buffer.st_uid;
+		data->gid = stat_buffer.st_gid;
+		data->total_size = stat_buffer.st_size;
+		data->block_size = stat_buffer.st_blksize;
+		data->block_nb = stat_buffer.st_blocks;
+		data->time = strat->setTime(&stat_buffer);
+	}
+	ret = add_xattr(data);
+
+	return (ret);
 }
 
 static int  add_xattr(t_data *data)
 {
 	int	ret = OK;
+
 	errno = 0;
-	ssize_t xattr_nb = listxattr(data->path, NULL, 0);
+	ssize_t	xattr_nb = listxattr(data->path, NULL, 0);
 	if (xattr_nb < 0)
 	{
-		if (errno == ENOENT || errno == ELOOP)
-		{
-			data->xattr = false;
-		}
-		else
-		{
-			ft_putstr_fd("ft_ls: listxattr: ", 2);
-			perror(data->path);
-			ret = MAJOR_KO;
-		}
-  	}
+		ret = xattr_error(data);	
+	}
 	else if (xattr_nb == 16 || xattr_nb == 0)
 	{
-    	data->xattr = false;
-  	}
-  	else
+		data->xattr = false;
+	}
+	else
 	{
-    	data->xattr = true;
-  	}
+		data->xattr = true;
+	}
+
 	return (ret); 
 }
 
 int  compute_stats(t_strategies *strat, t_data *data)
 {
-  (void)strat;
-  int ret = OK;
-  ret = set_type(data);
-
-  return (ret);
+	(void)strat;
+	return(set_type(data));
 }
 
 static int set_type(t_data *data)
@@ -129,6 +127,7 @@ static int	get_type(mode_t	mode)
 {
 	mode_t const modes[] = {S_IFREG, S_IFDIR, S_IFCHR, S_IFBLK, S_IFIFO, S_IFLNK, S_IFSOCK};
 	mode &= S_IFMT;
+
 	for (int i = 0; i < MODES_NB; ++i)
 	{
 		if(mode == modes[i])
@@ -136,10 +135,11 @@ static int	get_type(mode_t	mode)
 			return (i);
 		}
 	}
+	
 	return (ERROR_TYPE);
 }
 
-int  add_symlink(t_data *data)
+int	add_symlink(t_data *data)
 {
 	int	ret = OK;
 	
@@ -148,6 +148,7 @@ int  add_symlink(t_data *data)
 	{
 		return (INTERNAL_KO);
 	}
+
 	errno = 0;
 	ssize_t	size = readlink(data->path, data->target, data->total_size);
 	if (size < 0 || size != (ssize_t)data->total_size)
@@ -155,15 +156,17 @@ int  add_symlink(t_data *data)
 		perror("ft_ls: readlink: ");
 		return (MAJOR_KO);
 	}
+
 	data->target[data->total_size] = '\0';
 	ret = set_symlink_type(data);
+
 	return (ret);
 }
 
 static int	set_symlink_type(t_data *data)
 {
-	int ret = OK;
-	struct stat stat_buffer;
+	int			ret = OK;
+	struct stat	stat_buffer;
     
 	errno = 0;
 	if (stat(data->path, &stat_buffer) != 0)

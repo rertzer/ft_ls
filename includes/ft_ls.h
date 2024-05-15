@@ -55,6 +55,8 @@
 
 typedef enum {REG, DIREC, CHR, BLK, FIFO, LNK, SOCK, ERROR_TYPE=-1} e_type; 
 
+typedef enum {OPT_A, OPT_L, OPT_R, OPT_RR, OPT_T} e_option;
+
 typedef struct {
 	char	name[OPTIONS_NUMBER];
 	bool	value[OPTIONS_NUMBER];
@@ -120,13 +122,12 @@ typedef struct {
 
 typedef struct s_strategies {
 	bool	(*keepEntry)(struct dirent*);
-	bool	(*sorting)(void *, void *);
-	bool	(*othersorting)(void *, void *);
-	bool	(*isdirectory)(t_data *);
+	bool	(*sorting)(t_data*, t_data*);
+	bool	(*othersorting)(t_data*, t_data*);
+	bool	(*isdirectory)(t_data*);
 	time_t	(*setTime)(struct stat*);
 	int		(*recurse)(struct s_strategies*, t_directory*);
 	int		(*format)(struct s_strategies*, t_directory*);
-	bool	default_path;
 	bool	print_path_name;
 	bool	previous_print;
 	t_list*	users[HASH_SIZE];
@@ -146,11 +147,12 @@ bool  get_option(t_options *opt, char arg);
 //strategies
 int set_strategies(t_options *opt, t_strategies *strat);
 //sorting
-int   bubble_sort(t_list* list, bool(*sorting)(void*, void*));
-bool  sort_by_name(void *a, void *b);
-bool  sort_by_name_reverse(void *a, void *b);
-bool  sort_by_time(void *a, void *b);
-bool  sort_by_time_reverse(void *a, void *b);
+int   bubble_sort(t_list* list, bool(*sorting)(t_data*, t_data*));
+bool	sort_by_func(void *a, void *b, bool(*compare)(t_data *a, t_data *b));
+bool  sort_by_name(t_data *a, t_data *b);
+bool  sort_by_name_reverse(t_data *a, t_data *b);
+bool  sort_by_time(t_data *a, t_data *b);
+bool  sort_by_time_reverse(t_data *a, t_data *b);
 //keepentry
 bool  keep_all(struct dirent* entry);
 bool  skip_dot(struct dirent* entry);
@@ -179,6 +181,7 @@ int get_dir_content(t_strategies *strat, t_directory *dir);
 int recent(char *time_string);
 // time
 time_t  last_modif(struct stat *stat_buffer);
+char	*get_time_string(time_t *time);
 // stats
 int add_all_stats(t_strategies *strat, t_list *all_paths);
 int add_stats(t_strategies *strat, t_data *data);
@@ -196,4 +199,5 @@ char *get_user_name(t_strategies *strat, uid_t id);
 char *get_group_name(t_strategies *strat, gid_t id);
 // error handling
 void  print_char_error(char *message, char param);
+int	xattr_error(t_data *data);
 #endif

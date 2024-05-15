@@ -16,3 +16,19 @@ time_t  last_modif(struct stat *stat_buffer)
 {
   return (stat_buffer->st_mtim.tv_sec);
 }
+
+char	*get_time_string(time_t *time)
+{
+	errno = 0;
+	
+	char  *tmp = ctime(time);
+	if (tmp == NULL)
+	{
+		perror("ft_ls: ctime: ");
+		return (NULL);
+	}
+
+	char  *time_string = ft_strdup(tmp);
+
+	return (time_string);
+}

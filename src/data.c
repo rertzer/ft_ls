@@ -61,6 +61,7 @@ t_data  *new_data()
 		data->name = NULL;
 		data->path = NULL;
 		data->target = NULL;
+		data->target_type = -1;
 	}
 	return (data);
 }

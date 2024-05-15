@@ -14,15 +14,19 @@
 
 bool  keep_all(struct dirent* entry)
 {
-  (void)entry;
-  return true;
+	(void)entry;
+
+	return (true);
 }
 
 bool  skip_dot(struct dirent* entry)
 {
-  bool  ret = true;
+	bool	ret = true;
 
-  if (entry->d_name[0] == '.')
-    ret = false;
-  return (ret);
+	if (entry->d_name[0] == '.')
+	{
+		ret = false;
+	}
+
+	return (ret);
 }

@@ -11,69 +11,89 @@
 /* ************************************************************************** */
 
 #include "ft_ls.h"
+static void	option_a(t_strategies *strat, t_options *opt);
+static void	option_l(t_strategies *strat, t_options *opt);
+static void	option_r(t_strategies *strat, t_options *opt);
+static void	option_R(t_strategies *strat, t_options *opt);
+static void	option_t(t_strategies *strat, t_options *opt);
 
 int set_strategies(t_options *opt, t_strategies *strat)
 {
 	strat->setTime = last_modif;
 	strat->othersorting = NULL;
-	strat->default_path = false;
 	strat->previous_print = false;
 	strat->print_path_name = true;
 
-	for (int i = 0; i < OPTIONS_NUMBER; ++i)
+ 	option_a(strat, opt);
+	option_l(strat, opt);
+	option_r(strat, opt);
+	option_R(strat, opt);
+	option_t(strat, opt);
+
+	return OK;
+}
+
+static void	option_a(t_strategies *strat, t_options *opt)
+{
+	if (opt->value[OPT_A] == true)
 	{
-		switch(opt->name[i])
+		strat->keepEntry = keep_all;
+	}
+	else
+	{
+		strat->keepEntry = skip_dot;
+	}
+}
+
+static void	option_l(t_strategies *strat, t_options *opt)
+{
+	if (opt->value[OPT_L] == true)
+	{
+		strat->format = longlist;
+		strat->isdirectory = is_directory_longlist;
+	}
+	else
+	{
+		strat->format = simple;
+		strat->isdirectory = is_directory_simple;
+	}
+}
+
+static void	option_r(t_strategies *strat, t_options *opt)
+{
+	if (opt->value[OPT_R] == true)
+	{
+		strat->sorting = sort_by_name_reverse;
+	}
+	else
+	{
+		strat->sorting = sort_by_name;
+	}
+}
+
+static void	option_R(t_strategies *strat, t_options *opt)
+{
+	if (opt->value[OPT_RR] == true)
+	{
+		strat->recurse = recursive;
+	}
+	else
+	{
+		strat->recurse = no_recursion;
+	}
+}
+
+static void	option_t(t_strategies *strat, t_options *opt)
+{
+	if (opt->value[OPT_T] == true)
+	{
+		if (opt->value[OPT_R] == true)
 		{
-			case 'a':
-				if (opt->value[i] == true){
-				strat->keepEntry = keep_all;
-				}
-				else {
-				strat->keepEntry = skip_dot;
-				}
-				break;
-			case 'l':
-				if (opt->value[i] == true){
-				strat->format = longlist;
-				strat->isdirectory = is_directory_longlist;
-				}
-				else{
-				strat->format = simple;
-				strat->isdirectory = is_directory_simple;
-				}
-				break;
-			case 'r':
-				if (opt->value[i] == true){
-				strat->sorting = sort_by_name_reverse;
-				}
-				else{
-				strat->sorting = sort_by_name;
-				}
-				break;
-			case 't':
-				if (opt->value[i] == true)
-				{
-					if (opt->value[2] == true)
-					{
-						strat->othersorting = sort_by_time_reverse;
-					}
-					else
-					{
-						strat->othersorting = sort_by_time;
-	  				}
-				}
-				break;
-			case 'R':
-				if (opt->value[i] == true){
-				strat->recurse = recursive;
-				}
-				else{
-				strat->recurse = no_recursion;
-				}
-				break;
-			default:
-				break;
+			strat->othersorting = sort_by_time_reverse;
+		}
+		else
+		{
+			strat->othersorting = sort_by_time;
 		}
 	}
-	return OK;
 }

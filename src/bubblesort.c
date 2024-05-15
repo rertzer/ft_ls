@@ -14,7 +14,7 @@
 
 static inline void	swap(t_list *current);
 
-int bubble_sort(t_list *lst, bool(*ordered)(void *a, void *b))
+int bubble_sort(t_list *lst, bool(*ordered)(t_data *a, t_data *b))
 {
 	bool    sorted = false;
 	t_list  *current = lst;
@@ -29,7 +29,7 @@ int bubble_sort(t_list *lst, bool(*ordered)(void *a, void *b))
 		current = lst;
 		while(current)
 		{
-			if (current->next && ! ordered(current->content, current->next->content))
+			if (current->next && ! sort_by_func(current->content, current->next->content, ordered))
 			{
 				swap(current);
 				sorted = false;

@@ -22,3 +22,20 @@ void  print_char_error(char *message, char param)
 	ft_putstr_fd(message, 2);
 	ft_putstr_fd(param_string, 2);
 }
+
+int	xattr_error(t_data *data)
+{
+	int	ret = OK;
+
+	if (errno == ENOENT || errno == ELOOP)
+	{
+		data->xattr = false;
+	}
+	else
+	{
+		ft_putstr_fd("ft_ls: listxattr: ", 2);
+		perror(data->path);
+		ret = MAJOR_KO;
+	}
+	return (ret);
+}

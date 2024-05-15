@@ -13,6 +13,12 @@
 #include "ft_ls.h"
 
 
+static inline void	add_to_reg_files(t_directory *reg_files, t_list **files_prev, t_list *current);
+static inline void	remove_from_all_paths(t_list **all_paths, t_list *path_prev, t_list *current);
+static inline void	reset_next(t_list **next,t_list *current);
+static inline void	next_path(t_list **path_prev, t_list **next, t_list *current);
+static void			handle_reg_files(t_strategies *strat, t_directory *reg_files);
+
 int	process_all_paths(t_strategies *strat, t_list **all_paths)
 {
 	int	ret = OK;
@@ -28,17 +34,18 @@ int	process_all_paths(t_strategies *strat, t_list **all_paths)
 			ret = list_all_path(strat, *all_paths);
 		}
 	}
+
 	return (ret);
 }
 
-int list_all_files(t_strategies *strat, t_list **all_paths)
+int	list_all_files(t_strategies *strat, t_list **all_paths)
 {
-	int ret = OK;
-	t_directory reg_files;
-	t_list *current = *all_paths;
-	t_list *files_prev = NULL;
-	t_list *path_prev = NULL;
-	t_list  *next = NULL;
+	int			ret = OK;
+	t_directory	reg_files;
+	t_list		*current = *all_paths;
+	t_list		*files_prev = NULL;
+	t_list		*path_prev = NULL;
+	t_list		*next = NULL;
 
 	init_dir(&reg_files);
 
@@ -47,68 +54,100 @@ int list_all_files(t_strategies *strat, t_list **all_paths)
 		t_data* data = (t_data*)current->content;
 		if (! strat->isdirectory(data))
 		{
-			if (files_prev == NULL)
-				reg_files.content = current;
-			else
-			{
-				files_prev->next = current;
-			}
-			files_prev = current;
-			if (path_prev == NULL)
-			{
-				*all_paths = current->next;
-			}
-			else
-			{
-				path_prev->next = current->next;
-			}
-			next = current->next;
-			current->next = NULL;
+			add_to_reg_files(&reg_files, &files_prev, current);
+			remove_from_all_paths(all_paths, path_prev, current);
+			reset_next(&next, current);
 			++reg_files.entry_nb;
 		}
 		else
 		{
-			path_prev = current;
-			next = current->next;
+			next_path(&path_prev, &next, current);
 		}
 		current = next;
 	}
-	if (reg_files.content != NULL)
-	{
-		strat->format(strat, &reg_files);
-		free_directory(&reg_files);
-	}
+	handle_reg_files(strat, &reg_files);
 	return (ret);
 }
 
-int list_all_path(t_strategies *strat, t_list *all_paths)
+static inline void	add_to_reg_files(t_directory *reg_files, t_list **files_prev, t_list *current)
 {
-  int   ret = OK;
-  char  *path = NULL;
-
-  while (all_paths != NULL)
-  {
-    t_data  *data = (t_data*)all_paths->content;
-    path = ft_strdup(data->path);
-    if (path == NULL)
-    {
-      ret = MAJOR_KO;
-      break;
-    }
-    ret = list_path(strat, path);
-    if (ret != OK)
-      break;
-    all_paths = all_paths->next;
-  }
-    return (ret);
+	if (*files_prev == NULL)
+	{
+		reg_files->content = current;
+	}
+	else
+	{
+		(*files_prev)->next = current;
+	}
+	*files_prev = current;
 }
 
-int  default_path(t_strategies *strat)
+static inline void	remove_from_all_paths(t_list **all_paths, t_list *path_prev, t_list *current)
+{
+	if (path_prev == NULL)
+	{
+		*all_paths = current->next;
+	}
+	else
+	{
+		path_prev->next = current->next;
+	}
+}
+
+static inline void	reset_next(t_list **next, t_list *current)
+{
+	*next = current->next;
+	current->next = NULL;
+}
+
+static inline void	next_path(t_list **path_prev, t_list **next, t_list *current)
+{
+	*path_prev = current;
+	*next = current->next;
+}
+
+static void	handle_reg_files(t_strategies *strat, t_directory *reg_files)
+{
+	if (reg_files->content != NULL)
+	{
+		strat->format(strat, reg_files);
+		free_directory(reg_files);
+	}
+}
+
+int	list_all_path(t_strategies *strat, t_list *all_paths)
+{
+	int		ret = OK;
+	char	*path = NULL;
+
+	while (all_paths != NULL)
+	{
+		t_data	*data = (t_data*)all_paths->content;
+		
+		path = ft_strdup(data->path);
+		if (path == NULL)
+		{
+			ret = INTERNAL_KO;
+			break;
+		}
+
+		ret = list_path(strat, path);
+		if (ret != OK)
+		{
+			break;
+		}
+
+		all_paths = all_paths->next;
+	}
+
+	return (ret);
+}
+
+int	default_path(t_strategies *strat)
 {
 	int	ret = OK;
-	char	*path = strdup(".");
 
-	strat->default_path = true; 
+	char	*path = strdup(".");
 	if (path == NULL)
 	{
 		ret = INTERNAL_KO;
@@ -117,13 +156,15 @@ int  default_path(t_strategies *strat)
 	{
 		ret = list_path(strat, path);
 	}
+
 	return (ret);
 }
 
-int list_path(t_strategies *strat, char* path)
+int	list_path(t_strategies *strat, char* path)
 {
-	int ret = OK;
-	t_directory dir;
+	int			ret = OK;
+	t_directory	dir;
+
 	init_dir(&dir);
 	dir.path = path;
 
@@ -134,7 +175,9 @@ int list_path(t_strategies *strat, char* path)
 		bubble_sort(dir.content, strat->othersorting);
 		strat->format(strat, &dir);
 	}
+
 	ret = strat->recurse(strat, &dir);
 	free_directory(&dir);
+	
 	return (ret);
 }

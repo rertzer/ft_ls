@@ -37,7 +37,7 @@ int main(int argc, char **argv)
 	init_ids(&strat);
 	int	path_nb = ft_lstsize(all_paths);
 
-	if (path_nb < 2)
+	if (path_nb < 2 && get_option(&opt, 'R') == false)
 	{
 		strat.print_path_name = false;
 	}

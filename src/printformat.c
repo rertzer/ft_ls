@@ -26,21 +26,22 @@ static unsigned int	print_format_ending(char *dest, t_format_data *format_data, 
 static void			print_format_symlink(t_format_data *format_data);
 static unsigned int	get_end_pos(t_format_sizes *format_sizes);
 
-int  print_all_format_data(t_strategies *strat, t_directory *dir, t_format_sizes *format_sizes, t_format_data *all_format_data)
+int	print_all_format_data(t_strategies *strat, t_directory *dir, t_format_sizes *format_sizes, t_format_data *all_format_data)
 {
-  for(unsigned int i = 0; i < dir->entry_nb; ++i)
-  {
-    print_format_data(strat, &all_format_data[i], format_sizes);
-  }
-  return (OK);
+	for (unsigned int i = 0; i < dir->entry_nb; ++i)
+	{
+		print_format_data(strat, &all_format_data[i], format_sizes);
+	}
+
+	return (OK);
 }
 
-static int print_format_data(t_strategies *strat, t_format_data *format_data, t_format_sizes *format_sizes)
+static int	print_format_data(t_strategies *strat, t_format_data *format_data, t_format_sizes *format_sizes)
 {
 	(void)strat;
-	unsigned int  end_pos = get_end_pos(format_sizes);
-	unsigned int  offset = 0;
-	char  buffer[1024];
+	unsigned int	end_pos = get_end_pos(format_sizes);
+	unsigned int	offset = 0;
+	char			buffer[1024];
 
 	ft_memset(buffer, ' ', end_pos);
 
@@ -99,7 +100,6 @@ static unsigned int	print_format_size(char *dest, t_format_data *format_data, t_
 {
 	unsigned int	buffer_size = ft_strlen(format_data->size);
 	
-
 	offset += format_sizes->size - buffer_size;
 	ft_buffercpy(&dest[offset], format_data->size);
 	offset += buffer_size + 1;
@@ -110,7 +110,6 @@ static unsigned int	print_format_size(char *dest, t_format_data *format_data, t_
 static unsigned int	print_format_device(char *dest, t_format_data *format_data, t_format_sizes *format_sizes, unsigned int offset)
 {
 	unsigned int	buffer_size = ft_strlen(format_data->major);
-	
 	offset += format_sizes->major - buffer_size;
 	ft_buffercpy(&dest[offset], format_data->major);
 	offset += buffer_size;
@@ -141,6 +140,7 @@ static unsigned int	print_format_name(char *dest, t_format_data *format_data, un
 static unsigned int	print_format_ending(char *dest, t_format_data *format_data, unsigned int offset)
 {
 	int	shift = 0;
+
 	if (format_data->mode[0] == 'l')
 	{
 		ft_buffercpy(&dest[offset + 1], "->");
@@ -153,6 +153,7 @@ static unsigned int	print_format_ending(char *dest, t_format_data *format_data, 
 		dest[offset + 1] = '\0';
 		shift = 2;
 	}
+
 	return (shift);
 }
 

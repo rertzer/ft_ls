@@ -23,7 +23,9 @@ int get_dir_content(t_strategies *strat, t_directory *dir)
 	DIR	*dir_stream = opendir(dir->path);
 	if (dir_stream == NULL)
 	{
-		perror("ft_ls: opendir: ");
+		ft_putstr_fd("ls: cannot open directory '", 2);
+		ft_putstr_fd(dir->path, 2);
+		perror("'");
 		ret = MINOR_KO;
 	}
 	else
@@ -37,7 +39,7 @@ int get_dir_content(t_strategies *strat, t_directory *dir)
 			if (strat->keepEntry(dir_entry))
 			{
 				ret = add_entry(strat, dir, dir_entry);
-				if (ret == INTERNAL_ERROR)
+				if (ret == INTERNAL_KO)
 				{
 					break;
 				}
@@ -46,7 +48,9 @@ int get_dir_content(t_strategies *strat, t_directory *dir)
 		if (errno != 0 && ret == OK)
 		{
 			ret = MAJOR_KO;
-			perror("ft_ls: readdir: ");
+			ft_putstr_fd("ls: cannot read directory '", 2);
+			ft_putstr_fd(dir->path, 2);
+			perror("'");
 		}
 	}
 	closedir(dir_stream);
@@ -55,7 +59,7 @@ int get_dir_content(t_strategies *strat, t_directory *dir)
      
 static int add_entry(t_strategies *strat, t_directory *dir, struct dirent *dir_entry)
 {
-	int ret = OK;
+	int	ret = OK;
 
 	ret = add_new_data(&dir->content, dir_entry->d_name, dir->path);
 	if (ret != OK)
@@ -77,5 +81,6 @@ static int add_entry(t_strategies *strat, t_directory *dir, struct dirent *dir_e
 	{
 		ret = add_symlink((t_data*)dir->content->content);
 	}
+
 	return (ret);
 }
