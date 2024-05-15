@@ -50,6 +50,7 @@ int main(int argc, char **argv)
 		if (ret == OK)
 		{
 			bubble_sort(all_paths, strat.sorting);
+			bubble_sort(all_paths, strat.othersorting);
 			ret = list_all_files(&strat, &all_paths);
 			if (ret == OK)
 			ret = list_all_path(&strat, all_paths);

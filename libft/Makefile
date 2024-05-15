@@ -23,6 +23,7 @@ SOURCES := ft_atoi.c	\
 	ft_itoa.c	\
 	ft_itoa_dec.c \
 	ft_memchr.c	\
+	ft_malloc.c \
 	ft_memcmp.c	\
 	ft_memcpy.c	\
 	ft_memmove.c	\

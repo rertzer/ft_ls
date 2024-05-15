@@ -143,13 +143,12 @@ int  add_symlink(t_data *data)
 {
 	int	ret = OK;
 	
-	errno = 0;
-	data->target = malloc(sizeof(char) * (data->total_size + 1));
+	data->target = ft_malloc(sizeof(char) * (data->total_size + 1));
 	if (data->target == NULL)
 	{
-		perror("ft_ls: malloc: ");
-		return (MAJOR_KO);
+		return (INTERNAL_KO);
 	}
+	errno = 0;
 	ssize_t	size = readlink(data->path, data->target, data->total_size);
 	if (size < 0 || size != (ssize_t)data->total_size)
 	{

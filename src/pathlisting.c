@@ -111,6 +111,7 @@ int list_path(t_strategies *strat, char* path)
   if (ret == OK)
   {
     bubble_sort(dir.content, strat->sorting);
+    bubble_sort(dir.content, strat->othersorting);
     strat->format(strat, &dir);
       }
   ret = strat->recurse(strat, &dir);

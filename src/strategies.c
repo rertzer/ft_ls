@@ -15,6 +15,7 @@
 int set_strategies(t_options *opt, t_strategies *strat)
 {
 	strat->setTime = last_modif;
+	strat->othersorting = NULL;
 	strat->default_path = false;
 	strat->previous_print = false;
 	strat->print_path_name = true;
@@ -54,11 +55,11 @@ int set_strategies(t_options *opt, t_strategies *strat)
 				{
 					if (opt->value[2] == true)
 					{
-						strat->sorting = sort_by_time_reverse;
+						strat->othersorting = sort_by_time_reverse;
 					}
 					else
 					{
-						strat->sorting = sort_by_time;
+						strat->othersorting = sort_by_time;
 	  				}
 				}
 				break;

@@ -81,6 +81,7 @@ t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void(*del)(void *));
 char	**ft_split_clean(char **splited);
 char	*ft_buffercpy(char *dest, const char *src);
 char	*ft_bufferncpy(char *dest, const char *src, unsigned int n);
+void	*ft_malloc(size_t size);
 char	*ft_strcpy(char *dest, const char *src);
 char	*ft_pathjoin(char const *s1, char const *s2);
 bool	ft_is_inset(const char c, const char *set);

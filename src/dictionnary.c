@@ -18,12 +18,10 @@ static void  del_ids(void *ids);
 int insert_key(t_list *dict[HASH_SIZE], unsigned int key, char *value)
 {
 	unsigned int hash = get_hash(key);
-	errno = 0;
-	t_id  *newid = malloc(sizeof(t_id));
+	t_id  *newid = ft_malloc(sizeof(t_id));
 	if (newid == NULL)
 	{
-		perror("ft_ls: malloc: ");
-		return (MAJOR_KO);
+		return (INTERNAL_KO);
 	}
 	newid->id = key;
 	newid->value = value;
@@ -31,7 +29,7 @@ int insert_key(t_list *dict[HASH_SIZE], unsigned int key, char *value)
 	if (newlst == NULL)
 	{
 		free(newid);
-		return (MAJOR_KO);
+		return (INTERNAL_KO);
 	}
 	ft_lstadd_front(&dict[hash], newlst);
 	return (OK);

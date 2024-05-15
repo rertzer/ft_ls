@@ -33,3 +33,27 @@ bool  sort_by_name_reverse(void *a, void *b)
     ordered = false;
   return ordered;
 }
+
+bool	sort_by_time(void *a, void *b)
+{
+	bool  ordered = true;
+	t_data  *data_a = (t_data*)a;
+	t_data  *data_b = (t_data*)b;
+
+	if (data_a->time < data_b->time)
+		ordered = false;
+	return ordered;
+
+}
+
+bool	sort_by_time_reverse(void *a, void *b)
+{
+	bool  ordered = true;
+	t_data  *data_a = (t_data*)a;
+	t_data  *data_b = (t_data*)b;
+
+	if (data_a->time > data_b->time)
+		ordered = false;
+	return ordered;
+
+}

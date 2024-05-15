@@ -39,6 +39,7 @@
 # define	OK 0
 # define	MINOR_KO 1
 # define	MAJOR_KO 2
+# define	INTERNAL_KO 3
 # define	ERROR -1
 # define	TRUE 1
 # define	FALSE 0
@@ -120,6 +121,7 @@ typedef struct {
 typedef struct s_strategies {
 	bool	(*keepEntry)(struct dirent*);
 	bool	(*sorting)(void *, void *);
+	bool	(*othersorting)(void *, void *);
 	bool	(*isdirectory)(t_data *);
 	time_t	(*setTime)(struct stat*);
 	int		(*recurse)(struct s_strategies*, t_directory*);

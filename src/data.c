@@ -52,16 +52,12 @@ static  int add_data_path(t_data *data, char const * const name, char const * co
 
 t_data  *new_data()
 {
-	errno = 0;
-	t_data *data = malloc(sizeof(t_data));
+	t_data *data = ft_malloc(sizeof(t_data));
 	if (data != NULL)
 	{
 		data->name = NULL;
 		data->path = NULL;
 		data->target = NULL;
-	}
-	else {
-		perror("ft_ls: malloc: ");
 	}
 	return (data);
 }

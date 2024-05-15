@@ -17,6 +17,11 @@ int bubble_sort(t_list *lst, bool(*ordered)(void *a, void *b))
   bool    sorted = false;
   void    *tmp = NULL;
   t_list  *current = lst;
+
+	if (ordered == NULL)
+	{
+		return (OK);
+	}
   while (sorted == false)
   {
     sorted = true;
