@@ -14,7 +14,6 @@
 
 static void	init_options(t_options *opt);
 static int	parse_arg(t_options *opt, t_list **paths, char *arg);
-static int	parse_option(t_options *opt, char arg);
 
 int	parse_all_args(t_options *opt, t_list **paths, int argc, char **argv)
 {
@@ -35,7 +34,7 @@ int	parse_all_args(t_options *opt, t_list **paths, int argc, char **argv)
 
 static void	init_options(t_options *opt)
 {
-	char	tmp[] = {'a', 'l', 'r', 'R', 't'};
+	char	tmp[] = {OPTIONS};
 
 	for (int i = 0; i < OPTIONS_NUMBER; ++i)
 	{
@@ -55,37 +54,19 @@ static int	parse_arg(t_options *opt, t_list **paths, char *arg)
 
 	if (arg[0] == '-')
 	{
-		for (int i = 1; arg[i] != '\0'; ++i)
+		if (arg[1] == '-')
 		{
-			ret = parse_option(opt, arg[i]);
-			if (ret != OK)
-			{ 
-				print_char_error("invalid option -- ", arg[i]);
-				break;
-			}
+			ret = parse_long_option(opt, arg);
+		}
+		else
+		{
+			ret = parse_short_option(opt, arg);
 		}
 	}
 	else
 	{
 		ret = add_new_data(paths, arg, NULL);
 	}
-	return (ret);
-}
-
-static int	parse_option(t_options *opt, char arg)
-{
-	int	ret = MAJOR_KO;
-
-	for (int i = 0; i < OPTIONS_NUMBER; ++i)
-	{
-		if (arg == opt->name[i])
-		{
-		opt->value[i] = true;
-		ret = OK;
-		break;
-		}
-	}
-
 	return (ret);
 }
 

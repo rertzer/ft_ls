@@ -11,29 +11,8 @@
 /* ************************************************************************** */
 
 #include "ft_ls.h"
-static void	option_a(t_strategies *strat, t_options *opt);
-static void	option_l(t_strategies *strat, t_options *opt);
-static void	option_r(t_strategies *strat, t_options *opt);
-static void	option_R(t_strategies *strat, t_options *opt);
-static void	option_t(t_strategies *strat, t_options *opt);
 
-int set_strategies(t_options *opt, t_strategies *strat)
-{
-	strat->setTime = last_modif;
-	strat->othersorting = NULL;
-	strat->previous_print = false;
-	strat->print_path_name = true;
-
- 	option_a(strat, opt);
-	option_l(strat, opt);
-	option_r(strat, opt);
-	option_R(strat, opt);
-	option_t(strat, opt);
-
-	return OK;
-}
-
-static void	option_a(t_strategies *strat, t_options *opt)
+void	option_a(t_strategies *strat, t_options *opt)
 {
 	if (opt->value[OPT_A] == true)
 	{
@@ -45,7 +24,7 @@ static void	option_a(t_strategies *strat, t_options *opt)
 	}
 }
 
-static void	option_l(t_strategies *strat, t_options *opt)
+void	option_l(t_strategies *strat, t_options *opt)
 {
 	if (opt->value[OPT_L] == true)
 	{
@@ -59,7 +38,7 @@ static void	option_l(t_strategies *strat, t_options *opt)
 	}
 }
 
-static void	option_r(t_strategies *strat, t_options *opt)
+void	option_r(t_strategies *strat, t_options *opt)
 {
 	if (opt->value[OPT_R] == true)
 	{
@@ -71,7 +50,7 @@ static void	option_r(t_strategies *strat, t_options *opt)
 	}
 }
 
-static void	option_R(t_strategies *strat, t_options *opt)
+void	option_R(t_strategies *strat, t_options *opt)
 {
 	if (opt->value[OPT_RR] == true)
 	{
@@ -83,7 +62,7 @@ static void	option_R(t_strategies *strat, t_options *opt)
 	}
 }
 
-static void	option_t(t_strategies *strat, t_options *opt)
+void	option_t(t_strategies *strat, t_options *opt)
 {
 	if (opt->value[OPT_T] == true)
 	{

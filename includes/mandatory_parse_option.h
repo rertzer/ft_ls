@@ -1,18 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   bonus.h                                            :+:      :+:    :+:   */
+/*   mandatory_parse_option.h                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rertzer <rertzer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/06 13:32:25 by rertzer           #+#    #+#             */
-/*   Updated: 2024/05/06 13:32:32 by rertzer          ###   ########.fr       */
+/*   Created: 2024/05/16 11:21:52 by rertzer           #+#    #+#             */
+/*   Updated: 2024/05/16 11:21:53 by rertzer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef BONUS_H
-# define BONUS_H
+#ifndef MANDATORY_PARSE_OPTION_H
+# define MANDATORY_PARSE_OPTION_H
 
-# define LONG_OPTIONS_NUMBER 2
+# define OPTIONS_NUMBER 5
+# define OPTIONS "alrRt"
+# define LONG_OPTIONS_NB 0
+# define LONG_OPTIONS {} 
 
-#endif
+typedef enum {OPT_A, OPT_L, OPT_R, OPT_RR, OPT_T} e_option;
+
+typedef struct {
+	char	name[OPTIONS_NUMBER];
+	bool	value[OPTIONS_NUMBER];
+} t_options;
+
+
+
+#endif // MANDATORY_PARSE_OPTION_H
+

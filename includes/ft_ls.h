@@ -14,25 +14,25 @@
 # define FT_LS_H
 
 /*debug */
-#include <stdio.h>
+# include <stdio.h>
 
 /*------*/
 
-#include <dirent.h>
-#include <errno.h>
-#include <fcntl.h>
-#include <grp.h>
-#include <pwd.h>
-#include <stdio.h>
-#include <stdbool.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
-#include <unistd.h>
-#include <sys/sysmacros.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <sys/xattr.h>
+# include <dirent.h>
+# include <errno.h>
+# include <fcntl.h>
+# include <grp.h>
+# include <pwd.h>
+# include <stdio.h>
+# include <stdbool.h>
+# include <stdlib.h>
+# include <string.h>
+# include <time.h>
+# include <unistd.h>
+# include <sys/sysmacros.h>
+# include <sys/stat.h>
+# include <sys/types.h>
+# include <sys/xattr.h>
 
 #include "../libft/libft.h"
 
@@ -46,21 +46,13 @@
 
 # define  FT_LS_BLOCK_SIZE 16384
 
-//mandatory
-# define OPTIONS_NUMBER 5
 # define MODES_NB 7
 # define HASH_SIZE 512
 # define HASH_A 2654435769
 # define HASH_SHIFT 23
 
+
 typedef enum {REG, DIREC, CHR, BLK, FIFO, LNK, SOCK, ERROR_TYPE=-1} e_type; 
-
-typedef enum {OPT_A, OPT_L, OPT_R, OPT_RR, OPT_T} e_option;
-
-typedef struct {
-	char	name[OPTIONS_NUMBER];
-	bool	value[OPTIONS_NUMBER];
-} t_options;
 
 typedef struct {
 	unsigned int	id;
@@ -134,6 +126,11 @@ typedef struct s_strategies {
 	t_list*	groups[HASH_SIZE];
 }  t_strategies;
 
+# ifdef FT_LS_BONUS
+#  include "ft_ls_bonus.h"
+# else
+#  include "ft_ls_mandatory.h"
+# endif // !FT_LS_BONUS 
 
 // data handling
 int add_new_data(t_list **lst, char const * const name, char const * const path);
@@ -144,8 +141,16 @@ bool	is_directory_longlist(t_data *data);
 // option handler
 int   parse_all_args(t_options *opt, t_list **paths, int argc, char **argv);
 bool  get_option(t_options *opt, char arg);
+int	parse_long_option(t_options *opt, char *arg);
+int	parse_short_option(t_options *opt, char *arg);
+int	parse_option(t_options *opt, char arg);
 //strategies
 int set_strategies(t_options *opt, t_strategies *strat);
+void	option_a(t_strategies *strat, t_options *opt);
+void	option_l(t_strategies *strat, t_options *opt);
+void	option_r(t_strategies *strat, t_options *opt);
+void	option_R(t_strategies *strat, t_options *opt);
+void	option_t(t_strategies *strat, t_options *opt);
 //sorting
 int   bubble_sort(t_list* list, bool(*sorting)(t_data*, t_data*));
 bool	sort_by_func(void *a, void *b, bool(*compare)(t_data *a, t_data *b));
@@ -199,5 +204,6 @@ char *get_user_name(t_strategies *strat, uid_t id);
 char *get_group_name(t_strategies *strat, gid_t id);
 // error handling
 void  print_char_error(char *message, char param);
+void	print_error_msg(char *message, char *param);
 int	xattr_error(t_data *data);
 #endif

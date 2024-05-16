@@ -1,17 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mandatory.h                                        :+:      :+:    :+:   */
+/*   mandatory_set_strategies.c                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rertzer <rertzer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/06 13:32:05 by rertzer           #+#    #+#             */
-/*   Updated: 2024/05/06 13:32:13 by rertzer          ###   ########.fr       */
+/*   Created: 2024/05/16 10:37:30 by rertzer           #+#    #+#             */
+/*   Updated: 2024/05/16 10:37:34 by rertzer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MANDATORY_H
-# define MANDATORY_H
+#include "ft_ls.h"
 
+int set_strategies(t_options *opt, t_strategies *strat)
+{
+	strat->setTime = last_modif;
+	strat->othersorting = NULL;
+	strat->previous_print = false;
+	strat->print_path_name = true;
 
-#endif
+ 	option_a(strat, opt);
+	option_l(strat, opt);
+	option_r(strat, opt);
+	option_R(strat, opt);
+	option_t(strat, opt);
+
+	return OK;
+}
+

@@ -3,11 +3,14 @@ FLAGS := -Wall -Wextra -Werror -g3
 
 NAME := ft_ls 
 
+NAME_BONUS := ft_ls_bonus
+
 LIBFT_DIR := libft/
 
 SRC_DIR := src/
 
 OBJ_DIR := obj/
+OBJ_DIR_BONUS := obj_bonus/
 
 INC_DIR := includes/
 
@@ -35,6 +38,25 @@ SOURCES := \
 	dircontent.c \
 	main.c
 
+SOURCES_MANDATORY := \
+	mandatory_parse_option.c \
+	mandatory_set_strategies.c
+
+SOURCES_BONUS := \
+	bonus_parse_option.c \
+	bonus_set_strategies.c \
+	bonus_strategies.c
+
+SOURCES_BONUS += $(SOURCES)
+
+OBJ_BONUS := $(SOURCES_BONUS:.c=.o)
+OBJS_BONUS := $(addprefix $(OBJ_DIR_BONUS), $(OBJ_BONUS))
+DEPS_BONUS := $(OBJS_BONUS:.o=.d)
+
+OBJ_MANDATORY := $(SOURCES_MANDATORY:.c=.o)
+OBJS_MANDATORY := $(addprefix $(OBJ_DIR), $(OBJ_MANDATORY))
+DEPS_MANDATORY := $(OBJS_MANDATORY:.o=.d)
+
 OBJ := $(SOURCES:.c=.o)
 OBJS := $(addprefix $(OBJ_DIR), $(OBJ))
 DEPS := $(OBJS:.o=.d)
@@ -42,29 +64,44 @@ DEPS := $(OBJS:.o=.d)
 
 all: $(NAME) 
 
-bonus: $(NAME)
+bonus: $(NAME_BONUS)
+
+$(OBJ_DIR_BONUS)%.o: $(SRC_DIR)%.c
+	$(CC) $(FLAGS) -DFT_LS_BONUS -c -MMD $< -o $@ -I $(INC_DIR) -I $(LIBFT_DIR) 
 
 $(OBJ_DIR)%.o: $(SRC_DIR)%.c
 	$(CC) $(FLAGS) -c -MMD $< -o $@ -I $(INC_DIR) -I $(LIBFT_DIR) 
 
-$(NAME): $(OBJ_DIR) $(LIBFT) $(OBJS)
-	$(CC) $(FLAGS) -o  $@ $(OBJS) $(LIBFT) -lreadline
+$(NAME): $(OBJ_DIR) $(LIBFT) $(OBJS) $(OBJS_MANDATORY)
+	$(CC) $(FLAGS) -o $@ $(OBJS) $(OBJS_MANDATORY) $(LIBFT)
+
+$(NAME_BONUS): $(OBJ_DIR_BONUS) $(LIBFT) $(OBJS_BONUS)
+	$(CC) $(FLAGS) -o $@ $(OBJS_BONUS) $(LIBFT)
 
 $(OBJ_DIR):
 	mkdir  $(OBJ_DIR)
+
+$(OBJ_DIR_BONUS):
+	mkdir  $(OBJ_DIR_BONUS)
 
 $(LIBFT):
 	make -C $(LIBFT_DIR) bonus
 
 clean:
 	rm -f $(OBJS)
+	rm -f $(OBJS_BONUS)
+	rm -f $(OBJS_MANDATORY)
 	rm -f $(DEPS)
+	rm -f $(DEPS_BONUS)
+	rm -f $(DEPS_MANDATORY)
 	rm -fd $(OBJ_DIR)
+	rm -fd $(OBJ_DIR_BONUS)
 	make -C $(LIBFT_DIR) clean
 
 fclean: clean 
 	make -C $(LIBFT_DIR) fclean
 	rm -f $(NAME)
+	rm -f $(NAME_BONUS)
 
 re: fclean all
 
