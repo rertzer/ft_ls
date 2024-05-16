@@ -1,31 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mandatory_set_strategies.c                         :+:      :+:    :+:   */
+/*   bonus_loadformat.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rertzer <rertzer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/16 10:37:30 by rertzer           #+#    #+#             */
-/*   Updated: 2024/05/16 10:37:34 by rertzer          ###   ########.fr       */
+/*   Created: 2024/05/16 13:42:31 by rertzer           #+#    #+#             */
+/*   Updated: 2024/05/16 13:42:33 by rertzer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_ls.h"
+# include "ft_ls.h"
 
-int set_strategies(t_options *opt, t_strategies *strat)
+
+unsigned int	format_name_color(char **buffer, t_data *data)
 {
-	strat->setTime = last_modif;
-	strat->formatname = formatname; 
-	strat->othersorting = NULL;
-	strat->previous_print = false;
-	strat->print_path_name = true;
 
- 	option_a(strat, opt);
-	option_l(strat, opt);
-	option_r(strat, opt);
-	option_R(strat, opt);
-	option_t(strat, opt);
-
-	return OK;
 }
 

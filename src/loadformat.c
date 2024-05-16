@@ -272,7 +272,7 @@ static unsigned int format_late_time(char *buffer, char *time_string)
 	buffer[12] = '\0';
 	return (12);
 }
-static unsigned int	format_name(char **buffer, t_data *data)
+unsigned int	format_name(char **buffer, t_data *data)
 {
 	*buffer = data->name;
 	return (ft_strlen(*buffer));

@@ -120,6 +120,7 @@ typedef struct s_strategies {
 	time_t	(*setTime)(struct stat*);
 	int		(*recurse)(struct s_strategies*, t_directory*);
 	int		(*format)(struct s_strategies*, t_directory*);
+	unsigned int	(*format_name)(char**, t_data*);
 	bool	print_path_name;
 	bool	previous_print;
 	t_list*	users[HASH_SIZE];
@@ -167,6 +168,7 @@ int recursive(t_strategies *strat, t_directory *dir);
 // formating
 int longlist(t_strategies *strat, t_directory *dir);
 int simple(t_strategies *strat, t_directory *dir);
+unsigned int	format_name(char **buffer, t_data *data);
 //load format
 int  load_all_format_data(t_strategies *strat, t_directory *dir, t_format_sizes *format_sizes, t_format_data * all_format_data);
 // print format
