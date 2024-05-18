@@ -23,6 +23,8 @@
 # define WHT "\x1b[0;37m"
 # define RESET "\x1b[0m"
 
+#define RESET_SIZE 7
+
 #define BG_BLACK   "\x1b[40m"
 #define BG_RED     "\x1b[41m"
 #define BG_GREEN   "\x1b[42m"
@@ -38,7 +40,7 @@
 #define COLOR_EXEC	"\x1b[32;01m"		//exec file
 #define COLOR_ARCH	"\x1b[31;01m"		//archive file
 #define COLOR_FIFO	"\x1b[33;40m"		//fifo
-#define COLOR_BLNK	"\x1b[31;40m;01"	//broken link and missing files
+#define COLOR_BKLN	"\x1b[31;40m;01"	//broken link and missing files
 #define COLOR_SOCK	"\x1b[35;01m"		//socket
 #define COLOR_IMAG	"\x1b[35;01"		//image, video files...
 #define COLOR_AUDI	"\x1b[36;00m"		//audio files...
@@ -52,27 +54,26 @@
 #define COLOR_SOWD	"\x1b[30;42m"		//sticky and other directory
 
 
+#define COLOR_TYPE_NUMBER 18
 typedef enum {
-	COLOR_TYPE_DEFT,
-	COLOR_TYPE_DIRE,
-	COLOR_TYPE_LINK,
-	COLOR_TYPE_EXEC,
-	COLOR_TYPE_ARCH,
-	COLOR_TYPE_FIFO,
-	COLOR_TYPE_BLNK,
-	COLOR_TYPE_SOCK,
-	COLOR_TYPE_IMAG,
-	COLOR_TYPE_AUDI,
-	COLOR_TYPE_BLCK,
-	COLOR_TYPE_CHAR,
-	COLOR_TYPE_SUID,
-	COLOR_TYPE_SGID,
-	COLOR_TYPE_CAPA,
-	COLOR_TYPE_SKDR,
-	COLOR_TYPE_OWDR,
-	COLOR_TYPE_SOWD
+	COLOR_TYPE_DEFT,	//default
+	COLOR_TYPE_DIRE,	//directory
+	COLOR_TYPE_LINK,	//sym link
+	COLOR_TYPE_EXEC,	//exec file
+	COLOR_TYPE_ARCH,	//archive file
+	COLOR_TYPE_FIFO,	//fifo
+	COLOR_TYPE_BKLN,	//broken link and missing files
+	COLOR_TYPE_SOCK,	//socket
+	COLOR_TYPE_IMAG,	//image, video files...
+	COLOR_TYPE_AUDI,	//audio files...
+	COLOR_TYPE_BLCK,	//block device
+	COLOR_TYPE_CHAR,	//char device
+	COLOR_TYPE_SUID,	//set uid
+	COLOR_TYPE_SGID,	//set gid
+	COLOR_TYPE_CAPA,	//files whith capabilities
+	COLOR_TYPE_SKDR,	//sticky directory
+	COLOR_TYPE_OWDR,	//other writable directory
+	COLOR_TYPE_SOWD 	//sticky and other directory
 } e_color_type;
-
-typedef e_color_type (*color_type_func)(t_data*);
 
 #endif

@@ -17,6 +17,7 @@ INC_DIR := includes/
 LIBFT := $(LIBFT_DIR)libft.a
 
 SOURCES := \
+	color.c \
 	data.c \
 	dictionnary.c \
 	directory.c \
@@ -43,7 +44,7 @@ SOURCES_MANDATORY := \
 	mandatory_set_strategies.c
 
 SOURCES_BONUS := \
-	bonus_loadformat.c \
+	bonus_color.c \
 	bonus_set_strategies.c \
 	bonus_strategies.c
 

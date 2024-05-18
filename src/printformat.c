@@ -21,10 +21,12 @@ static unsigned int	print_format_size_field(char *dest, t_format_data *format_da
 static unsigned int	print_format_size(char *dest, t_format_data *format_data, t_format_sizes *format_sizes, unsigned int offset);
 static unsigned int	print_format_device(char *dest, t_format_data *format_data, t_format_sizes *format_sizes, unsigned int offset);
 static unsigned int	print_format_date(char *dest, t_format_data *format_data, t_format_sizes *format_sizes, unsigned int offset);
+static unsigned int	print_format_color(char *dest, t_format_data *format_data, unsigned int offset);
 static unsigned int	print_format_name(char *dest, t_format_data *format_data, unsigned int offset);
+static unsigned int	print_format_color_reset(char *dest, unsigned int offset);
 static unsigned int	print_format_ending(char *dest, t_format_data *format_data, unsigned int offset);
 static void			print_format_symlink(t_format_data *format_data);
-static unsigned int	get_end_pos(t_format_sizes *format_sizes);
+//static unsigned int	get_end_pos(t_format_sizes *format_sizes);
 
 int	print_all_format_data(t_strategies *strat, t_directory *dir, t_format_sizes *format_sizes, t_format_data *all_format_data)
 {
@@ -39,11 +41,10 @@ int	print_all_format_data(t_strategies *strat, t_directory *dir, t_format_sizes 
 static int	print_format_data(t_strategies *strat, t_format_data *format_data, t_format_sizes *format_sizes)
 {
 	(void)strat;
-	unsigned int	end_pos = get_end_pos(format_sizes);
 	unsigned int	offset = 0;
 	char			buffer[1024];
 
-	ft_memset(buffer, ' ', end_pos);
+	ft_memset(buffer, ' ', 1024);
 
 	offset += print_format_mode(buffer, format_data, format_sizes, offset);
 	offset += print_format_links(buffer, format_data, format_sizes, offset);
@@ -51,7 +52,9 @@ static int	print_format_data(t_strategies *strat, t_format_data *format_data, t_
 	offset += print_format_group(buffer, format_data, format_sizes, offset);
 	offset += print_format_size_field(buffer, format_data, format_sizes, offset);
 	offset += print_format_date(buffer, format_data, format_sizes, offset);
+	offset += print_format_color(buffer, format_data, offset);
 	offset += print_format_name(buffer, format_data, offset);
+	offset += print_format_color_reset(buffer, offset);
 	offset += print_format_ending(buffer, format_data, offset);
 
 	write(1, buffer, offset);
@@ -131,10 +134,50 @@ static unsigned int	print_format_date(char *dest, t_format_data *format_data, t_
 	return (format_sizes->date + 1);
 }
 
+static unsigned int	print_format_color(char *dest, t_format_data *format_data, unsigned int offset)
+{
+	char	*colors[] = {
+		COLOR_DEFT,
+		COLOR_DIRE,
+		COLOR_LINK,
+		COLOR_EXEC,
+		COLOR_ARCH,
+		COLOR_FIFO,
+		COLOR_BKLN,
+		COLOR_SOCK,
+		COLOR_IMAG,
+		COLOR_AUDI,
+		COLOR_BLCK,
+		COLOR_CHAR,
+		COLOR_SUID,
+		COLOR_SGID,
+		COLOR_CAPA,
+		COLOR_SKDR,
+		COLOR_OWDR,
+		COLOR_SOWD
+	};
+
+	e_color_type color = format_data->color;
+	if (color < 0 || color >= COLOR_TYPE_NUMBER)
+	{
+		color = COLOR_TYPE_DEFT;
+	}
+	ft_buffercpy(&dest[offset], colors[color]);
+
+	return (ft_strlen(colors[color]) + 1);
+}
+
 static unsigned int	print_format_name(char *dest, t_format_data *format_data, unsigned int offset)
 {
 	ft_buffercpy(&dest[offset], format_data->name);
 	return (ft_strlen(format_data->name));
+}
+
+static unsigned int	print_format_color_reset(char *dest, unsigned int offset)
+{
+	ft_buffercpy(&dest[offset], RESET);
+
+	return (RESET_SIZE);
 }
 
 static unsigned int	print_format_ending(char *dest, t_format_data *format_data, unsigned int offset)
@@ -165,7 +208,7 @@ static void	print_format_symlink(t_format_data *format_data)
 		ft_putchar_fd('\n', 1);
 	}
 }
-
+/*
 static unsigned int get_end_pos(t_format_sizes *format_sizes)
 {
   unsigned int  end_pos = 10;
@@ -182,4 +225,4 @@ static unsigned int get_end_pos(t_format_sizes *format_sizes)
   end_pos += format_sizes->path;
 
   return (end_pos);
-}
+}*/

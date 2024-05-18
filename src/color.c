@@ -1,31 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mandatory_set_strategies.c                         :+:      :+:    :+:   */
+/*   color.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rertzer <rertzer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/16 10:37:30 by rertzer           #+#    #+#             */
-/*   Updated: 2024/05/16 10:37:34 by rertzer          ###   ########.fr       */
+/*   Created: 2024/05/18 14:26:31 by rertzer           #+#    #+#             */
+/*   Updated: 2024/05/18 14:26:43 by rertzer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-int set_strategies(t_options *opt, t_strategies *strat)
+int no_color(e_color_type *color_type, t_data *data)
 {
-	strat->setTime = last_modif;
-	strat->othersorting = NULL;
-	strat->previous_print = false;
-	strat->print_path_name = true;
-	strat->color = no_color;
+	*color_type = COLOR_TYPE_DEFT;
+	(void)data;
 
- 	option_a(strat, opt);
-	option_l(strat, opt);
-	option_r(strat, opt);
-	option_R(strat, opt);
-	option_t(strat, opt);
-
-	return OK;
+	return (OK);
 }
-

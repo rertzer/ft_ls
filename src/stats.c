@@ -171,9 +171,16 @@ static int	set_symlink_type(t_data *data)
 	errno = 0;
 	if (stat(data->path, &stat_buffer) != 0)
 	{
-		ret = MAJOR_KO;
-		ft_putstr_fd("ft_ls: stat: ", 2);
-		perror(data->path);
+		if (errno == ENOENT)
+		{
+			data->target_type = ERROR_TYPE;
+		}
+		else
+		{
+			ret = MAJOR_KO;
+			ft_putstr_fd("ft_ls: stat: ", 2);
+			perror(data->path);
+		}
 	}
 	else 
 	{

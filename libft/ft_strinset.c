@@ -12,7 +12,7 @@
 
 #include "libft.h"
 
-bool	ft_str_inset(const char *str, const char **set)
+bool	ft_strinset(const char *str, const char **set)
 {
 	bool	inset = false;
 

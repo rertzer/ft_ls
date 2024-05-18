@@ -98,6 +98,8 @@ static int	load_format_data(t_strategies *strat, t_data *data, t_format_sizes *f
 
 	format_symlink(&format_data->target, data);
 
+	strat->color(&format_data->color, data);
+
 	return (OK);
 }
 
@@ -289,3 +291,4 @@ static void set_max_size(unsigned int *max, unsigned int size)
 		*max = size;
 	}
 }
+

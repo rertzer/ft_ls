@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   bonus_loadformat.c                                 :+:      :+:    :+:   */
+/*   bonus_color.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rertzer <rertzer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -17,11 +17,13 @@ static e_color_type	get_basic_color_type(t_data *data);
 static e_color_type	get_file_color_type(t_data *data);
 static e_color_type	get_direc_color_type(t_data *data);
 static e_color_type	get_symlink_color_type(t_data *data);
-static e_color_type	get_extension_color_type(t_data *data)
+static e_color_type	get_extension_color_type(t_data *data);
 
-unsigned int	format_name_color(char **buffer, t_data *data)
+int	format_color(e_color_type *color, t_data *data)
 {
-	e_color_type color_type = get_color_type(data);	
+	*color = get_color_type(data);
+
+	return (OK);
 }
 
 
@@ -48,17 +50,23 @@ static e_color_type	get_color_type(t_data *data)
 
 static e_color_type	get_basic_color_type(t_data *data)
 {	
-	e_color_type color_type = COLOR_TYPE_DEFT;
+	int	type = data->type;
+	
+	if (type >= MODES_NB || type < 0)
+	{
+		type = 0;
+	}
 
 	e_color_type types[] = {
-		COLOR_TYPE_DEFT
-		COLOR_TYPE_DIRE
-		COLOR_TYPE_CHAR
-		COLOR_TYPE_BLCK
-		COLOR_TYPE_FIFO
+		COLOR_TYPE_DEFT,
+		COLOR_TYPE_DIRE,
+		COLOR_TYPE_CHAR,
+		COLOR_TYPE_BLCK,
+		COLOR_TYPE_FIFO,
+		COLOR_TYPE_LINK,
 		COLOR_TYPE_SOCK
-	}
-	return (types[data->type]);
+	};
+	return (types[type]);
 }
 
 static e_color_type	get_file_color_type(t_data *data)
@@ -109,7 +117,12 @@ static e_color_type	get_direc_color_type(t_data *data)
 
 static e_color_type	get_symlink_color_type(t_data *data)
 {
-	//broken link
+	e_color_type color_type = COLOR_TYPE_LINK;
+	if (data->target_type == ERROR_TYPE)
+	{
+		color_type = COLOR_TYPE_BKLN;
+	}
+	return (color_type);
 }
 
 static e_color_type	get_extension_color_type(t_data *data)
@@ -144,15 +157,15 @@ static e_color_type	get_extension_color_type(t_data *data)
 		++extension;
 		if (ft_strinset(extension, archive_ext))
 		{
-			color_type = COLOR_ARCH;
+			color_type = COLOR_TYPE_ARCH;
 		}
 		else if (ft_strinset(extension, image_ext))
 		{
-			color_type = COLOR_IMAG;
+			color_type = COLOR_TYPE_IMAG;
 		}
 		else if (ft_strinset(extension, audio_ext))
 		{
-			color_type = COLOR_AUDI;
+			color_type = COLOR_TYPE_AUDI;
 		}
 	}
 	return (color_type);

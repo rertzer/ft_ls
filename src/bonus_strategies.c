@@ -51,11 +51,10 @@ void	option_color(t_strategies *strat, t_options *opt)
 {
 	if (opt->value[OPT_COLOR] == true)
 	{
-		strat->formatname = format_name_color;
+		strat->color = format_color;
 	}
 	else
 	{
-		strat->formatname = format_name;
+		strat->color = no_color;
 	}
-
 }

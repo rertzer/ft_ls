@@ -34,7 +34,8 @@
 # include <sys/types.h>
 # include <sys/xattr.h>
 
-#include "../libft/libft.h"
+# include "../libft/libft.h"
+# include "colors.h"
 
 # define	OK 0
 # define	MINOR_KO 1
@@ -79,17 +80,18 @@ typedef struct {
 }  t_data;
 
 typedef struct {
-	char	mode[12];
-	char	links[20];
-	char	*user;
-	char	*group;
-	char	size[20];
-	char	minor[11];
-	char	major[11];
-	char	date[13];
-	char	*name;
-	char	*path;
-	char	*target;
+	char			mode[12];
+	char			links[20];
+	char			*user;
+	char			*group;
+	char			size[20];
+	char			minor[11];
+	char			major[11];
+	char			date[13];
+	char			*name;
+	char			*path;
+	char			*target;
+	e_color_type	color;
 } t_format_data;
 
 typedef struct {
@@ -104,6 +106,8 @@ typedef struct {
 	unsigned int	name;
 	unsigned int	path;
 } t_format_sizes;
+
+
 
 typedef struct {
 	char			*path;
@@ -120,7 +124,7 @@ typedef struct s_strategies {
 	time_t	(*setTime)(struct stat*);
 	int		(*recurse)(struct s_strategies*, t_directory*);
 	int		(*format)(struct s_strategies*, t_directory*);
-	unsigned int	(*formatname)(char**, t_data*);
+	int		(*color)(e_color_type*, t_data *data);
 	bool	print_path_name;
 	bool	previous_print;
 	t_list*	users[HASH_SIZE];
@@ -152,6 +156,9 @@ void	option_l(t_strategies *strat, t_options *opt);
 void	option_r(t_strategies *strat, t_options *opt);
 void	option_R(t_strategies *strat, t_options *opt);
 void	option_t(t_strategies *strat, t_options *opt);
+//color
+int no_color(e_color_type *color_type, t_data *data);
+
 //sorting
 int   bubble_sort(t_list* list, bool(*sorting)(t_data*, t_data*));
 bool	sort_by_func(void *a, void *b, bool(*compare)(t_data *a, t_data *b));

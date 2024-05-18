@@ -85,5 +85,5 @@ void	*ft_malloc(size_t size);
 char	*ft_strcpy(char *dest, const char *src);
 char	*ft_pathjoin(char const *s1, char const *s2);
 bool	ft_is_inset(const char c, const char *set);
-bool	ft_str_inset(const char *str, const char** set);
+bool	ft_strinset(const char *str, const char** set);
 #endif

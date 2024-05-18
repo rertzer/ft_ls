@@ -16,8 +16,8 @@
 # include <termios.h>
 
 # include "ft_ls.h"
-# include "colors.h"
 # include "bonus_parse_option.h"
+
 
 // bonus strategies
 void	option_d(t_strategies *strat, t_options *opt);
@@ -28,6 +28,6 @@ void	option_u(t_strategies *strat, t_options *opt);
 void	option_color(t_strategies *strat, t_options *opt);
 
 // bonus formating
-unsigned int	format_name_color(char **buffer, t_data *data);
+int	format_color(e_color_type *color_type, t_data *data);
 
 #endif // !FT_LS_BONUS_H

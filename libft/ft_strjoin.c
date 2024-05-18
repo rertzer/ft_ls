@@ -20,10 +20,18 @@ char	*ft_strjoin(char const *s1, char const *s2)
 
 	len_s1 = ft_strlen(s1);
 	len_s2 = ft_strlen(s2);
+
+	errno = 0;
 	dest = malloc(sizeof(char) *(len_s1 + len_s2 + 1));
-	if (NULL == dest)
-		return (NULL);
-	ft_strcpy(dest, s1);
-	ft_strcpy(&dest[len_s1], s2);
+	if (dest == NULL)
+	{
+		perror("ft_ls: malloc: ");
+	}
+	else
+	{
+		ft_strcpy(dest, s1);
+		ft_strcpy(&dest[len_s1], s2);
+	}
+
 	return (dest);
 }

@@ -41,6 +41,11 @@ static void	init_options(t_options *opt)
 		opt->name[i] = tmp[i];
 		opt->value[i] = false;
 	}
+	for (int i = SHORT_OPTIONS_NUMBER; i < OPTIONS_NUMBER; ++i)
+	{
+		opt->name[i] = '-';
+		opt->value[i] = false;
+	}
 }
 
 static int	parse_arg(t_options *opt, t_list **paths, char *arg)
