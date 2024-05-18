@@ -1,28 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   bonus_parse_option.c                               :+:      :+:    :+:   */
+/*   parseoption.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rertzer <rertzer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/16 11:31:02 by rertzer           #+#    #+#             */
-/*   Updated: 2024/05/16 11:31:04 by rertzer          ###   ########.fr       */
+/*   Created: 2024/05/16 11:30:48 by rertzer           #+#    #+#             */
+/*   Updated: 2024/05/16 11:30:51 by rertzer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
-#include "bonus_parse_option.h"
 
 int	parse_long_option(t_options *opt, char *arg)
 {
 	int		ret = MAJOR_KO;
 	char	*long_options[] = LONG_OPTIONS;
 
-	for	(int i = 0; i < LONG_OPTIONS_NB; ++i)
+	for	(int i = 0; i < LONG_OPTIONS_NUMBER; ++i)
 	{
 		if (ft_strcmp(&arg[2], long_options[i]) == 0)
 		{
-			opt->value[i + OPTIONS_NUMBER] = true;
+			opt->value[i + SHORT_OPTIONS_NUMBER] = true;
 			ret = OK;
 			break;	
 		}
@@ -57,7 +56,7 @@ int	parse_option(t_options *opt, char arg)
 {
 	int	ret = MAJOR_KO;
 
-	for (int i = 0; i < OPTIONS_NUMBER; ++i)
+	for (int i = 0; i < SHORT_OPTIONS_NUMBER; ++i)
 	{
 		if (arg == opt->name[i])
 		{

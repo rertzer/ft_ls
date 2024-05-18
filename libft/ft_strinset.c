@@ -1,31 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mandatory_set_strategies.c                         :+:      :+:    :+:   */
+/*   ft_strinset.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rertzer <rertzer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/16 10:37:30 by rertzer           #+#    #+#             */
-/*   Updated: 2024/05/16 10:37:34 by rertzer          ###   ########.fr       */
+/*   Created: 2024/05/18 09:18:23 by rertzer           #+#    #+#             */
+/*   Updated: 2024/05/18 09:18:37 by rertzer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_ls.h"
+#include "libft.h"
 
-int set_strategies(t_options *opt, t_strategies *strat)
+bool	ft_str_inset(const char *str, const char **set)
 {
-	strat->setTime = last_modif;
-	strat->formatname = format_name; 
-	strat->othersorting = NULL;
-	strat->previous_print = false;
-	strat->print_path_name = true;
+	bool	inset = false;
 
- 	option_a(strat, opt);
-	option_l(strat, opt);
-	option_r(strat, opt);
-	option_R(strat, opt);
-	option_t(strat, opt);
-
-	return OK;
+	for (int i = 0 ; set[i] != NULL; ++i)
+	{
+		if (ft_strcmp(str, set[i]) == 0)
+		{
+			inset = true;
+			break;
+		}
+	}
+	return (inset);
 }
-

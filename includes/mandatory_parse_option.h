@@ -13,10 +13,11 @@
 #ifndef MANDATORY_PARSE_OPTION_H
 # define MANDATORY_PARSE_OPTION_H
 
-# define OPTIONS_NUMBER 5
-# define OPTIONS "alrRt"
-# define LONG_OPTIONS_NB 0
-# define LONG_OPTIONS {} 
+# define SHORT_OPTIONS_NUMBER 5
+# define SHORT_OPTIONS "alrRt"
+# define LONG_OPTIONS_NUMBER 0
+# define LONG_OPTIONS {}
+# define OPTIONS_NUMBER (SHORT_OPTIONS_NUMBER + LONG_OPTIONS_NUMBER)
 
 typedef enum {OPT_A, OPT_L, OPT_R, OPT_RR, OPT_T} e_option;
 

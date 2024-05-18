@@ -120,7 +120,7 @@ typedef struct s_strategies {
 	time_t	(*setTime)(struct stat*);
 	int		(*recurse)(struct s_strategies*, t_directory*);
 	int		(*format)(struct s_strategies*, t_directory*);
-	unsigned int	(*format_name)(char**, t_data*);
+	unsigned int	(*formatname)(char**, t_data*);
 	bool	print_path_name;
 	bool	previous_print;
 	t_list*	users[HASH_SIZE];

@@ -29,7 +29,6 @@ static unsigned int			format_major(char *buffer, t_data *data);
 static unsigned int			format_time(char *buffer, t_data *data);
 static unsigned int			format_recent_time(char *buffer, char *time_string);
 static unsigned int			format_late_time(char *buffer, char *time_string);
-static unsigned int			format_name(char **buffer, t_data *data);
 static void					format_symlink(char **buffer, t_data *data);
 static void					set_max_size(unsigned int *max, unsigned int size);
 

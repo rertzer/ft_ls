@@ -34,9 +34,9 @@ int	parse_all_args(t_options *opt, t_list **paths, int argc, char **argv)
 
 static void	init_options(t_options *opt)
 {
-	char	tmp[] = {OPTIONS};
+	char	tmp[] = {SHORT_OPTIONS};
 
-	for (int i = 0; i < OPTIONS_NUMBER; ++i)
+	for (int i = 0; i < SHORT_OPTIONS_NUMBER; ++i)
 	{
 		opt->name[i] = tmp[i];
 		opt->value[i] = false;

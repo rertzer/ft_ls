@@ -49,7 +49,13 @@ void	option_u(t_strategies *strat, t_options *opt)
 
 void	option_color(t_strategies *strat, t_options *opt)
 {
+	if (opt->value[OPT_COLOR] == true)
+	{
+		strat->formatname = format_name_color;
+	}
+	else
+	{
+		strat->formatname = format_name;
+	}
 
-	(void)strat;
-	(void)opt;
 }

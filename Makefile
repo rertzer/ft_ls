@@ -28,6 +28,7 @@ SOURCES := \
 	keepentry.c \
 	loadformat.c \
 	options.c \
+	parseoption.c \
 	printformat.c \
 	recent.c \
 	strategies.c \
@@ -39,11 +40,10 @@ SOURCES := \
 	main.c
 
 SOURCES_MANDATORY := \
-	mandatory_parse_option.c \
 	mandatory_set_strategies.c
 
 SOURCES_BONUS := \
-	bonus_parse_option.c \
+	bonus_loadformat.c \
 	bonus_set_strategies.c \
 	bonus_strategies.c
 

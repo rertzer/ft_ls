@@ -16,7 +16,7 @@
 # include <termios.h>
 
 # include "ft_ls.h"
-# include "colors.h'
+# include "colors.h"
 # include "bonus_parse_option.h"
 
 // bonus strategies
