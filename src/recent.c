@@ -59,6 +59,7 @@ static int	recent_month(char *time_string, char *now_string, int year_offset)
 	int	time_month = getMonth(time_string);
 	int	now_month = getMonth(now_string);
 	int	month_ago = now_month - time_month + 12 * year_offset;
+
 	if (month_ago < 6)
 	{
 		recent = TRUE;

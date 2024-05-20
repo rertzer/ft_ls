@@ -12,7 +12,6 @@
 
 #include "ft_ls.h"
 
-static int			print_format_data(t_strategies *strat, t_format_data *format_data, t_format_sizes *format_sizes);
 static unsigned int	print_format_mode(char *dest, t_format_data *format_data, t_format_sizes *format_sizes, unsigned int offset);
 static unsigned int	print_format_links(char *dest, t_format_data *format_data, t_format_sizes *format_sizes, unsigned int offset);
 static unsigned int	print_format_user(char *dest, t_format_data *format_data, t_format_sizes *format_sizes, unsigned int offset);
@@ -24,7 +23,8 @@ static unsigned int	print_format_date(char *dest, t_format_data *format_data, t_
 static unsigned int	print_format_color(char *dest, t_format_data *format_data, unsigned int offset);
 static unsigned int	print_format_name(char *dest, t_format_data *format_data, unsigned int offset);
 static unsigned int	print_format_color_reset(char *dest, unsigned int offset);
-static unsigned int	print_format_ending(char *dest, t_format_data *format_data, unsigned int offset);
+static unsigned int	print_format_short_ending(char *dest, unsigned int offset);
+static unsigned int	print_format_long_ending(char *dest, t_format_data *format_data, unsigned int offset);
 static void			print_format_symlink(t_format_data *format_data);
 //static unsigned int	get_end_pos(t_format_sizes *format_sizes);
 
@@ -32,13 +32,33 @@ int	print_all_format_data(t_strategies *strat, t_directory *dir, t_format_sizes 
 {
 	for (unsigned int i = 0; i < dir->entry_nb; ++i)
 	{
-		print_format_data(strat, &all_format_data[i], format_sizes);
+		strat->printformat(strat, &all_format_data[i], format_sizes);
 	}
 
 	return (OK);
 }
 
-static int	print_format_data(t_strategies *strat, t_format_data *format_data, t_format_sizes *format_sizes)
+int	print_format_data_short(t_strategies *strat, t_format_data *format_data, t_format_sizes *format_sizes)
+{
+	(void)strat;
+	(void)format_sizes;
+
+	unsigned int	offset = 0;
+	char			buffer[280];
+
+	ft_memset(buffer, ' ', 280);
+
+	offset += print_format_color(buffer, format_data, offset);
+	offset += print_format_name(buffer, format_data, offset);
+	offset += print_format_color_reset(buffer, offset);
+	offset += print_format_short_ending(buffer, offset);
+
+	write(1, buffer, offset);
+
+	return (OK);
+}
+
+int	print_format_data_long(t_strategies *strat, t_format_data *format_data, t_format_sizes *format_sizes)
 {
 	(void)strat;
 	unsigned int	offset = 0;
@@ -55,7 +75,7 @@ static int	print_format_data(t_strategies *strat, t_format_data *format_data, t_
 	offset += print_format_color(buffer, format_data, offset);
 	offset += print_format_name(buffer, format_data, offset);
 	offset += print_format_color_reset(buffer, offset);
-	offset += print_format_ending(buffer, format_data, offset);
+	offset += print_format_long_ending(buffer, format_data, offset);
 
 	write(1, buffer, offset);
 	print_format_symlink(format_data);
@@ -157,7 +177,18 @@ static unsigned int	print_format_color_reset(char *dest, unsigned int offset)
 	return (RESET_SIZE);
 }
 
-static unsigned int	print_format_ending(char *dest, t_format_data *format_data, unsigned int offset)
+static unsigned int	print_format_short_ending(char *dest, unsigned int offset)
+{
+	int	shift = 0;
+
+	dest[offset] = '\n';
+	dest[offset + 1] = '\0';
+	shift = 2;
+
+	return (shift);
+}
+
+static unsigned int	print_format_long_ending(char *dest, t_format_data *format_data, unsigned int offset)
 {
 	int	shift = 0;
 
@@ -169,9 +200,7 @@ static unsigned int	print_format_ending(char *dest, t_format_data *format_data, 
 	}
 	else
 	{
-		dest[offset] = '\n';
-		dest[offset + 1] = '\0';
-		shift = 2;
+		shift = print_format_short_ending(dest, offset);
 	}
 
 	return (shift);

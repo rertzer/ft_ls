@@ -110,7 +110,7 @@ static void	handle_reg_files(t_strategies *strat, t_directory *reg_files)
 {
 	if (reg_files->content != NULL)
 	{
-		strat->format(strat, reg_files);
+		format(strat, reg_files);
 		free_directory(reg_files);
 	}
 }
@@ -173,7 +173,7 @@ int	list_path(t_strategies *strat, char* path)
 	{
 		bubble_sort(dir.content, strat->sorting);
 		bubble_sort(dir.content, strat->othersorting);
-		strat->format(strat, &dir);
+		format(strat, &dir);
 	}
 
 	ret = strat->recurse(strat, &dir);

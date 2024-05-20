@@ -28,12 +28,13 @@ void	option_l(t_strategies *strat, t_options *opt)
 {
 	if (opt->value[OPT_L] == true)
 	{
-		strat->format = longlist;
+		strat->printformat = print_format_data_long;
 		strat->isdirectory = is_directory_longlist;
+		strat->printtotal = print_total;
 	}
 	else
 	{
-		strat->format = simple;
+		strat->printformat = print_format_data_short;
 		strat->isdirectory = is_directory_simple;
 	}
 }

@@ -14,31 +14,9 @@
 
 static void	previous_print(t_strategies *strat);
 static void	print_path(t_strategies *strat, char *path);
-static void	print_total(t_directory *dir);
 static void	init_format_sizes(t_format_sizes *format_sizes);
 
-int simple(t_strategies *strat, t_directory *dir)
-{
-	int		ret = OK;
-	t_list *lst = dir->content;
-
-	previous_print(strat);
-	print_path(strat, dir->path);
-
-	while (lst)
-	{
-		t_data*	d = (t_data*)lst->content;
-
-		ft_putstr_fd(d->file.name, 1);
-		ft_putchar_fd('\n', 1);
-		
-		lst = lst->next;
-	}
-
-	return (ret);
-}
-
-int longlist(t_strategies *strat, t_directory *dir)
+int format(t_strategies *strat, t_directory *dir)
 {
 	int ret = OK;
 	t_format_sizes  format_sizes;
@@ -55,7 +33,8 @@ int longlist(t_strategies *strat, t_directory *dir)
 		{
 			previous_print(strat);
 			print_path(strat, dir->path);
-			print_total(dir);
+			printf("before\n");
+			strat->printtotal(dir);
 			ret = print_all_format_data(strat, dir, &format_sizes, all_format_data);
 		}
 	}
@@ -98,7 +77,7 @@ static void  print_path(t_strategies *strat, char *path)
 	}
 }
 
-static void	print_total(t_directory *dir)
+void	print_total(t_directory *dir)
 {
 	if (dir->path != NULL)
 	{
@@ -106,4 +85,9 @@ static void	print_total(t_directory *dir)
 		ft_putnbr_fd(dir->total_block_size, 1);
 		ft_putchar_fd('\n', 1);
 	}
+}
+
+void	no_print_total(t_directory *dir)
+{
+	(void)dir;
 }
