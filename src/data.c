@@ -61,7 +61,8 @@ t_data  *new_data()
 		data->name = NULL;
 		data->path = NULL;
 		data->target = NULL;
-		data->target_type = -1;
+		data->target_mode.type = -1;
+		data->target_mode.mode = -1;
 	}
 	return (data);
 }
@@ -82,7 +83,7 @@ bool	is_directory_simple(t_data *data)
 {
 	int	ret = false;
 	
-	if(data->type == DIREC || (data->type == LNK && data->target_type == DIREC))
+	if(data->mode.type == DIREC || (data->mode.type == LNK && data->target_mode.type == DIREC))
 	{
 		ret = true;
 	}
@@ -93,7 +94,7 @@ bool	is_directory_longlist(t_data *data)
 {
 	int	ret = false;
 
-	if(data->type == DIREC)
+	if(data->mode.type == DIREC)
 	{
 		ret = true;
 	}

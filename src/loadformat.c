@@ -122,51 +122,51 @@ static inline void	format_mode_type(char *buffer, t_data *data)
 {
 	char	types[] = {'-', 'd', 'c', 'b', 'p', 'l', 's'};
 
-	buffer[0] = types[data->type];
+	buffer[0] = types[data->mode.type];
 }
 
 static inline void	format_mode_user(char *buffer, t_data *data)
 {
-	buffer[1] = (data->mode & S_IRUSR) ? 'r' : '-';
-	buffer[2] = (data->mode & S_IWUSR) ? 'w' : '-';
+	buffer[1] = (data->mode.mode & S_IRUSR) ? 'r' : '-';
+	buffer[2] = (data->mode.mode & S_IWUSR) ? 'w' : '-';
 
-	if (data->mode & S_ISUID)
+	if (data->mode.mode & S_ISUID)
 	{
-		buffer[3] = (data->mode & S_IXUSR) ? 's' : 'S';
+		buffer[3] = (data->mode.mode & S_IXUSR) ? 's' : 'S';
 	}
 	else
 	{
-		buffer[3] = (data->mode & S_IXUSR) ? 'x' : '-';
+		buffer[3] = (data->mode.mode & S_IXUSR) ? 'x' : '-';
 	}
 }
 
 static inline void	format_mode_group(char *buffer, t_data *data)
 {
-	buffer[4] = (data->mode & S_IRGRP) ? 'r' : '-';
-	buffer[5] = (data->mode & S_IWGRP) ? 'w' : '-';
+	buffer[4] = (data->mode.mode & S_IRGRP) ? 'r' : '-';
+	buffer[5] = (data->mode.mode & S_IWGRP) ? 'w' : '-';
 	
-	if (data->mode & S_ISGID)
+	if (data->mode.mode & S_ISGID)
 	{
-		buffer[6] = (data->mode & S_IXGRP) ? 's' : 'S';
+		buffer[6] = (data->mode.mode & S_IXGRP) ? 's' : 'S';
 	}
 	else
 	{
-		buffer[6] = (data->mode & S_IXGRP) ? 'x' : '-';
+		buffer[6] = (data->mode.mode & S_IXGRP) ? 'x' : '-';
 	}
 }
 
 static inline void	format_mode_other(char *buffer, t_data *data)
 {
-	buffer[7] = (data->mode & S_IROTH) ? 'r' : '-';
-	buffer[8] = (data->mode & S_IWOTH) ? 'w' : '-';
+	buffer[7] = (data->mode.mode & S_IROTH) ? 'r' : '-';
+	buffer[8] = (data->mode.mode & S_IWOTH) ? 'w' : '-';
 	
-	if (data->mode & S_ISVTX)
+	if (data->mode.mode & S_ISVTX)
 	{
-		buffer[9] = (data->mode & S_IXOTH) ? 't' : 'T';
+		buffer[9] = (data->mode.mode & S_IXOTH) ? 't' : 'T';
 	}
 	else
 	{
-		buffer[9] = (data->mode & S_IXOTH) ? 'x' : '-';
+		buffer[9] = (data->mode.mode & S_IXOTH) ? 'x' : '-';
 	}
 }
 
@@ -202,7 +202,7 @@ static unsigned int format_size(char *buffer, t_data *data)
 {
 	unsigned int	size = 0;
 
-	if (!(data->type == CHR || data->type == BLK))
+	if (!(data->mode.type == CHR || data->mode.type == BLK))
 	{
 		size = ft_itoa_dec(data->total_size, buffer);
 	}
@@ -214,7 +214,7 @@ static unsigned int format_minor(char *buffer, t_data *data)
 {
 	unsigned int	size = 0;
 
-	if (data->type == CHR || data->type == BLK)
+	if (data->mode.type == CHR || data->mode.type == BLK)
 	{
 		size = ft_itoa_dec(minor(data->rdev), buffer);
 	}
@@ -226,7 +226,7 @@ static unsigned int format_major(char *buffer, t_data *data)
 {
 	unsigned int	size = 0;
 
-	if (data->type == CHR || data->type == BLK)
+	if (data->mode.type == CHR || data->mode.type == BLK)
 	{
 		size = ft_itoa_dec(major(data->rdev), buffer);
 	}
@@ -273,6 +273,7 @@ static unsigned int format_late_time(char *buffer, char *time_string)
 	buffer[12] = '\0';
 	return (12);
 }
+
 unsigned int	format_name(char **buffer, t_data *data)
 {
 	*buffer = data->name;

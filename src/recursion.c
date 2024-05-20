@@ -29,7 +29,7 @@ int	recursive(t_strategies *strat, t_directory *dir)
 	while (lst)
 	{
 		t_data *data = (t_data*)lst->content;
-		if (data->type == DIREC && not_a_dot(data->name))
+		if (data->mode.type == DIREC && not_a_dot(data->name))
 		{
 			char *path = ft_strdup(data->path);
 			if (path == NULL)

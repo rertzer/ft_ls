@@ -38,7 +38,7 @@ int	add_all_stats(t_strategies *strat, t_list *all_paths)
 			break;
 		}
 		
-		if (data->type == LNK)
+		if (data->mode.type == LNK)
 		{
 			ret = add_symlink(data);
 		}
@@ -66,7 +66,7 @@ int add_stats(t_strategies *strat, t_data *data)
 		data->dev = stat_buffer.st_dev;
 		data->rdev = stat_buffer.st_rdev;
 		data->links = stat_buffer.st_nlink;
-		data->mode = stat_buffer.st_mode;
+		data->mode.mode = stat_buffer.st_mode;
 		data->uid = stat_buffer.st_uid;
 		data->gid = stat_buffer.st_gid;
 		data->total_size = stat_buffer.st_size;
@@ -111,9 +111,9 @@ static int set_type(t_data *data)
 {
 	int	ret = OK;
 
-	data->type = get_type(data->mode);
+	data->mode.type = get_type(data->mode.mode);
 
-	if (data->type == ERROR_TYPE)
+	if (data->mode.type == ERROR_TYPE)
 	{
 		ft_putstr_fd("ft_ls: ", 2);
 		ft_putstr_fd(data->name, 2);
@@ -173,7 +173,7 @@ static int	set_symlink_type(t_data *data)
 	{
 		if (errno == ENOENT)
 		{
-			data->target_type = ERROR_TYPE;
+			data->target_mode.type = ERROR_TYPE;
 		}
 		else
 		{
@@ -184,8 +184,9 @@ static int	set_symlink_type(t_data *data)
 	}
 	else 
 	{
-    	data->target_type = get_type(stat_buffer.st_mode);
-		if (data->target_type == ERROR_TYPE)
+    	data->target_mode.type = get_type(stat_buffer.st_mode);
+		data->target_mode.mode = stat_buffer.st_mode;
+		if (data->target_mode.type == ERROR_TYPE)
 		{
 			ft_putstr_fd("ft_ls: ", 2);
 			ft_putstr_fd(data->name, 2);

@@ -60,23 +60,28 @@ typedef struct {
 	char			*value;
 } t_id;
 
+
 typedef struct {
 	e_type	type;
-	dev_t	dev;
-	dev_t	rdev;
-	bool	xattr;
 	mode_t	mode;
-	nlink_t	links;
-	uid_t	uid;
-	gid_t	gid;
-	size_t	total_size;
-	size_t	block_size;
-	size_t	block_nb;
-	time_t	time;
-	char	*name;
-	char	*path;
-	char	*target;
-	e_type	target_type;
+} t_file_mode;
+
+typedef struct {
+	t_file_mode	mode;
+	dev_t		dev;
+	dev_t		rdev;
+	bool		xattr;
+	nlink_t		links;
+	uid_t		uid;
+	gid_t		gid;
+	size_t		total_size;
+	size_t		block_size;
+	size_t		block_nb;
+	time_t		time;
+	char		*name;
+	char		*path;
+	char		*target;
+	t_file_mode	target_mode;
 }  t_data;
 
 typedef struct {
@@ -92,6 +97,7 @@ typedef struct {
 	char			*path;
 	char			*target;
 	e_color_type	color;
+	e_color_type	target_color;
 } t_format_data;
 
 typedef struct {

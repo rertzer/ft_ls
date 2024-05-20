@@ -23,7 +23,7 @@
 # define WHT "\x1b[0;37m"
 # define RESET "\x1b[0m"
 
-#define RESET_SIZE 7
+#define RESET_SIZE 4
 
 #define BG_BLACK   "\x1b[40m"
 #define BG_RED     "\x1b[41m"
@@ -40,12 +40,12 @@
 #define COLOR_EXEC	"\x1b[32;01m"		//exec file
 #define COLOR_ARCH	"\x1b[31;01m"		//archive file
 #define COLOR_FIFO	"\x1b[33;40m"		//fifo
-#define COLOR_BKLN	"\x1b[31;40m;01"	//broken link and missing files
+#define COLOR_BKLN	"\x1b[31;40;01m"	//broken link and missing files
 #define COLOR_SOCK	"\x1b[35;01m"		//socket
-#define COLOR_IMAG	"\x1b[35;01"		//image, video files...
+#define COLOR_IMAG	"\x1b[35;01m"		//image, video files...
 #define COLOR_AUDI	"\x1b[36;00m"		//audio files...
-#define COLOR_BLCK	"\x1b[33;43m;01"	//block device
-#define COLOR_CHAR	"\x1b[33;43m;01"	//char device
+#define COLOR_BLCK	"\x1b[33;43;01m"	//block device
+#define COLOR_CHAR	"\x1b[33;43;01m"	//char device
 #define COLOR_SUID	"\x1b[37;41m"		//set uid
 #define COLOR_SGID	"\x1b[30;43m"		//set gid
 #define COLOR_CAPA	"\x1b[30;41m"		//files whith capabilities

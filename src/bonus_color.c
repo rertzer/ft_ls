@@ -50,7 +50,7 @@ static e_color_type	get_color_type(t_data *data)
 
 static e_color_type	get_basic_color_type(t_data *data)
 {	
-	int	type = data->type;
+	int	type = data->mode.type;
 	
 	if (type >= MODES_NB || type < 0)
 	{
@@ -75,15 +75,15 @@ static e_color_type	get_file_color_type(t_data *data)
 
 	//TODO: capabilites
 	
-	if (data->mode & S_ISUID)
+	if (data->mode.mode & S_ISUID)
 	{
 		color_type = COLOR_TYPE_SUID;
 	}
-	else if (data->mode & S_ISGID)
+	else if (data->mode.mode & S_ISGID)
 	{
 		color_type = COLOR_TYPE_SGID;
 	}
-	else if (data->mode & S_IXUSR || data->mode & S_IXGRP || data->mode & S_IXOTH)
+	else if (data->mode.mode & S_IXUSR || data->mode.mode & S_IXGRP || data->mode.mode & S_IXOTH)
 	{
 		color_type = COLOR_TYPE_EXEC;
 	}
@@ -99,15 +99,15 @@ static e_color_type	get_direc_color_type(t_data *data)
 {
 	e_color_type color_type = COLOR_TYPE_DIRE;
 
-	if (data->mode & S_ISVTX && data->mode & S_IWOTH)
+	if (data->mode.mode & S_ISVTX && data->mode.mode & S_IWOTH)
 	{
 		color_type = COLOR_TYPE_SOWD;
 	}
-	else if (data->mode & S_ISVTX)
+	else if (data->mode.mode & S_ISVTX)
 	{
 		color_type = COLOR_TYPE_SKDR;
 	}
-	else if (data->mode & S_IWOTH)
+	else if (data->mode.mode & S_IWOTH)
 	{
 		color_type = COLOR_TYPE_OWDR;
 	}
@@ -118,7 +118,7 @@ static e_color_type	get_direc_color_type(t_data *data)
 static e_color_type	get_symlink_color_type(t_data *data)
 {
 	e_color_type color_type = COLOR_TYPE_LINK;
-	if (data->target_type == ERROR_TYPE)
+	if (data->target_mode.type == ERROR_TYPE)
 	{
 		color_type = COLOR_TYPE_BKLN;
 	}

@@ -106,6 +106,6 @@ fclean: clean
 
 re: fclean all
 
--include $(DEPS)
+-include $(DEPS) $(DEPS_BONUS) $(DEPS_MANDATORY)
 
 .PHONY: all bonus clean fclean re

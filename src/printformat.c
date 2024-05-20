@@ -164,7 +164,7 @@ static unsigned int	print_format_color(char *dest, t_format_data *format_data, u
 	}
 	ft_buffercpy(&dest[offset], colors[color]);
 
-	return (ft_strlen(colors[color]) + 1);
+	return (ft_strlen(colors[color]));
 }
 
 static unsigned int	print_format_name(char *dest, t_format_data *format_data, unsigned int offset)

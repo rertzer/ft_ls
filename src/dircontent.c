@@ -77,7 +77,7 @@ static int add_entry(t_strategies *strat, t_directory *dir, struct dirent *dir_e
 
 	ret = compute_stats(strat, (t_data*)dir->content->content);
 
-	if (ret == OK && ((t_data*)dir->content->content)->type == LNK)
+	if (ret == OK && ((t_data*)dir->content->content)->mode.type == LNK)
 	{
 		ret = add_symlink((t_data*)dir->content->content);
 	}
