@@ -21,14 +21,12 @@ void	option_d(t_strategies *strat, t_options *opt)
 
 void	option_f(t_strategies *strat, t_options *opt)
 {
-
 	(void)strat;
 	(void)opt;
 }
 
 void	option_g(t_strategies *strat, t_options *opt)
 {
-
 	(void)strat;
 	(void)opt;
 }

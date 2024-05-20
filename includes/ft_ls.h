@@ -62,12 +62,14 @@ typedef struct {
 
 
 typedef struct {
+	char	*name;
 	e_type	type;
 	mode_t	mode;
-} t_file_mode;
+	bool	broken;
+} t_file;
 
 typedef struct {
-	t_file_mode	mode;
+	t_file		file;
 	dev_t		dev;
 	dev_t		rdev;
 	bool		xattr;
@@ -78,10 +80,8 @@ typedef struct {
 	size_t		block_size;
 	size_t		block_nb;
 	time_t		time;
-	char		*name;
 	char		*path;
-	char		*target;
-	t_file_mode	target_mode;
+	t_file		target;
 }  t_data;
 
 typedef struct {
@@ -130,7 +130,7 @@ typedef struct s_strategies {
 	time_t	(*setTime)(struct stat*);
 	int		(*recurse)(struct s_strategies*, t_directory*);
 	int		(*format)(struct s_strategies*, t_directory*);
-	int		(*color)(e_color_type*, t_data *data);
+	int		(*color)(e_color_type*, t_file *file);
 	bool	print_path_name;
 	bool	previous_print;
 	t_list*	users[HASH_SIZE];
@@ -163,7 +163,8 @@ void	option_r(t_strategies *strat, t_options *opt);
 void	option_R(t_strategies *strat, t_options *opt);
 void	option_t(t_strategies *strat, t_options *opt);
 //color
-int no_color(e_color_type *color_type, t_data *data);
+int no_color(e_color_type *color_type, t_file *file);
+const char	*get_color_str(e_color_type color);
 
 //sorting
 int   bubble_sort(t_list* list, bool(*sorting)(t_data*, t_data*));

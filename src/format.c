@@ -29,7 +29,7 @@ int simple(t_strategies *strat, t_directory *dir)
 	{
 		t_data*	d = (t_data*)lst->content;
 
-		ft_putstr_fd(d->name, 1);
+		ft_putstr_fd(d->file.name, 1);
 		ft_putchar_fd('\n', 1);
 		
 		lst = lst->next;

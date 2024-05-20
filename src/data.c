@@ -21,7 +21,7 @@ int add_new_data(t_list **lst, char const * const name, char const * const path)
 	t_list  *newlst = NULL;
 
 	if ((data = new_data()) == NULL || \
-		(data->name = ft_strdup(name)) == NULL || \
+		(data->file.name = ft_strdup(name)) == NULL || \
 		(add_data_path(data, name, path)) != OK || \
 		(newlst = ft_lstnew(data)) == NULL)
 	{
@@ -44,7 +44,7 @@ static  int add_data_path(t_data *data, char const * const name, char const * co
 	}
 	else
 	{
-		data->path = ft_pathjoin(path, data->name);
+		data->path = ft_pathjoin(path, data->file.name);
 	}
 	if (data->path == NULL)
 	{
@@ -58,11 +58,13 @@ t_data  *new_data()
 	t_data *data = ft_malloc(sizeof(t_data));
 	if (data != NULL)
 	{
-		data->name = NULL;
+		data->file.name = NULL;
 		data->path = NULL;
-		data->target = NULL;
-		data->target_mode.type = -1;
-		data->target_mode.mode = -1;
+		data->target.name = NULL;
+		data->target.type = -1;
+		data->target.mode = -1;
+		data->file.broken = false;
+		data->target.broken = false;
 	}
 	return (data);
 }
@@ -72,9 +74,9 @@ void  data_del(void *v_data)
 	if (v_data != NULL)
 	{
 		t_data  *data = (t_data*)v_data;
-		free(data->name);
+		free(data->file.name);
 		free(data->path);
-		free(data->target);
+		free(data->target.name);
 		free(data);
 	}
 }
@@ -83,7 +85,7 @@ bool	is_directory_simple(t_data *data)
 {
 	int	ret = false;
 	
-	if(data->mode.type == DIREC || (data->mode.type == LNK && data->target_mode.type == DIREC))
+	if(data->file.type == DIREC || (data->file.type == LNK && data->target.type == DIREC))
 	{
 		ret = true;
 	}
@@ -94,7 +96,7 @@ bool	is_directory_longlist(t_data *data)
 {
 	int	ret = false;
 
-	if(data->mode.type == DIREC)
+	if(data->file.type == DIREC)
 	{
 		ret = true;
 	}

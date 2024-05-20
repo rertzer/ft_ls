@@ -28,6 +28,6 @@ void	option_u(t_strategies *strat, t_options *opt);
 void	option_color(t_strategies *strat, t_options *opt);
 
 // bonus formating
-int	format_color(e_color_type *color_type, t_data *data);
+int	format_color(e_color_type *color_type, t_file *file);
 
 #endif // !FT_LS_BONUS_H

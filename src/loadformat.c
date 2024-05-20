@@ -98,7 +98,11 @@ static int	load_format_data(t_strategies *strat, t_data *data, t_format_sizes *f
 
 	format_symlink(&format_data->target, data);
 
-	strat->color(&format_data->color, data);
+	strat->color(&format_data->color, &data->file);
+	if (data->target.name != NULL)
+	{
+		strat->color(&format_data->target_color, &data->target);
+	}
 
 	return (OK);
 }
@@ -122,51 +126,51 @@ static inline void	format_mode_type(char *buffer, t_data *data)
 {
 	char	types[] = {'-', 'd', 'c', 'b', 'p', 'l', 's'};
 
-	buffer[0] = types[data->mode.type];
+	buffer[0] = types[data->file.type];
 }
 
 static inline void	format_mode_user(char *buffer, t_data *data)
 {
-	buffer[1] = (data->mode.mode & S_IRUSR) ? 'r' : '-';
-	buffer[2] = (data->mode.mode & S_IWUSR) ? 'w' : '-';
+	buffer[1] = (data->file.mode & S_IRUSR) ? 'r' : '-';
+	buffer[2] = (data->file.mode & S_IWUSR) ? 'w' : '-';
 
-	if (data->mode.mode & S_ISUID)
+	if (data->file.mode & S_ISUID)
 	{
-		buffer[3] = (data->mode.mode & S_IXUSR) ? 's' : 'S';
+		buffer[3] = (data->file.mode & S_IXUSR) ? 's' : 'S';
 	}
 	else
 	{
-		buffer[3] = (data->mode.mode & S_IXUSR) ? 'x' : '-';
+		buffer[3] = (data->file.mode & S_IXUSR) ? 'x' : '-';
 	}
 }
 
 static inline void	format_mode_group(char *buffer, t_data *data)
 {
-	buffer[4] = (data->mode.mode & S_IRGRP) ? 'r' : '-';
-	buffer[5] = (data->mode.mode & S_IWGRP) ? 'w' : '-';
+	buffer[4] = (data->file.mode & S_IRGRP) ? 'r' : '-';
+	buffer[5] = (data->file.mode & S_IWGRP) ? 'w' : '-';
 	
-	if (data->mode.mode & S_ISGID)
+	if (data->file.mode & S_ISGID)
 	{
-		buffer[6] = (data->mode.mode & S_IXGRP) ? 's' : 'S';
+		buffer[6] = (data->file.mode & S_IXGRP) ? 's' : 'S';
 	}
 	else
 	{
-		buffer[6] = (data->mode.mode & S_IXGRP) ? 'x' : '-';
+		buffer[6] = (data->file.mode & S_IXGRP) ? 'x' : '-';
 	}
 }
 
 static inline void	format_mode_other(char *buffer, t_data *data)
 {
-	buffer[7] = (data->mode.mode & S_IROTH) ? 'r' : '-';
-	buffer[8] = (data->mode.mode & S_IWOTH) ? 'w' : '-';
+	buffer[7] = (data->file.mode & S_IROTH) ? 'r' : '-';
+	buffer[8] = (data->file.mode & S_IWOTH) ? 'w' : '-';
 	
-	if (data->mode.mode & S_ISVTX)
+	if (data->file.mode & S_ISVTX)
 	{
-		buffer[9] = (data->mode.mode & S_IXOTH) ? 't' : 'T';
+		buffer[9] = (data->file.mode & S_IXOTH) ? 't' : 'T';
 	}
 	else
 	{
-		buffer[9] = (data->mode.mode & S_IXOTH) ? 'x' : '-';
+		buffer[9] = (data->file.mode & S_IXOTH) ? 'x' : '-';
 	}
 }
 
@@ -202,7 +206,7 @@ static unsigned int format_size(char *buffer, t_data *data)
 {
 	unsigned int	size = 0;
 
-	if (!(data->mode.type == CHR || data->mode.type == BLK))
+	if (!(data->file.type == CHR || data->file.type == BLK))
 	{
 		size = ft_itoa_dec(data->total_size, buffer);
 	}
@@ -214,7 +218,7 @@ static unsigned int format_minor(char *buffer, t_data *data)
 {
 	unsigned int	size = 0;
 
-	if (data->mode.type == CHR || data->mode.type == BLK)
+	if (data->file.type == CHR || data->file.type == BLK)
 	{
 		size = ft_itoa_dec(minor(data->rdev), buffer);
 	}
@@ -226,7 +230,7 @@ static unsigned int format_major(char *buffer, t_data *data)
 {
 	unsigned int	size = 0;
 
-	if (data->mode.type == CHR || data->mode.type == BLK)
+	if (data->file.type == CHR || data->file.type == BLK)
 	{
 		size = ft_itoa_dec(major(data->rdev), buffer);
 	}
@@ -276,13 +280,13 @@ static unsigned int format_late_time(char *buffer, char *time_string)
 
 unsigned int	format_name(char **buffer, t_data *data)
 {
-	*buffer = data->name;
+	*buffer = data->file.name;
 	return (ft_strlen(*buffer));
 }
 
 static void	format_symlink(char **buffer, t_data *data)
 {
-	*buffer = data->target;
+	*buffer = data->target.name;
 }
 
 static void set_max_size(unsigned int *max, unsigned int size)

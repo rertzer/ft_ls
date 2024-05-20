@@ -136,35 +136,12 @@ static unsigned int	print_format_date(char *dest, t_format_data *format_data, t_
 
 static unsigned int	print_format_color(char *dest, t_format_data *format_data, unsigned int offset)
 {
-	char	*colors[] = {
-		COLOR_DEFT,
-		COLOR_DIRE,
-		COLOR_LINK,
-		COLOR_EXEC,
-		COLOR_ARCH,
-		COLOR_FIFO,
-		COLOR_BKLN,
-		COLOR_SOCK,
-		COLOR_IMAG,
-		COLOR_AUDI,
-		COLOR_BLCK,
-		COLOR_CHAR,
-		COLOR_SUID,
-		COLOR_SGID,
-		COLOR_CAPA,
-		COLOR_SKDR,
-		COLOR_OWDR,
-		COLOR_SOWD
-	};
 
-	e_color_type color = format_data->color;
-	if (color < 0 || color >= COLOR_TYPE_NUMBER)
-	{
-		color = COLOR_TYPE_DEFT;
-	}
-	ft_buffercpy(&dest[offset], colors[color]);
+	const char *color = get_color_str(format_data->color);
 
-	return (ft_strlen(colors[color]));
+	ft_buffercpy(&dest[offset], color);
+
+	return (ft_strlen(color));
 }
 
 static unsigned int	print_format_name(char *dest, t_format_data *format_data, unsigned int offset)
@@ -204,7 +181,10 @@ static void	print_format_symlink(t_format_data *format_data)
 {
 	if (format_data->target != NULL)
 	{
+		const char *color = get_color_str(format_data->target_color);
+		ft_putstr_fd(color, 1);
 		ft_putstr_fd(format_data->target, 1);
+		ft_putstr_fd(RESET, 1);
 		ft_putchar_fd('\n', 1);
 	}
 }

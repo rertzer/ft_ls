@@ -38,7 +38,7 @@ int	add_all_stats(t_strategies *strat, t_list *all_paths)
 			break;
 		}
 		
-		if (data->mode.type == LNK)
+		if (data->file.type == LNK)
 		{
 			ret = add_symlink(data);
 		}
@@ -66,7 +66,7 @@ int add_stats(t_strategies *strat, t_data *data)
 		data->dev = stat_buffer.st_dev;
 		data->rdev = stat_buffer.st_rdev;
 		data->links = stat_buffer.st_nlink;
-		data->mode.mode = stat_buffer.st_mode;
+		data->file.mode = stat_buffer.st_mode;
 		data->uid = stat_buffer.st_uid;
 		data->gid = stat_buffer.st_gid;
 		data->total_size = stat_buffer.st_size;
@@ -111,12 +111,12 @@ static int set_type(t_data *data)
 {
 	int	ret = OK;
 
-	data->mode.type = get_type(data->mode.mode);
+	data->file.type = get_type(data->file.mode);
 
-	if (data->mode.type == ERROR_TYPE)
+	if (data->file.type == ERROR_TYPE)
 	{
 		ft_putstr_fd("ft_ls: ", 2);
-		ft_putstr_fd(data->name, 2);
+		ft_putstr_fd(data->file.name, 2);
 		ft_putstr_fd(": invalid file type\n", 2);
 		ret = MAJOR_KO;
 	}
@@ -143,21 +143,21 @@ int	add_symlink(t_data *data)
 {
 	int	ret = OK;
 	
-	data->target = ft_malloc(sizeof(char) * (data->total_size + 1));
-	if (data->target == NULL)
+	data->target.name = ft_malloc(sizeof(char) * (data->total_size + 1));
+	if (data->target.name == NULL)
 	{
 		return (INTERNAL_KO);
 	}
 
 	errno = 0;
-	ssize_t	size = readlink(data->path, data->target, data->total_size);
+	ssize_t	size = readlink(data->path, data->target.name, data->total_size);
 	if (size < 0 || size != (ssize_t)data->total_size)
 	{
 		perror("ft_ls: readlink: ");
 		return (MAJOR_KO);
 	}
 
-	data->target[data->total_size] = '\0';
+	data->target.name[data->total_size] = '\0';
 	ret = set_symlink_type(data);
 
 	return (ret);
@@ -173,7 +173,8 @@ static int	set_symlink_type(t_data *data)
 	{
 		if (errno == ENOENT)
 		{
-			data->target_mode.type = ERROR_TYPE;
+			data->target.type = ERROR_TYPE;
+			data->file.broken = true;
 		}
 		else
 		{
@@ -184,12 +185,12 @@ static int	set_symlink_type(t_data *data)
 	}
 	else 
 	{
-    	data->target_mode.type = get_type(stat_buffer.st_mode);
-		data->target_mode.mode = stat_buffer.st_mode;
-		if (data->target_mode.type == ERROR_TYPE)
+    	data->target.type = get_type(stat_buffer.st_mode);
+		data->target.mode = stat_buffer.st_mode;
+		if (data->target.type == ERROR_TYPE)
 		{
 			ft_putstr_fd("ft_ls: ", 2);
-			ft_putstr_fd(data->name, 2);
+			ft_putstr_fd(data->file.name, 2);
 			ft_putstr_fd(": invalid file type\n", 2);
 			ret = MAJOR_KO;
 		}
