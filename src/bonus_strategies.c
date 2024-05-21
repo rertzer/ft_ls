@@ -21,8 +21,18 @@ void	option_d(t_strategies *strat, t_options *opt)
 
 void	option_f(t_strategies *strat, t_options *opt)
 {
-	(void)strat;
-	(void)opt;
+	if (opt->value[OPT_F] == true)
+	{
+		strat->keepEntry = keep_all;
+		strat->addlist = ft_lstadd_back;
+		strat->sortingalgo = no_sorting;
+	}
+	else
+	{
+		strat->addlist = ft_lstadd_front;
+		strat->sortingalgo = bubble_sort;
+	}
+
 }
 
 void	option_g(t_strategies *strat, t_options *opt)

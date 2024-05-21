@@ -70,7 +70,12 @@ static int	parse_arg(t_options *opt, t_list **paths, char *arg)
 	}
 	else
 	{
-		ret = add_new_data(paths, arg, NULL);
+		t_data* data = add_new_data(paths, arg, NULL, ft_lstadd_front);
+		
+		if (data == NULL)
+		{
+			ret = INTERNAL_KO;
+		}
 	}
 	return (ret);
 }

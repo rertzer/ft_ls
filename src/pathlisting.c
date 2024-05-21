@@ -26,7 +26,7 @@ int	process_all_paths(t_strategies *strat, t_list **all_paths)
 	ret = add_all_stats(strat, *all_paths);
 	if (ret == OK)
 	{
-		bubble_sort(*all_paths, strat->sorting);
+		strat->sortingalgo(*all_paths, strat->sorting);
 		bubble_sort(*all_paths, strat->othersorting);
 		ret = list_all_files(strat, all_paths);
 		if (ret == OK)
@@ -171,8 +171,8 @@ int	list_path(t_strategies *strat, char* path)
 	ret = get_dir_content(strat, &dir);
 	if (ret == OK)
 	{
-		bubble_sort(dir.content, strat->sorting);
-		bubble_sort(dir.content, strat->othersorting);
+		strat->sortingalgo(dir.content, strat->sorting);
+		strat->sortingalgo(dir.content, strat->othersorting);
 		format(strat, &dir);
 	}
 

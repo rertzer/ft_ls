@@ -14,9 +14,8 @@
 
 static  int add_data_path(t_data *data, char const * const name, char const * const path);
 
-int add_new_data(t_list **lst, char const * const name, char const * const path)
+t_data	*add_new_data(t_list **lst, char const * const name, char const * const path, void (*lstadd)(t_list**, t_list*))
 {
-	int     ret = OK;
 	t_data  *data = NULL;
 	t_list  *newlst = NULL;
 
@@ -26,13 +25,13 @@ int add_new_data(t_list **lst, char const * const name, char const * const path)
 		(newlst = ft_lstnew(data)) == NULL)
 	{
 		data_del(data);
-		ret = INTERNAL_KO;
+		data = NULL;
 	}
 	else
 	{
-		ft_lstadd_front(lst, newlst);
+		lstadd(lst, newlst);
 	}
-	return (ret);
+	return (data);
 }
 
 static  int add_data_path(t_data *data, char const * const name, char const * const path)

@@ -69,11 +69,13 @@ void	option_t(t_strategies *strat, t_options *opt)
 	{
 		if (opt->value[OPT_R] == true)
 		{
+			strat->sorting = sort_by_name;
 			strat->othersorting = sort_by_time_reverse;
 		}
 		else
 		{
 			strat->othersorting = sort_by_time;
+			strat->sorting = sort_by_name_reverse;
 		}
 	}
 }

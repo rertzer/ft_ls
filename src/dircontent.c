@@ -61,25 +61,25 @@ static int add_entry(t_strategies *strat, t_directory *dir, struct dirent *dir_e
 {
 	int	ret = OK;
 
-	ret = add_new_data(&dir->content, dir_entry->d_name, dir->path);
-	if (ret != OK)
+	t_data*	data = add_new_data(&dir->content, dir_entry->d_name, dir->path, strat->addlist);
+	if (data == NULL)
 	{
-		return (ret);
+		return (INTERNAL_KO);
 	}
 
 	++dir->entry_nb;
 
-	ret = add_stats(strat, (t_data*)dir->content->content);
+	ret = add_stats(strat, data);
 	if (ret != OK)
 	{
 		return (ret);
 	}
 
-	ret = compute_stats(strat, (t_data*)dir->content->content);
+	ret = compute_stats(strat, data);
 
-	if (ret == OK && ((t_data*)dir->content->content)->file.type == LNK)
+	if (ret == OK && data->file.type == LNK)
 	{
-		ret = add_symlink((t_data*)dir->content->content);
+		ret = add_symlink(data);
 	}
 
 	return (ret);

@@ -124,6 +124,8 @@ typedef struct {
 
 typedef struct s_strategies {
 	bool	(*keepEntry)(struct dirent*);
+	void	(*addlist)(t_list **, t_list*);
+	int		(*sortingalgo)(t_list*, bool(*sorting)(t_data*, t_data*));
 	bool	(*sorting)(t_data*, t_data*);
 	bool	(*othersorting)(t_data*, t_data*);
 	bool	(*isdirectory)(t_data*);
@@ -147,7 +149,7 @@ typedef struct s_strategies {
 # endif // !FT_LS_BONUS 
 
 // data handling
-int add_new_data(t_list **lst, char const * const name, char const * const path);
+t_data *add_new_data(t_list **lst, char const * const name, char const * const path, void (*lstadd)(t_list**, t_list*));
 t_data  *new_data();
 void  data_del(void*);
 bool	is_directory_simple(t_data *data);
@@ -171,6 +173,7 @@ const char	*get_color_str(e_color_type color);
 
 //sorting
 int   bubble_sort(t_list* list, bool(*sorting)(t_data*, t_data*));
+int		no_sorting(t_list* lst, bool(*sorting)(t_data*, t_data*));
 bool	sort_by_func(void *a, void *b, bool(*compare)(t_data *a, t_data *b));
 bool  sort_by_name(t_data *a, t_data *b);
 bool  sort_by_name_reverse(t_data *a, t_data *b);

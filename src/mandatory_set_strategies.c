@@ -14,11 +14,14 @@
 
 int set_strategies(t_options *opt, t_strategies *strat)
 {
+	strat->addlist = ft_lstadd_front;
+	strat->sortingalgo = bubble_sort;
 	strat->setTime = last_modif;
-	strat->othersorting = NULL;
 	strat->printtotal = no_print_total;
 	strat->previous_print = false;
 	strat->print_path_name = true;
+	strat->printuser = print_format_user;
+	strat->printgroup = print_format_group;
 	strat->color = no_color;
 
  	option_a(strat, opt);

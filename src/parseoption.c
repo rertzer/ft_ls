@@ -64,7 +64,14 @@ int	parse_option(t_options *opt, char arg)
 			ret = OK;
 			break;
 		}
+		
 	}
+	if (ret == OK && arg == 'f')
+	{
+		opt->value[OPT_L] = false;
+		opt->value[OPT_T] = false;
+		opt->value[OPT_COLOR] = false;
+		}
 
 	return (ret);
 }

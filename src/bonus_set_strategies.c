@@ -23,12 +23,13 @@ int set_strategies(t_options *opt, t_strategies *strat)
 
  	option_a(strat, opt);
 	option_l(strat, opt);
-	option_r(strat, opt);
 	option_R(strat, opt);
-	option_t(strat, opt);
 
 	option_d(strat, opt);
+
 	option_f(strat, opt);
+	option_t(strat, opt);
+	option_r(strat, opt);
 	option_g(strat, opt);
 	option_G(strat, opt);
 	option_u(strat, opt);
