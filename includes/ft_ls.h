@@ -132,6 +132,8 @@ typedef struct s_strategies {
 	int		(*printformat)(struct s_strategies*, t_format_data*, t_format_sizes *);
 	void	(*printtotal)(t_directory *dir);
 	int		(*color)(e_color_type*, t_file *file);
+	unsigned int	(*printuser)(char *dest, t_format_data*, t_format_sizes*, unsigned int);
+	unsigned int	(*printgroup)(char *dest, t_format_data*, t_format_sizes*, unsigned int);
 	bool	print_path_name;
 	bool	previous_print;
 	t_list*	users[HASH_SIZE];
@@ -191,6 +193,11 @@ int  load_all_format_data(t_strategies *strat, t_directory *dir, t_format_sizes 
 int  print_all_format_data(t_strategies *strat, t_directory *dir, t_format_sizes *format_sizes, t_format_data *all_format_data);
 int		print_format_data_long(t_strategies *strat, t_format_data *format_data, t_format_sizes *format_sizes);
 int		print_format_data_short(t_strategies *strat, t_format_data *format_data, t_format_sizes *format_sizes);
+unsigned int	print_format_user(char *dest, t_format_data *format_data, t_format_sizes *format_sizes, unsigned int offset);
+unsigned int	print_format_group(char *dest, t_format_data *format_data, t_format_sizes *format_sizes, unsigned int offset);
+unsigned int	no_print_format_user(char *dest, t_format_data *format_data, t_format_sizes *format_sizes, unsigned int offset);
+unsigned int	no_print_format_group(char *dest, t_format_data *format_data, t_format_sizes *format_sizes, unsigned int offset);
+
 // list_path
 int	process_all_paths(t_strategies *strat, t_list **all_paths);
 int  default_path(t_strategies *strat);

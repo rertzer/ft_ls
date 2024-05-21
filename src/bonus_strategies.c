@@ -27,15 +27,26 @@ void	option_f(t_strategies *strat, t_options *opt)
 
 void	option_g(t_strategies *strat, t_options *opt)
 {
-	(void)strat;
-	(void)opt;
+	if (opt->value[OPT_G] == true)
+	{
+		strat->printuser = no_print_format_user;
+	}
+	else
+	{
+		strat->printuser = print_format_user;
+	}
 }
 
 void	option_G(t_strategies *strat, t_options *opt)
 {
-
-	(void)strat;
-	(void)opt;
+	if (opt->value[OPT_GG] == true)
+	{
+		strat->printgroup = no_print_format_group;
+	}
+	else
+	{
+		strat->printgroup = print_format_group;
+	}
 }
 
 void	option_u(t_strategies *strat, t_options *opt)

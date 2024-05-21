@@ -14,8 +14,6 @@
 
 static unsigned int	print_format_mode(char *dest, t_format_data *format_data, t_format_sizes *format_sizes, unsigned int offset);
 static unsigned int	print_format_links(char *dest, t_format_data *format_data, t_format_sizes *format_sizes, unsigned int offset);
-static unsigned int	print_format_user(char *dest, t_format_data *format_data, t_format_sizes *format_sizes, unsigned int offset);
-static unsigned int	print_format_group(char *dest, t_format_data *format_data, t_format_sizes *format_sizes, unsigned int offset);
 static unsigned int	print_format_size_field(char *dest, t_format_data *format_data, t_format_sizes *format_sizes, unsigned int offset);
 static unsigned int	print_format_size(char *dest, t_format_data *format_data, t_format_sizes *format_sizes, unsigned int offset);
 static unsigned int	print_format_device(char *dest, t_format_data *format_data, t_format_sizes *format_sizes, unsigned int offset);
@@ -60,7 +58,6 @@ int	print_format_data_short(t_strategies *strat, t_format_data *format_data, t_f
 
 int	print_format_data_long(t_strategies *strat, t_format_data *format_data, t_format_sizes *format_sizes)
 {
-	(void)strat;
 	unsigned int	offset = 0;
 	char			buffer[1024];
 
@@ -68,8 +65,8 @@ int	print_format_data_long(t_strategies *strat, t_format_data *format_data, t_fo
 
 	offset += print_format_mode(buffer, format_data, format_sizes, offset);
 	offset += print_format_links(buffer, format_data, format_sizes, offset);
-	offset += print_format_user(buffer, format_data, format_sizes, offset);
-	offset += print_format_group(buffer, format_data, format_sizes, offset);
+	offset += strat->printuser(buffer, format_data, format_sizes, offset);
+	offset += strat->printgroup(buffer, format_data, format_sizes, offset);
 	offset += print_format_size_field(buffer, format_data, format_sizes, offset);
 	offset += print_format_date(buffer, format_data, format_sizes, offset);
 	offset += print_format_color(buffer, format_data, offset);
@@ -95,16 +92,36 @@ static unsigned int	print_format_links(char *dest, t_format_data *format_data, t
 	return (format_sizes->links + 1);
 }
 
-static unsigned int	print_format_user(char *dest, t_format_data *format_data, t_format_sizes *format_sizes, unsigned int offset)
+unsigned int	print_format_user(char *dest, t_format_data *format_data, t_format_sizes *format_sizes, unsigned int offset)
 {
 	ft_buffercpy(&dest[offset], format_data->user);
 	return (format_sizes->user + 1);
 }
 
-static unsigned int	print_format_group(char *dest, t_format_data *format_data, t_format_sizes *format_sizes, unsigned int offset)
+unsigned int	print_format_group(char *dest, t_format_data *format_data, t_format_sizes *format_sizes, unsigned int offset)
 {
 	ft_buffercpy(&dest[offset], format_data->group);
 	return (format_sizes->group + 1);
+}
+
+unsigned int	no_print_format_user(char *dest, t_format_data *format_data, t_format_sizes *format_sizes, unsigned int offset)
+{
+	(void)dest;
+	(void)format_data;
+	(void)format_sizes;
+	(void)offset;
+
+	return (0);
+}
+
+unsigned int	no_print_format_group(char *dest, t_format_data *format_data, t_format_sizes *format_sizes, unsigned int offset)
+{
+	(void)dest;
+	(void)format_data;
+	(void)format_sizes;
+	(void)offset;
+
+	return (0);
 }
 
 static unsigned int	print_format_size_field(char *dest, t_format_data *format_data, t_format_sizes *format_sizes, unsigned int offset)
