@@ -60,12 +60,18 @@ void	option_G(t_strategies *strat, t_options *opt)
 		strat->printgroup = print_format_group;
 	}
 }
-
+		
 void	option_u(t_strategies *strat, t_options *opt)
 {
+	if (opt->value[OPT_U] == true)
+	{
+		strat->settime = access_time;
 
-	(void)strat;
-	(void)opt;
+		if (!((opt->value[OPT_L] == true && opt->value[OPT_T] == false)))
+		{
+			option_time_sorting(strat, opt);
+		}
+	}
 }
 
 void	option_color(t_strategies *strat, t_options *opt)

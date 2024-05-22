@@ -129,7 +129,7 @@ typedef struct s_strategies {
 	bool	(*sorting)(t_data*, t_data*);
 	bool	(*othersorting)(t_data*, t_data*);
 	bool	(*isdirectory)(t_data*);
-	time_t	(*setTime)(struct stat*);
+	time_t	(*settime)(struct stat*);
 	int		(*recurse)(struct s_strategies*, t_directory*);
 	int		(*printformat)(struct s_strategies*, t_format_data*, t_format_sizes *);
 	void	(*printtotal)(t_directory *dir);
@@ -168,6 +168,7 @@ void	option_l(t_strategies *strat, t_options *opt);
 void	option_r(t_strategies *strat, t_options *opt);
 void	option_R(t_strategies *strat, t_options *opt);
 void	option_t(t_strategies *strat, t_options *opt);
+void	option_time_sorting(t_strategies *strat, t_options *opt);
 //color
 int no_color(e_color_type *color_type, t_file *file);
 const char	*get_color_str(e_color_type color);
@@ -217,6 +218,7 @@ int get_dir_content(t_strategies *strat, t_directory *dir);
 int recent(char *time_string);
 // time
 time_t  last_modif(struct stat *stat_buffer);
+time_t  access_time(struct stat *stat_buffer);
 char	*get_time_string(time_t *time);
 // stats
 int add_all_stats(t_strategies *strat, t_list *all_paths);

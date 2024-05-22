@@ -17,6 +17,11 @@ time_t  last_modif(struct stat *stat_buffer)
   return (stat_buffer->st_mtim.tv_sec);
 }
 
+time_t  access_time(struct stat *stat_buffer)
+{
+  return (stat_buffer->st_atim.tv_sec);
+}
+
 char	*get_time_string(time_t *time)
 {
 	errno = 0;

@@ -72,7 +72,7 @@ int add_stats(t_strategies *strat, t_data *data)
 		data->total_size = stat_buffer.st_size;
 		data->block_size = stat_buffer.st_blksize;
 		data->block_nb = stat_buffer.st_blocks;
-		data->time = strat->setTime(&stat_buffer);
+		data->time = strat->settime(&stat_buffer);
 	}
 	ret = add_xattr(data);
 

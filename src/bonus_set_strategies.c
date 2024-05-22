@@ -15,7 +15,7 @@
 
 int set_strategies(t_options *opt, t_strategies *strat)
 {
-	strat->setTime = last_modif;
+	strat->settime = last_modif;
 	strat->othersorting = NULL;
 	strat->printtotal = no_print_total;
 	strat->previous_print = false;
