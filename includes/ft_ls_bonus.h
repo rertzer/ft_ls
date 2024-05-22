@@ -30,4 +30,8 @@ void	option_color(t_strategies *strat, t_options *opt);
 // bonus formating
 int	format_color(e_color_type *color_type, t_file *file);
 
+// bonus colums
+unsigned int	get_term_width();
+int	print_format_data_column(t_strategies *strat, t_format_data *format_data, t_format_sizes *format_sizes)
+
 #endif // !FT_LS_BONUS_H

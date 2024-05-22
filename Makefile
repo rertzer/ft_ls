@@ -46,6 +46,7 @@ SOURCES_MANDATORY := \
 
 SOURCES_BONUS := \
 	bonus_color.c \
+	bonus_columns.c \
 	bonus_parseoption.c \
 	bonus_set_strategies.c \
 	bonus_strategies.c

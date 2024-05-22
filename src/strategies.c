@@ -34,7 +34,6 @@ void	option_l(t_strategies *strat, t_options *opt)
 	}
 	else
 	{
-		strat->printformat = print_format_data_short;
 		strat->isdirectory = is_directory_simple;
 	}
 }

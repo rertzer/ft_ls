@@ -17,7 +17,8 @@ int set_strategies(t_options *opt, t_strategies *strat)
 {
 	strat->settime = last_modif;
 	strat->othersorting = NULL;
-	strat->printtotal = no_print_total;
+	strat->printtotal = no_print_total;		
+	strat->printformat = print_format_data_column;
 	strat->previous_print = false;
 	strat->print_path_name = true;
 
