@@ -108,6 +108,8 @@ static inline void	next_path(t_list **path_prev, t_list **next, t_list *current)
 
 static void	handle_reg_files(t_strategies *strat, t_directory *reg_files)
 {
+	strat->sortingalgo(reg_files->content, strat->sorting);
+	strat->sortingalgo(reg_files->content, strat->othersorting);
 	if (reg_files->content != NULL)
 	{
 		format(strat, reg_files);

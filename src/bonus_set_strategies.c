@@ -22,10 +22,11 @@ int set_strategies(t_options *opt, t_strategies *strat)
 	strat->print_path_name = true;
 
  	option_a(strat, opt);
-	option_l(strat, opt);
-	option_R(strat, opt);
 
+	option_l(strat, opt);
 	option_d(strat, opt);
+	
+	option_R(strat, opt);
 
 	option_f(strat, opt);
 	option_t(strat, opt);

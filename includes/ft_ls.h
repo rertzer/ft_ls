@@ -154,6 +154,7 @@ t_data  *new_data();
 void  data_del(void*);
 bool	is_directory_simple(t_data *data);
 bool	is_directory_longlist(t_data *data);
+bool	is_directory_nodir(t_data *data);
 // option handler
 int   parse_all_args(t_options *opt, t_list **paths, int argc, char **argv);
 bool  get_option(t_options *opt, char arg);

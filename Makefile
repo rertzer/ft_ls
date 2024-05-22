@@ -41,10 +41,12 @@ SOURCES := \
 	main.c
 
 SOURCES_MANDATORY := \
+	mandatory_parseoption.c \
 	mandatory_set_strategies.c
 
 SOURCES_BONUS := \
 	bonus_color.c \
+	bonus_parseoption.c \
 	bonus_set_strategies.c \
 	bonus_strategies.c
 

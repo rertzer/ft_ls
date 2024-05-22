@@ -102,3 +102,10 @@ bool	is_directory_longlist(t_data *data)
 	return (ret);
 
 }
+
+bool	is_directory_nodir(t_data *data)
+{
+	(void)data;
+
+	return (false);
+}

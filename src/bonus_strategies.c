@@ -15,8 +15,10 @@
 
 void	option_d(t_strategies *strat, t_options *opt)
 {
-	(void)strat;
-	(void)opt;
+	if (opt->value[OPT_D] == true)
+	{
+		strat->isdirectory = is_directory_nodir;
+	}
 }
 
 void	option_f(t_strategies *strat, t_options *opt)
