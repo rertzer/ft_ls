@@ -18,10 +18,6 @@ static unsigned int	print_format_size_field(char *dest, t_format_data *format_da
 static unsigned int	print_format_size(char *dest, t_format_data *format_data, t_format_sizes *format_sizes, unsigned int offset);
 static unsigned int	print_format_device(char *dest, t_format_data *format_data, t_format_sizes *format_sizes, unsigned int offset);
 static unsigned int	print_format_date(char *dest, t_format_data *format_data, t_format_sizes *format_sizes, unsigned int offset);
-static unsigned int	print_format_color(char *dest, t_format_data *format_data, unsigned int offset);
-static unsigned int	print_format_name(char *dest, t_format_data *format_data, unsigned int offset);
-static unsigned int	print_format_color_reset(char *dest, unsigned int offset);
-static unsigned int	print_format_short_ending(char *dest, unsigned int offset);
 static unsigned int	print_format_long_ending(char *dest, t_format_data *format_data, unsigned int offset);
 static void			print_format_symlink(t_format_data *format_data);
 //static unsigned int	get_end_pos(t_format_sizes *format_sizes);
@@ -171,7 +167,7 @@ static unsigned int	print_format_date(char *dest, t_format_data *format_data, t_
 	return (format_sizes->date + 1);
 }
 
-static unsigned int	print_format_color(char *dest, t_format_data *format_data, unsigned int offset)
+unsigned int	print_format_color(char *dest, t_format_data *format_data, unsigned int offset)
 {
 
 	const char *color = get_color_str(format_data->color);
@@ -181,20 +177,20 @@ static unsigned int	print_format_color(char *dest, t_format_data *format_data, u
 	return (ft_strlen(color));
 }
 
-static unsigned int	print_format_name(char *dest, t_format_data *format_data, unsigned int offset)
+unsigned int	print_format_name(char *dest, t_format_data *format_data, unsigned int offset)
 {
 	ft_buffercpy(&dest[offset], format_data->name);
 	return (ft_strlen(format_data->name));
 }
 
-static unsigned int	print_format_color_reset(char *dest, unsigned int offset)
+unsigned int	print_format_color_reset(char *dest, unsigned int offset)
 {
 	ft_buffercpy(&dest[offset], RESET);
 
 	return (RESET_SIZE);
 }
 
-static unsigned int	print_format_short_ending(char *dest, unsigned int offset)
+unsigned int	print_format_short_ending(char *dest, unsigned int offset)
 {
 	int	shift = 0;
 

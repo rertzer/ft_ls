@@ -131,6 +131,7 @@ typedef struct s_strategies {
 	bool	(*isdirectory)(t_data*);
 	time_t	(*settime)(struct stat*);
 	int		(*recurse)(struct s_strategies*, t_directory*);
+	int		(*printallformat)(struct s_strategies*, t_directory*, t_format_sizes*, t_format_data*);
 	int		(*printformat)(struct s_strategies*, t_format_data*, t_format_sizes *);
 	void	(*printtotal)(t_directory *dir);
 	int		(*color)(e_color_type*, t_file *file);
@@ -202,6 +203,11 @@ unsigned int	print_format_user(char *dest, t_format_data *format_data, t_format_
 unsigned int	print_format_group(char *dest, t_format_data *format_data, t_format_sizes *format_sizes, unsigned int offset);
 unsigned int	no_print_format_user(char *dest, t_format_data *format_data, t_format_sizes *format_sizes, unsigned int offset);
 unsigned int	no_print_format_group(char *dest, t_format_data *format_data, t_format_sizes *format_sizes, unsigned int offset);
+unsigned int	print_format_color(char *dest, t_format_data *format_data, unsigned int offset);
+unsigned int	print_format_name(char *dest, t_format_data *format_data, unsigned int offset);
+unsigned int	print_format_color_reset(char *dest, unsigned int offset);
+unsigned int	print_format_short_ending(char *dest, unsigned int offset);
+
 
 // list_path
 int	process_all_paths(t_strategies *strat, t_list **all_paths);

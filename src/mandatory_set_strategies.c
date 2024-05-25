@@ -18,6 +18,7 @@ int set_strategies(t_options *opt, t_strategies *strat)
 	strat->sortingalgo = bubble_sort;
 	strat->settime = last_modif;
 	strat->printtotal = no_print_total;
+	strat->printallformat = print_all_format_data;
 	strat->printformat = print_format_data_short;
 	strat->previous_print = false;
 	strat->print_path_name = true;

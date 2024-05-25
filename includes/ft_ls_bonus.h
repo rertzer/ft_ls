@@ -13,11 +13,13 @@
 #ifndef FT_LS_BONUS_H
 # define FT_LS_BONUS_H
 
-# include <termios.h>
+# include <sys/ioctl.h>
 
 # include "ft_ls.h"
 # include "bonus_parse_option.h"
 
+
+#define COLUMN_MIN_SPACE 1
 
 // bonus strategies
 void	option_d(t_strategies *strat, t_options *opt);
@@ -31,7 +33,6 @@ void	option_color(t_strategies *strat, t_options *opt);
 int	format_color(e_color_type *color_type, t_file *file);
 
 // bonus colums
-int	print_all_format_data_by_columns(t_strategies *strat, t_directory *dir, t_format_sizes *format_sizes, t_format_data *all_format_data);
-int	print_format_data_column(t_strategies *strat, t_format_data *format_data, t_format_sizes *format_sizes)
+int	print_all_format_data_column(t_strategies *strat, t_directory *dir, t_format_sizes *format_sizes, t_format_data *all_format_data);
 
 #endif // !FT_LS_BONUS_H
