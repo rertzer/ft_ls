@@ -19,7 +19,16 @@
 # include "bonus_parse_option.h"
 
 
-#define COLUMN_MIN_SPACE 1
+#define COLUMN_MIN_SPACE 2
+
+
+typedef {
+	unsigned int	line_nb;
+	unsigned int	col_nb;
+	unsigned int	full_col_nb;
+	unsigned int	term_width;
+	unsigned int	*col_sizes;
+}	t_column;
 
 // bonus strategies
 void	option_d(t_strategies *strat, t_options *opt);
