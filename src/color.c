@@ -14,8 +14,8 @@
 
 int no_color(e_color_type *color_type, t_file *file)
 {
-	*color_type = COLOR_TYPE_DEFT;
 	(void)file;
+	*color_type = COLOR_TYPE_DEFT;
 
 	return (OK);
 }

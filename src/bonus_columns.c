@@ -14,18 +14,21 @@
 
 static unsigned int	*get_file_sizes(t_directory *dir);
 static unsigned int	get_max_columns(unsigned int *file_sizes, unsigned int nb, unsigned int term_width);
+static	t_column	get_column(t_directory *dir);
 static int	set_columns(t_column *column, unsigned int *file_sizes, unsigned int nb, unsigned int max_col);
 static int	set_column_number(t_column *column, unsigned int *file_sizes, unsigned int file_nb, unsigned int col_nb);
 static void	init_column(t_column *column, unsigned int file_nb, unsigned int col_nb);
+static inline void	set_line_nb(t_column *column, unsigned int file_nb);
 static unsigned int	get_col_id(t_column *column, unsigned int i);
 static int	print_format_data_line(char *buffer, int line_index, t_column *column, t_format_data *all_format_data);
-static inline unsigned int	get_line_col_nb(t_column *column, unsigned int line_index);
-static unsigned int	print_format_data_column(char *buffer, int offset, t_format_data *format_data);
+static inline unsigned int	get_col_nb_by_line_id(t_column *column, unsigned int line_index);
+static unsigned int	print_format_data_column(char *buffer, unsigned int offset, unsigned int col_size, t_format_data *format_data);
 static unsigned int	get_term_width();
 
 int	print_all_format_data_column(t_strategies *strat, t_directory *dir, t_format_sizes *format_sizes, t_format_data *all_format_data)
 {
 	(void)strat;
+	(void)format_sizes;
 
 	int				ret = OK;
 	unsigned int	line_entries = 0;
@@ -37,7 +40,7 @@ int	print_all_format_data_column(t_strategies *strat, t_directory *dir, t_format
 		return (INTERNAL_KO);
 	}
 
-	unsigned int	buffer_size = column.term_width + col_nb * COLOR_CHAR_NB + 1;
+	unsigned int	buffer_size = column.term_width + column.col_nb * COLOR_CHAR_NB + 1;
 	
 	char	*buffer = ft_malloc(buffer_size + 1);
 	if (buffer == NULL)
@@ -45,6 +48,7 @@ int	print_all_format_data_column(t_strategies *strat, t_directory *dir, t_format
 		return (INTERNAL_KO);
 	}
 	buffer[buffer_size] = '\0';
+	printf("column %u %u %u\n", column.col_nb, column.line_nb, column.full_lines);
 	for (unsigned int line_index = 0; line_index < column.line_nb; ++line_index)
 	{
 		ft_memset(buffer, ' ', buffer_size);
@@ -52,7 +56,6 @@ int	print_all_format_data_column(t_strategies *strat, t_directory *dir, t_format
 		line_entries =  remaining_entries < column.col_nb ? remaining_entries : column.col_nb;
 		remaining_entries -= line_entries;
 
-		printf("entries: %u %u\n", line_entries, remaining_entries);
 		ret = print_format_data_line(buffer, line_index, &column, all_format_data);
 		if (ret == INTERNAL_KO)
 			break;
@@ -70,11 +73,11 @@ static	t_column	get_column(t_directory *dir)
 	column.col_sizes = NULL;
 	column.term_width = get_term_width();
 
-	unsigned int	file_sizes = get_file_sizes(dir);
-	if (file_sizes = NULL)
+	unsigned int	*file_sizes = get_file_sizes(dir);
+	if (file_sizes == NULL)
 		return (column);
 
-	unsigned int	max_col = get_max_columns(file_sizes, dir->entry_nb, column->term_width);	
+	unsigned int	max_col = get_max_columns(file_sizes, dir->entry_nb, column.term_width);	
 	set_columns(&column, file_sizes, dir->entry_nb, max_col);
 
 	free(file_sizes);
@@ -93,9 +96,9 @@ static unsigned int	*get_file_sizes(t_directory *dir)
 		return (NULL);
 	}
 
-	for (int i = 0; i < dir->entry_nb; ++i)
+	for (unsigned int i = 0; i < dir->entry_nb; ++i)
 	{
-		data = (data*)lst->content;
+		data = (t_data*)lst->content;
 		file_sizes[i] = ft_strlen(data->file.name);
 		lst = lst->next;
 	}
@@ -107,7 +110,7 @@ static unsigned int	get_max_columns(unsigned int *file_sizes, unsigned int nb, u
 {
 	unsigned int	min_name_size = 256;
 
-	for (int i = 0; i < nb; ++i)
+	for (unsigned int i = 0; i < nb; ++i)
 	{
 		if (file_sizes[i] < min_name_size)
 		{
@@ -124,8 +127,8 @@ static unsigned int	get_max_columns(unsigned int *file_sizes, unsigned int nb, u
 	
 static int	set_columns(t_column *column, unsigned int *file_sizes, unsigned int nb, unsigned int max_col)
 {
-	unsigned int	*col_sizes = ft_malloc(sizeof(unsigned int) * max_col);
-	if (col_sizes == NULL)
+	column->col_sizes = ft_malloc(sizeof(unsigned int) * max_col);
+	if (column->col_sizes == NULL)
 	{
 		return (INTERNAL_KO);
 	}
@@ -135,6 +138,7 @@ static int	set_columns(t_column *column, unsigned int *file_sizes, unsigned int 
 		if (set_column_number(column, file_sizes, nb, i) == TRUE)
 			break;
 	}
+
 	return (OK);
 }
 
@@ -170,35 +174,33 @@ static int	set_column_number(t_column *column, unsigned int *file_sizes, unsigne
 static void	init_column(t_column *column, unsigned int file_nb, unsigned int col_nb)
 {
 	column->col_nb = col_nb;
-	column->line_nb = (file_nb / col_nb) + !!(file_nb % col_nb);
-	column->full_col_nb = file_nb % col_nb;
-	if (column->full_col_nb == 0)
+	set_line_nb(column, file_nb);
+	column->full_lines = file_nb % column->line_nb;
+	if (column->full_lines == 0)
 	{
-		column->full_col_nb = col_nb;
+		column->full_lines = column->line_nb;
 	}
-
-	for (int i = 0; i < col_nb; ++i)
+	
+	for (unsigned int i = 0; i < col_nb; ++i)
 	{
 		column->col_sizes[i] = 0;
 	}
 }
 
-static unsigned int	get_col_id(t_column *column, unsigned int i)
+static inline void	set_line_nb(t_column *column, unsigned int file_nb)
+{
+	column->line_nb = file_nb / column->col_nb;
+	if (file_nb / column->col_nb != 0)
+	{
+		++column->line_nb;
+	}
+}
+
+static unsigned int	get_col_id(t_column *column, unsigned int file_id)
 {
 	unsigned int	col_id = 0;
-	unsigned int	full_col_max = column->line_nb * (column->full_col_nb + 1) - 1;
-
-	++i;
-
-	if (i <= full_col_max)
-	{
-		col_id = i / column->line_nb;
-	}
-	else
-	{
-		col_id = full_col_nb + 1;
-		col_id += (i - full_col_max) / (column->line_nb - 1);
-	}
+	
+	col_id = file_id / column->line_nb;
 
 	return (col_id);
 }
@@ -207,26 +209,18 @@ static unsigned int	get_file_id(t_column *column, unsigned int line, unsigned in
 {
 	unsigned int	id;
 
-	if (col <= column->full_col_nb)
-	{
-		id = col * column->line_nb + line;
-	}
-	else
-	{
-		id = column->line_nb * column->full_col_nb;
-		id += (col - column->full_col_nb) * (column->line_nb - 1) + line;
-	}
+	id = column->line_nb * col + line;
 
 	return (id);
 }
 
 static int	print_format_data_line(char *buffer, int line_index, t_column *column, t_format_data *all_format_data)
 {
-	unsigned int	offset;
-	unsigned int	col_nb = get_line_col_nb(column, line_index);
+	unsigned int	offset = 0;
+	unsigned int	col_nb = get_col_nb_by_line_id(column, line_index);
 
 
-	for (int col_index = 0; col_index < col_nb; ++col_index)
+	for (unsigned int col_index = 0; col_index < col_nb; ++col_index)
 	{
 		unsigned int	file_id = get_file_id(column, line_index, col_index);
 		offset = print_format_data_column(buffer, offset, column->col_sizes[col_index],&all_format_data[file_id]);
@@ -234,22 +228,18 @@ static int	print_format_data_line(char *buffer, int line_index, t_column *column
 
 	offset += print_format_short_ending(buffer, offset);
 
-	write(1, buffer, offset -1);
+	write(1, buffer, offset);
 
 	return (OK);
 }
 
-static inline unsigned int	get_line_col_nb(t_column *column, unsigned int line_index)
+static inline unsigned int	get_col_nb_by_line_id(t_column *column, unsigned int line_index)
 {
-	unsigned int	col_nb;
+	unsigned int col_nb = column->col_nb;
 
-	if (line_index + 1 == column.line_nb)
+	if (line_index < column->full_lines)
 	{
-		col_nb = column.full_col_nb;
-	}
-	else
-	{
-		col_nb = column.col_nb;
+		--col_nb;
 	}
 
 	return (col_nb);
@@ -263,7 +253,7 @@ static unsigned int	print_format_data_column(char *buffer, unsigned int offset, 
 	name_size = print_format_name(buffer, format_data, offset);
 	offset += name_size;
 	offset += print_format_color_reset(buffer, offset);
-	offset += col_size - name_size;
+	offset += col_size - name_size + COLUMN_MIN_SPACE;
 
 	return (offset);
 }

@@ -22,10 +22,10 @@
 #define COLUMN_MIN_SPACE 2
 
 
-typedef {
+typedef struct	{
 	unsigned int	line_nb;
 	unsigned int	col_nb;
-	unsigned int	full_col_nb;
+	unsigned int	full_lines;
 	unsigned int	term_width;
 	unsigned int	*col_sizes;
 }	t_column;
