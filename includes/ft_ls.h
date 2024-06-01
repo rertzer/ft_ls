@@ -16,6 +16,7 @@
 /*debug */
 # include <stdio.h>
 
+#define DP printf("%s %d\n", __FILE__, __LINE__);
 /*------*/
 
 # include <dirent.h>

@@ -28,6 +28,7 @@ SOURCES := \
 	errors.c \
 	keepentry.c \
 	loadformat.c \
+	mergesort.c \
 	options.c \
 	parseoption.c \
 	printformat.c \

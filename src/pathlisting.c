@@ -21,6 +21,7 @@ static void			handle_reg_files(t_strategies *strat, t_directory *reg_files);
 
 int	process_all_paths(t_strategies *strat, t_list **all_paths)
 {
+	
 	int	ret = OK;
 
 	ret = add_all_stats(strat, *all_paths);
@@ -40,6 +41,7 @@ int	process_all_paths(t_strategies *strat, t_list **all_paths)
 
 int	list_all_files(t_strategies *strat, t_list **all_paths)
 {
+	
 	int			ret = OK;
 	t_directory	reg_files;
 	t_list		*current = *all_paths;
@@ -169,8 +171,8 @@ int	list_path(t_strategies *strat, char* path)
 
 	init_dir(&dir);
 	dir.path = path;
-
 	ret = get_dir_content(strat, &dir);
+	
 	if (ret == OK)
 	{
 		strat->sortingalgo(dir.content, strat->sorting);
@@ -180,6 +182,6 @@ int	list_path(t_strategies *strat, char* path)
 
 	ret = strat->recurse(strat, &dir);
 	free_directory(&dir);
-	
+
 	return (ret);
 }

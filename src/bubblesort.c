@@ -27,8 +27,10 @@ int bubble_sort(t_list *lst, bool(*ordered)(t_data *a, t_data *b))
 	{
 		sorted = true;
 		current = lst;
+		int len = 0;
 		while(current)
 		{
+			len++;
 			if (current->next && ! sort_by_func(current->content, current->next->content, ordered))
 			{
 				swap(current);
