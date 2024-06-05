@@ -37,6 +37,7 @@ int format(t_strategies *strat, t_directory *dir)
 			ret = strat->printallformat(strat, dir, &format_sizes, all_format_data);
 		}
 	}
+
 	free(all_format_data);
 	return (ret);
 }

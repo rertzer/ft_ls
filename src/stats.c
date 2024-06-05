@@ -88,6 +88,7 @@ static int  add_xattr(t_data *data)
 	if (xattr_nb < 0)
 	{
 		ret = xattr_error(data);	
+		data->xattr = false;
 	}
 	else if (xattr_nb == 16 || xattr_nb == 0)
 	{

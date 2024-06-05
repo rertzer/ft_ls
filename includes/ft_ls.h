@@ -99,6 +99,8 @@ typedef struct {
 	char			*target;
 	e_color_type	color;
 	e_color_type	target_color;
+	bool			align_user_left;
+	bool			align_group_left;
 } t_format_data;
 
 typedef struct {
@@ -126,7 +128,7 @@ typedef struct {
 typedef struct s_strategies {
 	bool	(*keepEntry)(struct dirent*);
 	void	(*addlist)(t_list **, t_list*);
-	int		(*sortingalgo)(t_list*, bool(*sorting)(t_data*, t_data*));
+	t_list*		(*sortingalgo)(t_list*, unsigned int, bool(*sorting)(t_data*, t_data*));
 	bool	(*sorting)(t_data*, t_data*);
 	bool	(*othersorting)(t_data*, t_data*);
 	bool	(*isdirectory)(t_data*);
@@ -177,7 +179,8 @@ const char	*get_color_str(e_color_type color);
 
 //sorting
 int   bubble_sort(t_list* list, bool(*sorting)(t_data*, t_data*));
-int		no_sorting(t_list* lst, bool(*sorting)(t_data*, t_data*));
+t_list *merge_sort(t_list* lst, unsigned int lst_len, bool(*ordered)(t_data *a, t_data *b));
+t_list		*no_sorting(t_list* lst, unsigned int lst_len, bool(*sorting)(t_data*, t_data*));
 bool	sort_by_func(void *a, void *b, bool(*compare)(t_data *a, t_data *b));
 bool  sort_by_name(t_data *a, t_data *b);
 bool  sort_by_name_reverse(t_data *a, t_data *b);
@@ -211,7 +214,7 @@ unsigned int	print_format_short_ending(char *dest, unsigned int offset);
 
 
 // list_path
-int	process_all_paths(t_strategies *strat, t_list **all_paths);
+int	process_all_paths(t_strategies *strat, t_list **all_paths, unsigned int len);
 int  default_path(t_strategies *strat);
 int list_all_files(t_strategies *strat, t_list **all_paths);
 int list_all_path(t_strategies *strat, t_list *all_paths);

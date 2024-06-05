@@ -32,9 +32,8 @@ void	option_f(t_strategies *strat, t_options *opt)
 	else
 	{
 		strat->addlist = ft_lstadd_front;
-		strat->sortingalgo = bubble_sort;
+		strat->sortingalgo = merge_sort;
 	}
-
 }
 
 void	option_g(t_strategies *strat, t_options *opt)

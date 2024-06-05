@@ -19,7 +19,7 @@ static inline void	reset_next(t_list **next,t_list *current);
 static inline void	next_path(t_list **path_prev, t_list **next, t_list *current);
 static void			handle_reg_files(t_strategies *strat, t_directory *reg_files);
 
-int	process_all_paths(t_strategies *strat, t_list **all_paths)
+int	process_all_paths(t_strategies *strat, t_list **all_paths, unsigned int len)
 {
 	
 	int	ret = OK;
@@ -27,8 +27,8 @@ int	process_all_paths(t_strategies *strat, t_list **all_paths)
 	ret = add_all_stats(strat, *all_paths);
 	if (ret == OK)
 	{
-		strat->sortingalgo(*all_paths, strat->sorting);
-		bubble_sort(*all_paths, strat->othersorting);
+		*all_paths = strat->sortingalgo(*all_paths, len, strat->sorting);
+		*all_paths = strat->sortingalgo(*all_paths, len, strat->othersorting);
 		ret = list_all_files(strat, all_paths);
 		if (ret == OK)
 		{
@@ -110,8 +110,8 @@ static inline void	next_path(t_list **path_prev, t_list **next, t_list *current)
 
 static void	handle_reg_files(t_strategies *strat, t_directory *reg_files)
 {
-	strat->sortingalgo(reg_files->content, strat->sorting);
-	strat->sortingalgo(reg_files->content, strat->othersorting);
+	reg_files->content = strat->sortingalgo(reg_files->content, reg_files->entry_nb, strat->sorting);
+	reg_files->content = strat->sortingalgo(reg_files->content, reg_files->entry_nb, strat->othersorting);
 	if (reg_files->content != NULL)
 	{
 		format(strat, reg_files);
@@ -175,8 +175,8 @@ int	list_path(t_strategies *strat, char* path)
 	
 	if (ret == OK)
 	{
-		strat->sortingalgo(dir.content, strat->sorting);
-		strat->sortingalgo(dir.content, strat->othersorting);
+		dir.content = strat->sortingalgo(dir.content, dir.entry_nb, strat->sorting);
+		dir.content = strat->sortingalgo(dir.content, dir.entry_nb, strat->othersorting);
 		format(strat, &dir);
 	}
 

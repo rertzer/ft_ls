@@ -22,7 +22,9 @@ static inline void			format_mode_other(char *buffer, t_data *data);
 static inline unsigned int	format_mode_xattr(char *buffer, t_data *data, unsigned int size);
 static unsigned int			format_links(char *buffer, t_data *data);
 static unsigned int			format_user(t_strategies *strat, char **buffer, t_data *data);
+static unsigned int 		format_user_id(char **buffer, t_data *data);
 static unsigned int			format_group(t_strategies *strat, char **buffer, t_data *data);
+static unsigned int 		format_group_id(char **buffer, t_data *data);
 static unsigned int			format_size(char *buffer, t_data *data);
 static unsigned int			format_minor(char *buffer, t_data *data);
 static unsigned int			format_major(char *buffer, t_data *data);
@@ -65,6 +67,8 @@ static int	load_format_data(t_strategies *strat, t_data *data, t_format_sizes *f
 {
 	size_t  size = 0;
 
+	format_data->align_user_left = true;
+	format_data->align_group_left = true;
 	size = format_mode(format_data->mode, data);
 	set_max_size(&format_sizes->mode, size);
 	
@@ -72,9 +76,27 @@ static int	load_format_data(t_strategies *strat, t_data *data, t_format_sizes *f
 	set_max_size(&format_sizes->links, size);
 	
 	size = format_user(strat, &format_data->user, data);
+	if (size == 0)
+	{
+		size = format_user_id(&format_data->user, data);
+		if (size == 0)
+		{
+			return (MAJOR_KO);
+		}
+		format_data->align_user_left = false;
+	}
 	set_max_size(&format_sizes->user, size);
 	
 	size = format_group(strat, &format_data->group, data);
+	if (size == 0)
+	{
+		size = format_group_id(&format_data->group, data);
+		if (size == 0)
+		{
+			return (MAJOR_KO);
+		}
+		format_data->align_group_left = false;
+	}
 	set_max_size(&format_sizes->group, size);
 
 	size = format_size(format_data->size, data);
@@ -192,14 +214,46 @@ static unsigned int	format_links(char *buffer, t_data *data)
 
 static unsigned int format_user(t_strategies *strat, char **buffer, t_data *data)
 {
+	unsigned int	len = 0;
 	*buffer = get_user_name(strat, data->uid);
-	return (ft_strlen(*buffer));
+	if (*buffer != NULL)
+	{
+		len = ft_strlen(*buffer);
+	}
+	return (len);
+}
+
+static unsigned int format_user_id(char **buffer, t_data *data)
+{
+	unsigned int	len = 0;
+	*buffer = ft_itoa(data->uid);
+	if (buffer != NULL)
+	{
+		len = ft_strlen(*buffer);
+	}
+	return (len);
 }
 
 static unsigned int format_group(t_strategies *strat, char **buffer, t_data *data)
 {
+	unsigned int	len = 0;
 	*buffer = get_group_name(strat, data->gid);
-	return (ft_strlen(*buffer));
+	if (*buffer != NULL)
+	{
+		len = ft_strlen(*buffer);
+	}
+	return (len);
+}
+
+static unsigned int format_group_id(char **buffer, t_data *data)
+{
+	unsigned int	len = 0;
+	*buffer = ft_itoa(data->gid);
+	if (buffer != NULL)
+	{
+		len = ft_strlen(*buffer);
+	}
+	return (len);
 }
 
 static unsigned int format_size(char *buffer, t_data *data)

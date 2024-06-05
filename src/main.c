@@ -47,7 +47,7 @@ int main(int argc, char **argv)
 	}
 	else
 	{
-		ret = process_all_paths(&strat, &all_paths);
+		ret = process_all_paths(&strat, &all_paths, path_nb);
 	}
 
 	ft_lstclear(&all_paths, data_del);

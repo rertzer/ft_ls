@@ -43,7 +43,6 @@ int	xattr_error(t_data *data)
 	{
 		ft_putstr_fd("ft_ls: listxattr: ", 2);
 		perror(data->path);
-		ret = MAJOR_KO;
 	}
 	return (ret);
 }

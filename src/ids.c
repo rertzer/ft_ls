@@ -67,7 +67,10 @@ static char  *getpw_username(uid_t id)
 	struct passwd	*psw = getpwuid(id);
 	if (psw == NULL)
 	{
-		perror("ft_ls: getpwuid: ");
+		if (errno != 0)
+		{
+			perror("ft_ls: getpwuid: ");
+		}
 	}
 	else
 	{
@@ -85,7 +88,10 @@ static char  *getgr_groupname(gid_t id)
 	struct group *grp = getgrgid(id);
 	if (grp == NULL)
 	{
-		perror("ft_ls: getgrgid: ");
+		if (errno != 0)
+		{
+			perror("ft_ls: getgrgid: ");
+		}
 	}
 	else
 	{

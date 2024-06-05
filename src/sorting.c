@@ -12,12 +12,13 @@
 
 #include "ft_ls.h"
 
-int	no_sorting(t_list* lst, bool(*sorting)(t_data*, t_data*))
+t_list	*no_sorting(t_list* lst, unsigned int lst_len, bool(*sorting)(t_data*, t_data*))
 {
 	(void)lst;
+	(void)lst_len;
 	(void)sorting;
 
-	return (OK);
+	return (lst);
 }
 
 bool	sort_by_func(void *a, void *b, bool(*compare)(t_data *data_a, t_data *data_b))

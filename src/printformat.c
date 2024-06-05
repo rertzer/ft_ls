@@ -48,6 +48,16 @@ int	print_format_data_short(t_strategies *strat, t_format_data *format_data, t_f
 	offset += print_format_short_ending(buffer, offset);
 
 	write(1, buffer, offset);
+	if (format_data->align_user_left == false)
+	{
+		free(format_data->user);
+		format_data->name = NULL;
+	}
+	if (format_data->align_group_left == false)
+	{
+		free(format_data->group);
+		format_data->group = NULL;
+	}
 
 	return (OK);
 }
@@ -90,14 +100,35 @@ static unsigned int	print_format_links(char *dest, t_format_data *format_data, t
 
 unsigned int	print_format_user(char *dest, t_format_data *format_data, t_format_sizes *format_sizes, unsigned int offset)
 {
-	ft_buffercpy(&dest[offset], format_data->user);
+	if (format_data->align_user_left == true)
+	{
+		ft_buffercpy(&dest[offset], format_data->user);
+	}
+	else
+	{
+		offset += format_sizes->user - ft_strlen(format_data->user);	
+		ft_buffercpy(&dest[offset], format_data->user);
+		free(format_data->user);
+		format_data->user = NULL;
+	}
 	return (format_sizes->user + 1);
 }
 
 unsigned int	print_format_group(char *dest, t_format_data *format_data, t_format_sizes *format_sizes, unsigned int offset)
 {
-	ft_buffercpy(&dest[offset], format_data->group);
-	return (format_sizes->group + 1);
+	if (format_data->align_group_left == true)
+	{
+		ft_buffercpy(&dest[offset], format_data->group);
+	}
+	else
+	{
+		offset += format_sizes->group - ft_strlen(format_data->user);	
+		ft_buffercpy(&dest[offset], format_data->group);
+		free(format_data->group);
+		format_data->group = NULL;
+	}
+
+		return (format_sizes->group + 1);
 }
 
 unsigned int	no_print_format_user(char *dest, t_format_data *format_data, t_format_sizes *format_sizes, unsigned int offset)
@@ -122,7 +153,7 @@ unsigned int	no_print_format_group(char *dest, t_format_data *format_data, t_for
 
 static unsigned int	print_format_size_field(char *dest, t_format_data *format_data, t_format_sizes *format_sizes, unsigned int offset)
 {
-	if(format_data->mode[0] == 'c' || format_data->mode[0] == 'b')
+	if (format_data->mode[0] == 'c' || format_data->mode[0] == 'b')
 	{
 		return (print_format_device(dest, format_data, format_sizes, offset));
 	}

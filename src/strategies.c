@@ -28,6 +28,7 @@ void	option_l(t_strategies *strat, t_options *opt)
 {
 	if (opt->value[OPT_L] == true)
 	{
+		strat->printallformat = print_all_format_data;
 		strat->printformat = print_format_data_long;
 		strat->isdirectory = is_directory_longlist;
 		strat->printtotal = print_total;

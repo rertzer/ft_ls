@@ -15,7 +15,7 @@
 int set_strategies(t_options *opt, t_strategies *strat)
 {
 	strat->addlist = ft_lstadd_front;
-	strat->sortingalgo = bubble_sort;
+	strat->sortingalgo = merge_sort;
 	strat->settime = last_modif;
 	strat->printtotal = no_print_total;
 	strat->printallformat = print_all_format_data;
@@ -25,6 +25,7 @@ int set_strategies(t_options *opt, t_strategies *strat)
 	strat->printuser = print_format_user;
 	strat->printgroup = print_format_group;
 	strat->color = no_color;
+	strat->othersorting = NULL;
 
  	option_a(strat, opt);
 	option_l(strat, opt);
