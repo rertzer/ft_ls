@@ -22,6 +22,7 @@ int set_strategies(t_options *opt, t_strategies *strat)
 	strat->printformat = print_format_data_short;
 	strat->previous_print = false;
 	strat->print_path_name = true;
+	strat->strcmp = ft_strcmp_local;
 
  	option_a(strat, opt);
 

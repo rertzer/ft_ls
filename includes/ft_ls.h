@@ -131,6 +131,7 @@ typedef struct s_strategies {
 	t_list*		(*sortingalgo)(t_list*, unsigned int, bool(*sorting)(t_data*, t_data*));
 	bool	(*sorting)(t_data*, t_data*);
 	bool	(*othersorting)(t_data*, t_data*);
+	int		(*strcmp)(const char*, const char*);
 	bool	(*isdirectory)(t_data*);
 	time_t	(*settime)(struct stat*);
 	int		(*recurse)(struct s_strategies*, t_directory*);
@@ -170,9 +171,7 @@ int set_strategies(t_options *opt, t_strategies *strat);
 void	option_a(t_strategies *strat, t_options *opt);
 void	option_l(t_strategies *strat, t_options *opt);
 void	option_r(t_strategies *strat, t_options *opt);
-void	option_R(t_strategies *strat, t_options *opt);
-void	option_t(t_strategies *strat, t_options *opt);
-void	option_time_sorting(t_strategies *strat, t_options *opt);
+void	option_R(t_strategies *strat, t_options *opt); void	option_t(t_strategies *strat, t_options *opt); void	option_time_sorting(t_strategies *strat, t_options *opt);
 //color
 int no_color(e_color_type *color_type, t_file *file);
 const char	*get_color_str(e_color_type color);
@@ -186,6 +185,7 @@ bool  sort_by_name(t_data *a, t_data *b);
 bool  sort_by_name_reverse(t_data *a, t_data *b);
 bool  sort_by_time(t_data *a, t_data *b);
 bool  sort_by_time_reverse(t_data *a, t_data *b);
+int	ls_strcmp(const char *s1, const char *s2);
 //keepentry
 bool  keep_all(struct dirent* entry);
 bool  skip_dot(struct dirent* entry);

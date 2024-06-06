@@ -47,6 +47,7 @@ SOURCES := ft_atoi.c	\
 	ft_strmapi.c	\
 	ft_strncmp.c	\
 	ft_strcmp_ci.c	\
+	ft_strcmp_local.c	\
 	ft_strcmp.c	\
 	ft_strnstr.c	\
 	ft_strrchr.c	\

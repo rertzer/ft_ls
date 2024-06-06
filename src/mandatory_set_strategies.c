@@ -26,6 +26,7 @@ int set_strategies(t_options *opt, t_strategies *strat)
 	strat->printgroup = print_format_group;
 	strat->color = no_color;
 	strat->othersorting = NULL;
+	strat->strcmp = ft_strcmp;
 
  	option_a(strat, opt);
 	option_l(strat, opt);

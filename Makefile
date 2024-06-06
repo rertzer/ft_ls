@@ -43,14 +43,16 @@ SOURCES := \
 
 SOURCES_MANDATORY := \
 	mandatory_parseoption.c \
-	mandatory_set_strategies.c
+	mandatory_set_strategies.c \
+	mandatory_strcmp.c
 
 SOURCES_BONUS := \
 	bonus_color.c \
 	bonus_columns.c \
 	bonus_parseoption.c \
 	bonus_set_strategies.c \
-	bonus_strategies.c
+	bonus_strategies.c \
+	bonus_strcmp.c
 
 SOURCES_BONUS += $(SOURCES)
 
