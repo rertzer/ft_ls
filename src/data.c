@@ -12,7 +12,7 @@
 
 #include "ft_ls.h"
 
-static  int add_data_path(t_data *data, char const * const name, char const * const path);
+static  int			add_data_path(t_data *data, char const * const name, char const * const path);
 
 t_data	*add_new_data(t_list **lst, char const * const name, char const * const path, void (*lstadd)(t_list**, t_list*))
 {
@@ -20,8 +20,8 @@ t_data	*add_new_data(t_list **lst, char const * const name, char const * const p
 	t_list  *newlst = NULL;
 
 	if ((data = new_data()) == NULL || \
-		(data->file.name = ft_strdup(name)) == NULL || \
-		(add_data_path(data, name, path)) != OK || \
+		(data->file.name = ft_pathdup(name)) == NULL || \
+		(add_data_path(data, data->file.name, path)) != OK || \
 		(newlst = ft_lstnew(data)) == NULL)
 	{
 		data_del(data);
