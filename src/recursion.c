@@ -34,12 +34,12 @@ int	recursive(t_strategies *strat, t_directory *dir)
 			char *path = ft_strdup(data->path);
 			if (path == NULL)
 			{
-				ret = MAJOR_KO;
+				ret = INTERNAL_KO;
 				break;
 			}
 
 			ret = list_path(strat, path);
-			if (ret != OK)
+			if (ret == INTERNAL_KO)
 			{
 				break;
 			}

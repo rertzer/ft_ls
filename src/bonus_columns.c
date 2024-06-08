@@ -13,7 +13,7 @@
 #include "ft_ls.h"
 
 static unsigned int	*get_file_sizes(t_directory *dir);
-static	t_column	get_column(t_directory *dir);
+static int	get_column(t_directory *dir, t_column *column);
 static int	set_columns(t_column *column, unsigned int *file_sizes, unsigned int nb);
 static int	set_column_number(t_column *column, unsigned int *file_sizes, unsigned int file_nb, unsigned int col_nb);
 static void	init_column(t_column *column, unsigned int file_nb, unsigned int line_nb);
@@ -31,11 +31,17 @@ int	print_all_format_data_column(t_strategies *strat, t_directory *dir, t_format
 	int				ret = OK;
 	unsigned int	line_entries = 0;
 	unsigned int	remaining_entries = dir->entry_nb;
-	
-	t_column		column = get_column(dir);
-	if (column.col_nb == 0)
+	t_column		column;
+
+	if (dir->entry_nb == 0)
 	{
-		return (INTERNAL_KO);
+		return (ret);
+	}
+
+	ret = get_column(dir, &column);
+	if (ret == INTERNAL_KO)
+	{
+		return (ret);
 	}
 
 	unsigned int	buffer_size = column.term_width + column.col_nb * COLOR_CHAR_NB + 1;
@@ -43,6 +49,7 @@ int	print_all_format_data_column(t_strategies *strat, t_directory *dir, t_format
 	char	*buffer = ft_malloc(buffer_size + 1);
 	if (buffer == NULL)
 	{
+		free(column.col_sizes);
 		return (INTERNAL_KO);
 	}
 	buffer[buffer_size] = '\0';
@@ -63,22 +70,23 @@ int	print_all_format_data_column(t_strategies *strat, t_directory *dir, t_format
 }
 
 
-static	t_column	get_column(t_directory *dir)
+static int	get_column(t_directory *dir, t_column *column)
 {
-	t_column		column;
-	column.col_nb = 0;
-	column.col_sizes = NULL;
-	column.term_width = get_term_width();
+	int	ret = OK;
+
+	column->col_nb = 0;
+	column->col_sizes = NULL;
+	column->term_width = get_term_width();
 
 	unsigned int	*file_sizes = get_file_sizes(dir);
 	if (file_sizes == NULL)
-		return (column);
+		return (INTERNAL_KO);
 
-	set_columns(&column, file_sizes, dir->entry_nb);
+	ret = set_columns(column, file_sizes, dir->entry_nb);
 
 	free(file_sizes);
 
-	return (column);
+	return (ret);
 }
 
 static unsigned int	*get_file_sizes(t_directory *dir)

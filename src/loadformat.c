@@ -21,9 +21,9 @@ static inline void			format_mode_group(char *buffer, t_data *data);
 static inline void			format_mode_other(char *buffer, t_data *data);
 static inline unsigned int	format_mode_xattr(char *buffer, t_data *data, unsigned int size);
 static unsigned int			format_links(char *buffer, t_data *data);
-static unsigned int			format_user(t_strategies *strat, char **buffer, t_data *data);
+static int					format_user(t_strategies *strat, char **buffer, unsigned int *len, t_data *data);
 static unsigned int 		format_user_id(char **buffer, t_data *data);
-static unsigned int			format_group(t_strategies *strat, char **buffer, t_data *data);
+static int					format_group(t_strategies *strat, char **buffer, unsigned int *len, t_data *data);
 static unsigned int 		format_group_id(char **buffer, t_data *data);
 static unsigned int			format_size(char *buffer, t_data *data);
 static unsigned int			format_minor(char *buffer, t_data *data);
@@ -46,7 +46,7 @@ int  load_all_format_data(t_strategies *strat, t_directory *dir, t_format_sizes 
 
 		load_block_size(dir, data);
 		ret = load_format_data(strat, data, format_sizes, &all_format_data[i]);
-		if (ret != OK)
+		if (ret == INTERNAL_KO)
 		{
 			break;
 		}
@@ -65,7 +65,8 @@ static inline void	load_block_size(t_directory *dir, t_data *data)
 
 static int	load_format_data(t_strategies *strat, t_data *data, t_format_sizes *format_sizes, t_format_data *format_data)
 {
-	size_t  size = 0;
+	int				ret = OK;
+	unsigned int	size = 0;
 
 	format_data->align_user_left = true;
 	format_data->align_group_left = true;
@@ -75,25 +76,33 @@ static int	load_format_data(t_strategies *strat, t_data *data, t_format_sizes *f
 	size = format_links(format_data->links, data);
 	set_max_size(&format_sizes->links, size);
 	
-	size = format_user(strat, &format_data->user, data);
+	ret = format_user(strat, &format_data->user, &size, data);
+	if (ret == INTERNAL_KO)
+	{
+		return (ret);
+	}
 	if (size == 0)
 	{
 		size = format_user_id(&format_data->user, data);
 		if (size == 0)
 		{
-			return (MAJOR_KO);
+			return (INTERNAL_KO);
 		}
 		format_data->align_user_left = false;
 	}
 	set_max_size(&format_sizes->user, size);
 	
-	size = format_group(strat, &format_data->group, data);
+	ret = format_group(strat, &format_data->group, &size, data);
+	if (ret == INTERNAL_KO)
+	{
+		return (ret);
+	}
 	if (size == 0)
 	{
 		size = format_group_id(&format_data->group, data);
 		if (size == 0)
 		{
-			return (MAJOR_KO);
+			return (INTERNAL_KO);
 		}
 		format_data->align_group_left = false;
 	}
@@ -111,7 +120,7 @@ static int	load_format_data(t_strategies *strat, t_data *data, t_format_sizes *f
 	size = format_time(format_data->date, data);
 	if (size == 0)
 	{
-		return (MAJOR_KO);
+		return (INTERNAL_KO);
 	}
 	set_max_size(&format_sizes->date, size);
 
@@ -126,7 +135,7 @@ static int	load_format_data(t_strategies *strat, t_data *data, t_format_sizes *f
 		strat->color(&format_data->target_color, &data->target);
 	}
 
-	return (OK);
+	return (ret);
 }
 
 static unsigned int	format_mode(char *buffer, t_data *data)
@@ -212,15 +221,20 @@ static unsigned int	format_links(char *buffer, t_data *data)
 	return (ft_itoa_dec(data->links, buffer));
 }
 
-static unsigned int format_user(t_strategies *strat, char **buffer, t_data *data)
+static int format_user(t_strategies *strat, char **buffer, unsigned int *len, t_data *data)
 {
-	unsigned int	len = 0;
-	*buffer = get_user_name(strat, data->uid);
-	if (*buffer != NULL)
+	int	ret = OK;
+
+	ret = get_user_name(strat, buffer, data->uid);
+	if (ret == OK && *buffer != NULL)
 	{
-		len = ft_strlen(*buffer);
+		*len = ft_strlen(*buffer);
 	}
-	return (len);
+	else
+	{
+		*len = 0;
+	}
+	return (ret);
 }
 
 static unsigned int format_user_id(char **buffer, t_data *data)
@@ -234,15 +248,19 @@ static unsigned int format_user_id(char **buffer, t_data *data)
 	return (len);
 }
 
-static unsigned int format_group(t_strategies *strat, char **buffer, t_data *data)
+static int format_group(t_strategies *strat, char **buffer, unsigned int *len, t_data *data)
 {
-	unsigned int	len = 0;
-	*buffer = get_group_name(strat, data->gid);
-	if (*buffer != NULL)
+	int	ret = OK;
+	ret = get_group_name(strat, buffer, data->gid);
+	if (ret == OK && *buffer != NULL)
 	{
-		len = ft_strlen(*buffer);
+		*len = ft_strlen(*buffer);
 	}
-	return (len);
+	else
+	{
+		*len = 0;
+	}
+	return (ret);
 }
 
 static unsigned int format_group_id(char **buffer, t_data *data)

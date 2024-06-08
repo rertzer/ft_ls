@@ -17,7 +17,7 @@ static inline void	add_to_reg_files(t_directory *reg_files, t_list **files_prev,
 static inline void	remove_from_all_paths(t_list **all_paths, t_list *path_prev, t_list *current);
 static inline void	reset_next(t_list **next,t_list *current);
 static inline void	next_path(t_list **path_prev, t_list **next, t_list *current);
-static void			handle_reg_files(t_strategies *strat, t_directory *reg_files);
+static int			handle_reg_files(t_strategies *strat, t_directory *reg_files);
 
 int	process_all_paths(t_strategies *strat, t_list **all_paths, unsigned int len)
 {
@@ -67,7 +67,7 @@ int	list_all_files(t_strategies *strat, t_list **all_paths)
 		}
 		current = next;
 	}
-	handle_reg_files(strat, &reg_files);
+	ret = handle_reg_files(strat, &reg_files);
 	return (ret);
 }
 
@@ -108,15 +108,17 @@ static inline void	next_path(t_list **path_prev, t_list **next, t_list *current)
 	*next = current->next;
 }
 
-static void	handle_reg_files(t_strategies *strat, t_directory *reg_files)
+static int	handle_reg_files(t_strategies *strat, t_directory *reg_files)
 {
+	int	ret = OK;
 	reg_files->content = strat->sortingalgo(reg_files->content, reg_files->entry_nb, strat->sorting);
 	reg_files->content = strat->sortingalgo(reg_files->content, reg_files->entry_nb, strat->othersorting);
 	if (reg_files->content != NULL)
 	{
-		format(strat, reg_files);
+		ret = format(strat, reg_files);
 		free_directory(reg_files);
 	}
+	return (ret);
 }
 
 int	list_all_path(t_strategies *strat, t_list *all_paths)
@@ -151,7 +153,7 @@ int	default_path(t_strategies *strat)
 {
 	int	ret = OK;
 
-	char	*path = strdup(".");
+	char	*path = ft_strdup(".");
 	if (path == NULL)
 	{
 		ret = INTERNAL_KO;
@@ -177,10 +179,13 @@ int	list_path(t_strategies *strat, char* path)
 	{
 		dir.content = strat->sortingalgo(dir.content, dir.entry_nb, strat->sorting);
 		dir.content = strat->sortingalgo(dir.content, dir.entry_nb, strat->othersorting);
-		format(strat, &dir);
+		ret = format(strat, &dir);
+	}
+	if (ret != INTERNAL_KO)
+	{
+		ret = strat->recurse(strat, &dir);
 	}
 
-	ret = strat->recurse(strat, &dir);
 	free_directory(&dir);
 
 	return (ret);

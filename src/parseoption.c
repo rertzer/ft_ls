@@ -51,5 +51,3 @@ int	parse_short_option(t_options *opt, char *arg)
 
 	return (ret);
 }
-
-

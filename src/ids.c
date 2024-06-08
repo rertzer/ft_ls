@@ -12,8 +12,8 @@
 
 #include "ft_ls.h"
 
-static char	*getpw_username(uid_t id);
-static char	*getgr_groupname(gid_t id);
+static int	getpw_username(uid_t id, char **name);
+static int	getgr_groupname(gid_t id, char **name);
 
 void  init_ids(t_strategies *strat)
 {
@@ -27,76 +27,101 @@ void  free_ids(t_strategies *strat)
 	free_dict(strat->groups);
 }
 
-char *get_user_name(t_strategies *strat, uid_t id)
+int	get_user_name(t_strategies *strat, char **name, uid_t id)
 {
-	char	*name = get_value_by_key(strat->users, id);
+	int	ret = OK;
+	*name = get_value_by_key(strat->users, id);
 
-	if (name == NULL)
+	if (*name == NULL)
 	{
-		name = getpw_username(id);
-		if (name != NULL)
+		ret = getpw_username(id, name);
+		if (*name != NULL)
 		{
-			insert_key(strat->users, id, name);
+			if (insert_key(strat->users, id, *name) == INTERNAL_KO)
+			{
+				free(*name);
+				ret = INTERNAL_KO;
+			}
 		}
 	}
 
-	return (name);
+	return (ret);
 }
 
-char *get_group_name(t_strategies *strat, gid_t id)
+int	get_group_name(t_strategies *strat, char **name, gid_t id)
 {
-	char	*name = get_value_by_key(strat->groups, id);
+	int	ret = OK;
 
-	if (name == NULL)
+	*name = get_value_by_key(strat->groups, id);
+
+	if (*name == NULL)
 	{
-		name = getgr_groupname(id);
-		if (name != NULL)
+		ret = getgr_groupname(id, name);
+		if (*name != NULL)
 		{
-			insert_key(strat->groups, id, name);
+			if (insert_key(strat->groups, id, *name))
+			{
+				free(*name);
+				ret = INTERNAL_KO;
+			}
 		}
 	}
 
-	return (name);
+	return (ret);
 }
 
-static char  *getpw_username(uid_t id)
+static int	getpw_username(uid_t id, char **name)
 {
-	char	*name = NULL;
+	int	ret = OK;
 
+	*name = NULL;
 	errno = 0;
+
 	struct passwd	*psw = getpwuid(id);
 	if (psw == NULL)
 	{
 		if (errno != 0)
 		{
 			perror("ft_ls: getpwuid: ");
+			ret = MAJOR_KO;
 		}
 	}
 	else
 	{
-		name = ft_strdup(psw->pw_name);
+		*name = ft_strdup(psw->pw_name);
+		if (*name == NULL)
+		{
+			ret = INTERNAL_KO;
+		}
 	}
 
-	return (name);
+	return (ret);
 }
 
-static char  *getgr_groupname(gid_t id)
+static int	getgr_groupname(gid_t id, char **name)
 {
-	char	*name = NULL;
-
+	int		ret = OK;
+	
+	*name = NULL;
 	errno = 0;
+
 	struct group *grp = getgrgid(id);
 	if (grp == NULL)
 	{
 		if (errno != 0)
 		{
+			ret = MAJOR_KO;
 			perror("ft_ls: getgrgid: ");
 		}
 	}
 	else
 	{
-		name = ft_strdup(grp->gr_name);
+		*name = ft_strdup(grp->gr_name);
+		if (*name == NULL)
+		{
+			ret = INTERNAL_KO;
+		}
 	}
 
-	return (name);
+	return (ret);
 }

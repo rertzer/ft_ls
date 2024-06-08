@@ -24,6 +24,7 @@ int main(int argc, char **argv)
 	ret = parse_all_args(&opt, &all_paths, argc, argv);
 	if (ret != OK)
 	{
+		ft_lstclear(&all_paths, data_del);
 		return (return_reformat(ret));
 	}
 

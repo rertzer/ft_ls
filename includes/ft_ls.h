@@ -243,8 +243,8 @@ void  free_dict(t_list *dict[HASH_SIZE]);
 //ids
 void  init_ids(t_strategies *strat);
 void  free_ids(t_strategies *strat);
-char *get_user_name(t_strategies *strat, uid_t id);
-char *get_group_name(t_strategies *strat, gid_t id);
+int	get_user_name(t_strategies *strat, char **name, uid_t id);
+int	get_group_name(t_strategies *strat, char **name, gid_t id);
 // error handling
 void  print_char_error(char *message, char param);
 void	print_error_msg(char *message, char *param);
