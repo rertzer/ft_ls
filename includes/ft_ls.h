@@ -53,6 +53,24 @@
 # define HASH_A 2654435769
 # define HASH_SHIFT 23
 
+# define SIX_MONTH_MIN 15638400
+# define SIX_MONTH_MAX 15897600
+
+# define JAN_CODE 8
+# define FEB_CODE 0
+# define MAR_CODE 12
+# define APR_CODE 27
+# define MAY_CODE 19
+# define JUN_CODE 28
+# define JUL_CODE 26
+# define AUG_CODE 21
+# define SEP_CODE 14
+# define OCT_CODE 16
+# define NOV_CODE 30
+# define DEC_CODE 1
+# define MONTH_CODE_MAX 31
+# define MONTH_CODE_SHIFT 199
+           
 
 typedef enum {REG, DIREC, CHR, BLK, FIFO, LNK, SOCK, ERROR_TYPE=-1} e_type; 
 
@@ -136,7 +154,7 @@ typedef struct s_strategies {
 	time_t	(*settime)(struct stat*);
 	int		(*recurse)(struct s_strategies*, t_directory*);
 	int		(*printallformat)(struct s_strategies*, t_directory*, t_format_sizes*, t_format_data*);
-	int		(*printformat)(struct s_strategies*, t_format_data*, t_format_sizes *);
+	int		(*printformat)(struct s_strategies*, t_format_data*, t_format_sizes *, char *buffer);
 	void	(*printtotal)(t_directory *dir);
 	int		(*color)(e_color_type*, t_file *file);
 	unsigned int	(*printuser)(char *dest, t_format_data*, t_format_sizes*, unsigned int);
@@ -201,8 +219,8 @@ void	no_print_total(t_directory *dir);
 int  load_all_format_data(t_strategies *strat, t_directory *dir, t_format_sizes *format_sizes, t_format_data * all_format_data);
 // print format
 int  print_all_format_data(t_strategies *strat, t_directory *dir, t_format_sizes *format_sizes, t_format_data *all_format_data);
-int		print_format_data_long(t_strategies *strat, t_format_data *format_data, t_format_sizes *format_sizes);
-int		print_format_data_short(t_strategies *strat, t_format_data *format_data, t_format_sizes *format_sizes);
+int		print_format_data_long(t_strategies *strat, t_format_data *format_data, t_format_sizes *format_sizes, char *buffer);
+int		print_format_data_short(t_strategies *strat, t_format_data *format_data, t_format_sizes *format_sizes, char *buffer);
 unsigned int	print_format_user(char *dest, t_format_data *format_data, t_format_sizes *format_sizes, unsigned int offset);
 unsigned int	print_format_group(char *dest, t_format_data *format_data, t_format_sizes *format_sizes, unsigned int offset);
 unsigned int	no_print_format_user(char *dest, t_format_data *format_data, t_format_sizes *format_sizes, unsigned int offset);
@@ -225,7 +243,7 @@ void  free_directory(t_directory *dir);
 void  init_dir(t_directory *dir);
 int get_dir_content(t_strategies *strat, t_directory *dir);
 // recent
-int recent(char *time_string);
+int recent(time_t time, char *time_string);
 // time
 time_t  last_modif(struct stat *stat_buffer);
 time_t  access_time(struct stat *stat_buffer);

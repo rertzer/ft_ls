@@ -84,13 +84,13 @@ static int  add_xattr(t_data *data)
 	int	ret = OK;
 
 	errno = 0;
-	ssize_t	xattr_nb = listxattr(data->path, NULL, 0);
-	if (xattr_nb < 0)
+	ssize_t	xattr_len = listxattr(data->path, NULL, 0);
+	if (xattr_len < 0)
 	{
 		ret = xattr_error(data);	
 		data->xattr = false;
 	}
-	else if (xattr_nb == 16 || xattr_nb == 0)
+	else if (xattr_len == 16 || xattr_len == 0)
 	{
 		data->xattr = false;
 	}

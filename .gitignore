@@ -1,3 +1,6 @@
+# valgrind
+callgrind.out.*
+cachegrind.out.*
 # vim files
 *.swp
 

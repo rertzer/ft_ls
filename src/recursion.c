@@ -31,7 +31,7 @@ int	recursive(t_strategies *strat, t_directory *dir)
 		t_data *data = (t_data*)lst->content;
 		if (data->file.type == DIREC && not_a_dot(data->file.name))
 		{
-			char *path = ft_strdup(data->path);
+			char *path = ft_longdup(data->path);
 			if (path == NULL)
 			{
 				ret = INTERNAL_KO;

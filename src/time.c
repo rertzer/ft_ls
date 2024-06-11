@@ -33,7 +33,7 @@ char	*get_time_string(time_t *time)
 		return (NULL);
 	}
 
-	char  *time_string = ft_strdup(tmp);
+	char  *time_string = ft_longdup(tmp);
 
 	return (time_string);
 }

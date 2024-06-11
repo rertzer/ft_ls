@@ -20,27 +20,34 @@ static unsigned int	print_format_device(char *dest, t_format_data *format_data, 
 static unsigned int	print_format_date(char *dest, t_format_data *format_data, t_format_sizes *format_sizes, unsigned int offset);
 static unsigned int	print_format_long_ending(char *dest, t_format_data *format_data, unsigned int offset);
 static void			print_format_symlink(t_format_data *format_data);
+static	void		space_feed(void *v, int n);
 //static unsigned int	get_end_pos(t_format_sizes *format_sizes);
 
 int	print_all_format_data(t_strategies *strat, t_directory *dir, t_format_sizes *format_sizes, t_format_data *all_format_data)
 {
+	char			buffer[1024];
+	unsigned int	offset = 1024;
+
+	if (strat->printformat == print_format_data_short)
+	{
+		offset = 280;
+	}
+
 	for (unsigned int i = 0; i < dir->entry_nb; ++i)
 	{
-		strat->printformat(strat, &all_format_data[i], format_sizes);
+		space_feed(buffer, offset);
+		offset = strat->printformat(strat, &all_format_data[i], format_sizes, buffer);
 	}
 
 	return (OK);
 }
 
-int	print_format_data_short(t_strategies *strat, t_format_data *format_data, t_format_sizes *format_sizes)
+int	print_format_data_short(t_strategies *strat, t_format_data *format_data, t_format_sizes *format_sizes, char *buffer)
 {
 	(void)strat;
 	(void)format_sizes;
 
 	unsigned int	offset = 0;
-	char			buffer[280];
-
-	ft_memset(buffer, ' ', 280);
 
 	offset += print_format_color(buffer, format_data, offset);
 	offset += print_format_name(buffer, format_data, offset);
@@ -59,15 +66,12 @@ int	print_format_data_short(t_strategies *strat, t_format_data *format_data, t_f
 		format_data->group = NULL;
 	}
 
-	return (OK);
+	return (offset);
 }
 
-int	print_format_data_long(t_strategies *strat, t_format_data *format_data, t_format_sizes *format_sizes)
+int	print_format_data_long(t_strategies *strat, t_format_data *format_data, t_format_sizes *format_sizes, char *buffer)
 {
 	unsigned int	offset = 0;
-	char			buffer[1024];
-
-	ft_memset(buffer, ' ', 1024);
 
 	offset += print_format_mode(buffer, format_data, format_sizes, offset);
 	offset += print_format_links(buffer, format_data, format_sizes, offset);
@@ -83,7 +87,7 @@ int	print_format_data_long(t_strategies *strat, t_format_data *format_data, t_fo
 	write(1, buffer, offset);
 	print_format_symlink(format_data);
 
-	return (OK);
+	return (offset);
 }
 
 static unsigned int	print_format_mode(char *dest, t_format_data *format_data, t_format_sizes *format_sizes, unsigned int offset)
@@ -261,6 +265,23 @@ static void	print_format_symlink(t_format_data *format_data)
 		ft_putchar_fd('\n', 1);
 	}
 }
+
+static	void space_feed(void *v, int n)
+{
+	int64_t	*s = (int64_t*)v;	
+
+	int	r = n % 8;
+	if (r != 0)
+	{
+		n += 8 - r;
+	}
+	n /= 8;
+	for (int i = 0; i < n; ++i)
+	{
+		s[i] = 2314885530818453536;
+	}
+}
+
 /*
 static unsigned int get_end_pos(t_format_sizes *format_sizes)
 {

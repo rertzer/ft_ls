@@ -130,7 +130,7 @@ int	list_all_path(t_strategies *strat, t_list *all_paths)
 	{
 		t_data	*data = (t_data*)all_paths->content;
 		
-		path = ft_strdup(data->path);
+		path = ft_longdup(data->path);
 		if (path == NULL)
 		{
 			ret = INTERNAL_KO;
@@ -153,7 +153,7 @@ int	default_path(t_strategies *strat)
 {
 	int	ret = OK;
 
-	char	*path = ft_strdup(".");
+	char	*path = ft_longdup(".");
 	if (path == NULL)
 	{
 		ret = INTERNAL_KO;

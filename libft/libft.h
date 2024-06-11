@@ -6,7 +6,7 @@
 /*   By: rertzer <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 11:20:30 by rertzer           #+#    #+#             */
-/*   Updated: 2024/06/06 14:41:25 by rertzer          ###   ########.fr       */
+/*   Updated: 2024/06/10 14:53:34 by rertzer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,4 +87,5 @@ char	*ft_strcpy(char *dest, const char *src);
 char	*ft_pathjoin(char const *s1, char const *s2);
 bool	ft_is_inset(const char c, const char *set);
 bool	ft_strinset(const char *str, const char** set);
+char	*ft_longdup(const void *src);
 #endif

@@ -39,7 +39,7 @@ static  int add_data_path(t_data *data, char const * const name, char const * co
 	int ret = OK;
 	if (path == NULL)
 	{
-		data->path = ft_strdup(name);
+		data->path = ft_longdup(name);
 	}
 	else
 	{

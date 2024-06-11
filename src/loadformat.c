@@ -320,7 +320,7 @@ static unsigned int format_time(char *buffer, t_data *data)
 		return 0;
 	}
 
-	if (recent(time_string))
+	if (recent(data->time, time_string))
 	{
 		size = format_recent_time(buffer, time_string);
 	}

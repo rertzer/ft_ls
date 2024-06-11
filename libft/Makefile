@@ -22,6 +22,7 @@ SOURCES := ft_atoi.c	\
 	ft_isprint.c	\
 	ft_itoa.c	\
 	ft_itoa_dec.c \
+	ft_longdup.c \
 	ft_memchr.c	\
 	ft_malloc.c \
 	ft_memcmp.c	\

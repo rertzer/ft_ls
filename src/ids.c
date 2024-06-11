@@ -88,7 +88,7 @@ static int	getpw_username(uid_t id, char **name)
 	}
 	else
 	{
-		*name = ft_strdup(psw->pw_name);
+		*name = ft_longdup(psw->pw_name);
 		if (*name == NULL)
 		{
 			ret = INTERNAL_KO;
@@ -116,7 +116,7 @@ static int	getgr_groupname(gid_t id, char **name)
 	}
 	else
 	{
-		*name = ft_strdup(grp->gr_name);
+		*name = ft_longdup(grp->gr_name);
 		if (*name == NULL)
 		{
 			ret = INTERNAL_KO;
