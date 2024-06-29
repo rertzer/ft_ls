@@ -12,8 +12,8 @@
 
 #include "ft_ls.h"
 
-static	time_t	get_now();
-static char*	get_now_string();
+static time_t	get_now();
+static void		get_now_string(char *now_string, time_t now);
 static int		recent_month(char *time_string, char *now_string, int year_offset);
 static int		recent_day(char *time_string, char *now_string);
 static int		getMonth(char *time);
@@ -22,6 +22,8 @@ static int		getDay(char *time);
 
 int	recent(time_t time, char *time_string)
 {
+	static char	now_string[26];
+
 	time_t	now = get_now();
 	time_t	diff = now - time;
 	if (diff < SIX_MONTH_MIN)
@@ -33,8 +35,8 @@ int	recent(time_t time, char *time_string)
 		return (false);
 	}
 
-	char*	now_string = get_now_string(now);
-	if (now_string == NULL)
+	get_now_string(now_string, now);
+	if (now_string[0] == '\0')
 	{
 		return (ERROR);
 	}
@@ -48,27 +50,36 @@ int	recent(time_t time, char *time_string)
 
 static	time_t	get_now()
 {
-	errno = 0;
-	time_t	now = time(NULL);
-	if (now == -1)
+	static	time_t	now;
+
+	if (now == 0)
 	{
-		perror("ft_ls: time: ");
+		errno = 0;
+		now = time(NULL);
+		if (now == -1)
+		{
+			perror("ft_ls: time: ");
+		}
 	}
 	return (now);
 }
 
-
-static char*	get_now_string(time_t now)
+static void	get_now_string(char *now_string, time_t now)
 {
 	errno = 0;
 
-	char	*now_string = ctime(&now);
-	if (now_string == NULL)
+	if (now_string[0] == '\0')
 	{
-		perror("ft_ls: ctime: ");
+		char *now_tmp = ctime(&now);
+		if (now_tmp == NULL)
+		{
+			perror("ft_ls: ctime: ");
+		}
+		else
+		{
+			ft_strcpy(now_string, now_tmp);
+		}
 	}
-
-	return (now_string);
 }
 
 static int	recent_month(char *time_string, char *now_string, int year_offset)

@@ -36,6 +36,7 @@ cachegrind.out.*
 
 # Executables
 ft_ls
+ft_ls_bonus
 *.exe
 *.out
 *.app

@@ -21,6 +21,7 @@ int main(int argc, char **argv)
 	t_list        *all_paths = NULL;
 	t_strategies  strat;
 
+	recent(0, NULL);
 	ret = parse_all_args(&opt, &all_paths, argc, argv);
 	if (ret != OK)
 	{

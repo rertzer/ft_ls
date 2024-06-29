@@ -329,7 +329,7 @@ static unsigned int format_time(char *buffer, t_data *data)
 		size = format_late_time(buffer, time_string);
 	}
 
-	free(time_string);
+	//free(time_string);
 	
 	return (size);
 }

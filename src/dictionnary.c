@@ -39,10 +39,10 @@ int insert_key(t_list *dict[HASH_SIZE], unsigned int key, char *value)
 	return (OK);
 }
 
-char* get_value_by_key(t_list * const dict[HASH_SIZE], unsigned int key)
+char* get_value_by_key(t_list * dict[HASH_SIZE], unsigned int key)
 {
 	unsigned int	hash = get_hash(key);
-	t_list const	*lst = dict[hash];
+	t_list			*lst = dict[hash];
 	char		 	*value = NULL;
 
 	while (lst)

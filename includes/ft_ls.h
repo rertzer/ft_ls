@@ -255,7 +255,7 @@ int  compute_stats(t_strategies *strat, t_data *data);
 int  add_symlink(t_data *data);
 // dictonnary
 int insert_key(t_list *dict[HASH_SIZE], unsigned int key, char *value);
-char* get_value_by_key(t_list * const dict[HASH_SIZE], unsigned int key);
+char* get_value_by_key(t_list * dict[HASH_SIZE], unsigned int key);
 void  init_dict(t_list *dict[HASH_SIZE]);
 void  free_dict(t_list *dict[HASH_SIZE]);
 //ids
