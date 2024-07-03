@@ -13,6 +13,8 @@
 #include "ft_ls.h"
 
 static int					load_format_data(t_strategies *strat, t_data *data, t_format_sizes *format_sizes, t_format_data *format_data);
+static int	load_format_data_invalid(t_strategies *strat, t_data *data, t_format_sizes *format_sizes, t_format_data *format_data);
+static int	load_format_data_valid(t_strategies *strat, t_data *data, t_format_sizes *format_sizes, t_format_data *format_data);
 static inline void			load_block_size(t_directory *dir, t_data *data);
 static unsigned int			format_mode(char *buffer, t_data *data);
 static inline void			format_mode_type(char *buffer, t_data *data);
@@ -53,7 +55,10 @@ int  load_all_format_data(t_strategies *strat, t_directory *dir, t_format_sizes 
 		entry = entry->next;
 		++i;
 	}
-	set_max_size(&format_sizes->size, format_sizes->minor + format_sizes->major + 2);
+	if (format_sizes->minor || format_sizes->major)
+	{
+		set_max_size(&format_sizes->size, format_sizes->minor + format_sizes->major + 2);
+	}
 
 	return (ret);
 }
@@ -64,6 +69,58 @@ static inline void	load_block_size(t_directory *dir, t_data *data)
 }
 
 static int	load_format_data(t_strategies *strat, t_data *data, t_format_sizes *format_sizes, t_format_data *format_data)
+{
+	if (data->file.mode == UINT_MAX)
+	{
+		return (load_format_data_invalid(strat, data, format_sizes, format_data));
+	}
+	else
+	{
+		return (load_format_data_valid(strat, data, format_sizes, format_data));
+	}
+}
+
+static int	load_format_data_invalid(t_strategies *strat, t_data *data, t_format_sizes *format_sizes, t_format_data *format_data)
+{
+	(void)strat;
+
+	static char	*question_mark = "?";
+
+	format_data->align_user_left = true;
+	format_data->align_group_left = true;
+
+	format_mode_type(format_data->mode, data);
+	for (int i = 1; i < 10; ++i)
+	{
+		format_data->mode[i] = '?';
+	}
+	format_data->mode[10] = '\0';
+	format_data->links[0] = '?';
+	format_data->links[1] = '\0';
+	format_data->user = question_mark;
+	format_data->group = question_mark;
+	format_data->size[0] = '?';
+	format_data->size[1] = '\0';
+	format_data->date[0] = '?';
+	format_data->date[1] = '\0';
+	set_max_size(&format_sizes->mode, 10);
+	set_max_size(&format_sizes->links, 1);
+	set_max_size(&format_sizes->user, 1);
+	set_max_size(&format_sizes->group, 1);
+	set_max_size(&format_sizes->size, 1);
+	set_max_size(&format_sizes->date, 1);
+	
+	unsigned int	size = format_name(&format_data->name, data);
+	set_max_size(&format_sizes->name, size);
+
+	format_symlink(&format_data->target, data);
+
+	strat->color(&format_data->color, &data->file);
+
+	return (OK);
+}
+
+static int	load_format_data_valid(t_strategies *strat, t_data *data, t_format_sizes *format_sizes, t_format_data *format_data)
 {
 	int				ret = OK;
 	unsigned int	size = 0;
@@ -329,8 +386,6 @@ static unsigned int format_time(char *buffer, t_data *data)
 		size = format_late_time(buffer, time_string);
 	}
 
-	//free(time_string);
-	
 	return (size);
 }
 
@@ -368,4 +423,3 @@ static void set_max_size(unsigned int *max, unsigned int size)
 		*max = size;
 	}
 }
-

@@ -13,8 +13,9 @@
 #include "ft_ls.h"
 
 static  int			add_data_path(t_data *data, char const * const name, char const * const path);
+static e_type		get_e_type(unsigned char d_type);
 
-t_data	*add_new_data(t_list **lst, char const * const name, char const * const path, void (*lstadd)(t_list**, t_list*))
+t_data	*add_new_data(t_list **lst, char const *const name, unsigned char d_type, char const *const path, void (*lstadd)(t_list**, t_list*))
 {
 	t_data  *data = NULL;
 	t_list  *newlst = NULL;
@@ -29,9 +30,25 @@ t_data	*add_new_data(t_list **lst, char const * const name, char const * const p
 	}
 	else
 	{
+		data->file.type = get_e_type(d_type);
 		lstadd(lst, newlst);
 	}
 	return (data);
+}
+
+static e_type	get_e_type(unsigned char d_type)
+{
+	e_type	types[13];
+	types[DT_UNKNOWN] = ERROR_TYPE;
+	types[DT_REG] = REG;
+	types[DT_DIR] = DIREC;
+	types[DT_CHR] = CHR;
+	types[DT_BLK] = BLK;
+	types[DT_FIFO] = FIFO;
+	types[DT_LNK] = LNK;
+	types[DT_SOCK] = SOCK;
+	
+	return (types[d_type]);
 }
 
 static  int add_data_path(t_data *data, char const * const name, char const * const path)
@@ -58,10 +75,12 @@ t_data  *new_data()
 	if (data != NULL)
 	{
 		data->file.name = NULL;
+		data->file.type = 0;
+		data->file.mode = UINT_MAX;
 		data->path = NULL;
 		data->target.name = NULL;
-		data->target.type = -1;
-		data->target.mode = -1;
+		data->target.type = 0;
+		data->target.mode = UINT_MAX;
 		data->file.broken = false;
 		data->target.broken = false;
 	}

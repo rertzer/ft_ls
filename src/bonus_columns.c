@@ -231,7 +231,7 @@ static unsigned int	print_format_data_column(char *buffer, unsigned int offset, 
 	offset += print_format_color(buffer, format_data, offset);
 	name_size = print_format_name(buffer, format_data, offset);
 	offset += name_size;
-	offset += print_format_color_reset(buffer, offset);
+	offset += print_format_color_reset(buffer, format_data, offset);
 	offset += col_size - name_size + COLUMN_MIN_SPACE;
 
 	return (offset);

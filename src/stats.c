@@ -20,6 +20,7 @@ static int	set_symlink_type(t_data *data);
 int	add_all_stats(t_strategies *strat, t_list *all_paths)
 {
 	int		ret = OK;
+	int		status = ret;
 	t_data	*data = NULL;
 
 	while (all_paths != NULL)
@@ -27,26 +28,25 @@ int	add_all_stats(t_strategies *strat, t_list *all_paths)
 		data = (t_data*)all_paths->content;
 
 		ret = add_stats(strat, data);
-		if (ret != OK)
+		status = ret > status ? ret : status;
+		if (ret == OK)
 		{
-			break;
-		}
-		
-		ret = compute_stats(strat, data);
-		if (ret != OK)
-		{
-			break;
-		}
-		
-		if (data->file.type == LNK)
-		{
-			ret = add_symlink(data);
+			ret = compute_stats(strat, data);
+			if (ret != OK)
+			{
+				break;
+			}
+			
+			if (data->file.type == LNK)
+			{
+				ret = add_symlink(data);
+			}
 		}
 		
 		all_paths = all_paths->next;
 	}
-
-	return (ret);
+	status = ret > status ? ret : status;
+	return (status);
 }
 
 int add_stats(t_strategies *strat, t_data *data)
@@ -57,9 +57,7 @@ int add_stats(t_strategies *strat, t_data *data)
 	errno = 0;
 	if (lstat(data->path, &stat_buffer) != 0)
 	{
-		ret = MAJOR_KO;
-		ft_putstr_fd("ft_ls: lstat: ", 2);
-		perror(data->path);
+		ret = print_perror_msg("lstat: '", data->path);
 	}
 	else
 	{
@@ -73,8 +71,8 @@ int add_stats(t_strategies *strat, t_data *data)
 		data->block_size = stat_buffer.st_blksize;
 		data->block_nb = stat_buffer.st_blocks;
 		data->time = strat->settime(&stat_buffer);
+		ret = add_xattr(data);
 	}
-	ret = add_xattr(data);
 
 	return (ret);
 }

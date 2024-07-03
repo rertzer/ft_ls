@@ -18,14 +18,16 @@ static inline void	remove_from_all_paths(t_list **all_paths, t_list *path_prev, 
 static inline void	reset_next(t_list **next,t_list *current);
 static inline void	next_path(t_list **path_prev, t_list **next, t_list *current);
 static int			handle_reg_files(t_strategies *strat, t_directory *reg_files);
+static int			list_duplicated_path(t_strategies *strat, char *path);
 
 int	process_all_paths(t_strategies *strat, t_list **all_paths, unsigned int len)
 {
 	
 	int	ret = OK;
-
+	int	status = ret;
 	ret = add_all_stats(strat, *all_paths);
-	if (ret == OK)
+	status = ret;
+	if (ret != INTERNAL_KO)
 	{
 		*all_paths = strat->sortingalgo(*all_paths, len, strat->sorting);
 		*all_paths = strat->sortingalgo(*all_paths, len, strat->othersorting);
@@ -34,9 +36,10 @@ int	process_all_paths(t_strategies *strat, t_list **all_paths, unsigned int len)
 		{
 			ret = list_all_path(strat, *all_paths);
 		}
+		status = ret > status ? ret : status;
 	}
 
-	return (ret);
+	return (status);
 }
 
 int	list_all_files(t_strategies *strat, t_list **all_paths)
@@ -124,69 +127,73 @@ static int	handle_reg_files(t_strategies *strat, t_directory *reg_files)
 int	list_all_path(t_strategies *strat, t_list *all_paths)
 {
 	int		ret = OK;
-	char	*path = NULL;
+	int		status = ret;
 
 	while (all_paths != NULL)
 	{
 		t_data	*data = (t_data*)all_paths->content;
 		
-		path = ft_longdup(data->path);
-		if (path == NULL)
+		ret = list_path(strat, data->path);
+
+		if (ret ==  INTERNAL_KO)
 		{
-			ret = INTERNAL_KO;
+			status = ret;
 			break;
 		}
-
-		ret = list_path(strat, path);
-		if (ret != OK)
-		{
-			break;
-		}
-
+		status = ret > status ? ret : status;
 		all_paths = all_paths->next;
 	}
 
-	return (ret);
+	return (status);
 }
 
 int	default_path(t_strategies *strat)
 {
+	return (list_path(strat, "."));
+}
+
+int	list_path(t_strategies *strat, char* path)
+{
 	int	ret = OK;
 
-	char	*path = ft_longdup(".");
-	if (path == NULL)
+	char	*dup_path = ft_longdup(path);
+	if (dup_path == NULL)
 	{
 		ret = INTERNAL_KO;
 	}
 	else
 	{
-		ret = list_path(strat, path);
+		ret = list_duplicated_path(strat, dup_path);
 	}
 
 	return (ret);
 }
 
-int	list_path(t_strategies *strat, char* path)
+static int	list_duplicated_path(t_strategies *strat, char *path)
 {
 	int			ret = OK;
+	int			status = ret;
 	t_directory	dir;
 
 	init_dir(&dir);
 	dir.path = path;
 	ret = get_dir_content(strat, &dir);
+	status = ret > status ? ret : status;
 	
-	if (ret == OK)
+	if (ret != INTERNAL_KO)
 	{
 		dir.content = strat->sortingalgo(dir.content, dir.entry_nb, strat->sorting);
 		dir.content = strat->sortingalgo(dir.content, dir.entry_nb, strat->othersorting);
 		ret = format(strat, &dir);
+		status = ret > status ? ret : status;
 	}
 	if (ret != INTERNAL_KO)
 	{
 		ret = strat->recurse(strat, &dir);
+		status = ret > status ? ret : status;
 	}
 
 	free_directory(&dir);
 
-	return (ret);
+	return (status);
 }

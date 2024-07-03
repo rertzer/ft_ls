@@ -81,7 +81,7 @@ void	print_total(t_directory *dir)
 {
 	if (dir->path != NULL)
 	{
-		ft_putstr_fd("total: ", 1);
+		ft_putstr_fd("total ", 1);
 		ft_putnbr_fd(dir->total_block_size, 1);
 		ft_putchar_fd('\n', 1);
 	}

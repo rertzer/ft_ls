@@ -25,28 +25,24 @@ int	recursive(t_strategies *strat, t_directory *dir)
 {
 	t_list	*lst = dir->content;
 	int		ret = OK;
+	int		status = OK;
 
 	while (lst)
 	{
 		t_data *data = (t_data*)lst->content;
 		if (data->file.type == DIREC && not_a_dot(data->file.name))
 		{
-			char *path = ft_longdup(data->path);
-			if (path == NULL)
-			{
-				ret = INTERNAL_KO;
-				break;
-			}
-
-			ret = list_path(strat, path);
+			ret = list_path(strat, data->path);
 			if (ret == INTERNAL_KO)
 			{
+				status = ret;
 				break;
 			}
 		}
 		lst = lst->next;
+		status = ret > status ? ret : status;
 	}
-	return (ret);
+	return (status);
 }
 
 static bool not_a_dot(char *name)

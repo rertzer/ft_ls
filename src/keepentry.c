@@ -12,14 +12,14 @@
 
 #include "ft_ls.h"
 
-bool  keep_all(struct dirent* entry)
+bool  keep_all(const struct dirent* const entry)
 {
 	(void)entry;
 
 	return (true);
 }
 
-bool  skip_dot(struct dirent* entry)
+bool  skip_dot(const struct dirent* const entry)
 {
 	bool	ret = true;
 

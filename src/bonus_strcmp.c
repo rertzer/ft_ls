@@ -24,36 +24,90 @@ int	ls_strcmp(const char *s1, const char *s2)
 	char	a = 0;
 	char	b = 0;
 	size_t	i = 0;
+	size_t	j = 0;
+	bool	isalnum = false;
 
-	while (s1[i] != '\0')
-	{ 
 		a = ft_toupper(s1[i]);
-		b = ft_toupper(s2[i]);
+		b = ft_toupper(s2[j]);
+	while (s1[i] != '\0' && s2[j] != '\0')
+	{ 
+		if (! ft_isalnum(s1[i]))
+		{
+			++i;
+			a = ft_toupper(s1[i]);
+			continue;
+		}
+		if (! ft_isalnum(s2[j]))
+		{
+			++j;
+			b = ft_toupper(s2[j]);
+			continue;
+		}
+		isalnum = true;
 		
 		if (a != b)
 		  break;
 		++i;
+		++j;
+		a = ft_toupper(s1[i]);
+		b = ft_toupper(s2[j]);
 	}
-
-	if (s1[i] == '\0' && s2[i] == '\0')
+	if (isalnum)
 	{
-		i = 0;
-		while (s1[i] != '\0')
+		if (s1[i] == '\0' && s2[j] == '\0')
 		{
-			if (s1[i] != s2[i])
-				break;
-			++i;
+			i = 0;
+			j = 0;
+			while (s1[i] != '\0' && s2[j] != '\0')
+			{
+				if (! ft_isalnum(s1[i]))
+				{
+					++i;
+					continue;
+				}
+				if (! ft_isalnum(s2[j]))
+				{
+					++j;
+					continue;
+				}
+
+				if (s1[i] != s2[j])
+					break;
+				++i;
+				++j;
+			}
+			diff = s2[j] - s1[i];
+			if (diff == 0)
+			{
+				i = 0;
+				j = 0;
+				while (s1[i] != '\0' && s2[j] != '\0')
+				{
+					
+					if (s1[i] != s2[j])
+						break;
+					++i;
+					++j;
+				}
+				diff = (unsigned int)s1[i] - (unsigned int)s2[j];
+			}
 		}
-		diff = s2[i] - s1[i];
+		else
+		{
+			diff = (unsigned char)a - (unsigned char)b;
+		}
+		if (diff == 0)
+		{
+			diff = dots_2 - dots_1;
+		}
 	}
 	else
-	{
-		diff = (unsigned char)a - (unsigned char)b;
-	}
-	if (diff == 0)
-	{
-		diff = dots_2 - dots_1;
-	}
+		{
+			if (a == '\0' && b == '\0')
+				diff = dots_1 - dots_2;
+			else
+				diff = (unsigned char)a - (unsigned char)b;
+		}
 	return (diff);
 }
 
@@ -65,7 +119,7 @@ static inline size_t	skip_dots(const char **s)
 	{
 		++i;
 	}
-	if (i != 0 && (*s)[i] != '\0')
+	if (i != 0 )//&& (*s)[i] != '\0')
 	{
 		*s = &(*s)[i];
 	}

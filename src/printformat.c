@@ -51,7 +51,7 @@ int	print_format_data_short(t_strategies *strat, t_format_data *format_data, t_f
 
 	offset += print_format_color(buffer, format_data, offset);
 	offset += print_format_name(buffer, format_data, offset);
-	offset += print_format_color_reset(buffer, offset);
+	offset += print_format_color_reset(buffer, format_data, offset);
 	offset += print_format_short_ending(buffer, offset);
 
 	write(1, buffer, offset);
@@ -73,15 +73,20 @@ int	print_format_data_long(t_strategies *strat, t_format_data *format_data, t_fo
 {
 	unsigned int	offset = 0;
 
+	//printf("%s\n", buffer);
 	offset += print_format_mode(buffer, format_data, format_sizes, offset);
+
+	//printf("%s\n", buffer);
 	offset += print_format_links(buffer, format_data, format_sizes, offset);
+	//printf("%s\n", buffer);
 	offset += strat->printuser(buffer, format_data, format_sizes, offset);
+	//printf("%s\n", buffer);
 	offset += strat->printgroup(buffer, format_data, format_sizes, offset);
 	offset += print_format_size_field(buffer, format_data, format_sizes, offset);
 	offset += print_format_date(buffer, format_data, format_sizes, offset);
 	offset += print_format_color(buffer, format_data, offset);
 	offset += print_format_name(buffer, format_data, offset);
-	offset += print_format_color_reset(buffer, offset);
+	offset += print_format_color_reset(buffer, format_data, offset);
 	offset += print_format_long_ending(buffer, format_data, offset);
 
 	write(1, buffer, offset);
@@ -98,7 +103,12 @@ static unsigned int	print_format_mode(char *dest, t_format_data *format_data, t_
 
 static unsigned int	print_format_links(char *dest, t_format_data *format_data, t_format_sizes *format_sizes, unsigned int offset)
 {
+	unsigned int	buffer_size = ft_strlen(format_data->links);
+	
+	offset += format_sizes->links - buffer_size;
 	ft_buffercpy(&dest[offset], format_data->links);
+	offset += buffer_size + 1;
+	
 	return (format_sizes->links + 1);
 }
 
@@ -205,6 +215,8 @@ static unsigned int	print_format_date(char *dest, t_format_data *format_data, t_
 unsigned int	print_format_color(char *dest, t_format_data *format_data, unsigned int offset)
 {
 
+	if (format_data->color == COLOR_TYPE_DEFT)
+		return (0);
 	const char *color = get_color_str(format_data->color);
 
 	ft_buffercpy(&dest[offset], color);
@@ -218,8 +230,10 @@ unsigned int	print_format_name(char *dest, t_format_data *format_data, unsigned 
 	return (ft_strlen(format_data->name));
 }
 
-unsigned int	print_format_color_reset(char *dest, unsigned int offset)
+unsigned int	print_format_color_reset(char *dest, t_format_data * format_data, unsigned int offset)
 {
+	if (format_data->color == COLOR_TYPE_DEFT)
+		return (0);
 	ft_buffercpy(&dest[offset], RESET);
 
 	return (RESET_SIZE);
@@ -231,7 +245,7 @@ unsigned int	print_format_short_ending(char *dest, unsigned int offset)
 
 	dest[offset] = '\n';
 	dest[offset + 1] = '\0';
-	shift = 2;
+	shift = 1;
 
 	return (shift);
 }
@@ -258,10 +272,17 @@ static void	print_format_symlink(t_format_data *format_data)
 {
 	if (format_data->target != NULL)
 	{
-		const char *color = get_color_str(format_data->target_color);
-		ft_putstr_fd(color, 1);
-		ft_putstr_fd(format_data->target, 1);
-		ft_putstr_fd(RESET, 1);
+		if (format_data->target_color == COLOR_TYPE_DEFT)
+		{
+			ft_putstr_fd(format_data->target, 1);
+		}	
+		else
+		{
+			const char *color = get_color_str(format_data->target_color);
+			ft_putstr_fd(color, 1);
+			ft_putstr_fd(format_data->target, 1);
+			ft_putstr_fd(RESET, 1);
+		}
 		ft_putchar_fd('\n', 1);
 	}
 }
@@ -273,30 +294,11 @@ static	void space_feed(void *v, int n)
 	int	r = n % 8;
 	if (r != 0)
 	{
-		n += 8 - r;
+		n += 8;
 	}
 	n /= 8;
 	for (int i = 0; i < n; ++i)
 	{
-		s[i] = 2314885530818453536;
+		s[i] = EIGHT_SPACES;
 	}
 }
-
-/*
-static unsigned int get_end_pos(t_format_sizes *format_sizes)
-{
-  unsigned int  end_pos = 10;
-
-  end_pos += format_sizes->mode;
-  end_pos += format_sizes->links;
-  end_pos += format_sizes->user;
-  end_pos += format_sizes->group;
-  end_pos += format_sizes->size;
-  end_pos += format_sizes->minor;
-  end_pos += format_sizes->major;
-  end_pos += format_sizes->date;
-  end_pos += format_sizes->name;
-  end_pos += format_sizes->path;
-
-  return (end_pos);
-}*/

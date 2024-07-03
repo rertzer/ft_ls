@@ -24,7 +24,6 @@ SOURCES := \
 	ids.c \
 	format.c \
 	sorting.c \
-	bubblesort.c \
 	errors.c \
 	keepentry.c \
 	loadformat.c \

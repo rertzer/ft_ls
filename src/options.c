@@ -70,7 +70,7 @@ static int	parse_arg(t_options *opt, t_list **paths, char *arg)
 	}
 	else
 	{
-		t_data* data = add_new_data(paths, arg, NULL, ft_lstadd_front);
+		t_data* data = add_new_data(paths, arg, 0, NULL, ft_lstadd_front);
 		
 		if (data == NULL)
 		{

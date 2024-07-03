@@ -18,17 +18,25 @@ void  print_char_error(char *message, char param)
 	
 	param_string[1] = param;
 
-	ft_putstr_fd("ls: ", 2);
+	ft_putstr_fd("ft_ls: ", 2);
 	ft_putstr_fd(message, 2);
 	ft_putstr_fd(param_string, 2);
 }
 
 void	print_error_msg(char *message, char *param)
 {
-	ft_putstr_fd("ls: ", 2);
+	ft_putstr_fd("ft_ls: ", 2);
 	ft_putstr_fd(message, 2);
 	ft_putstr_fd(param, 2);
 	ft_putstr_fd("'\n", 2);
+}
+
+int		print_perror_msg(char *message, char *param)
+{
+	ft_putstr_fd(message, 2);
+	ft_putstr_fd(param, 2);
+	perror("'");
+	return (MINOR_KO);
 }
 
 int	xattr_error(t_data *data)

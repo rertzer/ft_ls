@@ -23,9 +23,7 @@ int get_dir_content(t_strategies *strat, t_directory *dir)
 	DIR	*dir_stream = opendir(dir->path);
 	if (dir_stream == NULL)
 	{
-		ft_putstr_fd("ls: cannot open directory '", 2);
-		ft_putstr_fd(dir->path, 2);
-		perror("'");
+		print_perror_msg("cannot open directory '", dir->path);
 		ret = MINOR_KO;
 	}
 	else
@@ -47,10 +45,7 @@ int get_dir_content(t_strategies *strat, t_directory *dir)
 		}
 		if (errno != 0 && ret == OK)
 		{
-			ret = MAJOR_KO;
-			ft_putstr_fd("ls: cannot read directory '", 2);
-			ft_putstr_fd(dir->path, 2);
-			perror("'");
+			ret = print_perror_msg("cannot read directory '", dir->path);
 		}
 	}
 	closedir(dir_stream);
@@ -61,7 +56,7 @@ static int add_entry(t_strategies *strat, t_directory *dir, struct dirent *dir_e
 {
 	int	ret = OK;
 
-	t_data*	data = add_new_data(&dir->content, dir_entry->d_name, dir->path, strat->addlist);
+	t_data*	data = add_new_data(&dir->content, dir_entry->d_name, dir_entry->d_type,dir->path, strat->addlist);
 	if (data == NULL)
 	{
 		return (INTERNAL_KO);
@@ -70,13 +65,15 @@ static int add_entry(t_strategies *strat, t_directory *dir, struct dirent *dir_e
 	++dir->entry_nb;
 
 	ret = add_stats(strat, data);
-	if (ret != OK)
+	if (ret == INTERNAL_KO)
 	{
 		return (ret);
 	}
 
-	ret = compute_stats(strat, data);
-
+	if (ret == OK)
+	{
+		ret = compute_stats(strat, data);
+	}
 	if (ret == OK && data->file.type == LNK)
 	{
 		ret = add_symlink(data);

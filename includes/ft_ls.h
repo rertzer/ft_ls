@@ -38,6 +38,8 @@
 # include "../libft/libft.h"
 # include "colors.h"
 
+
+/*================================ define =============================================*/
 # define	OK 0
 # define	MINOR_KO 1
 # define	MAJOR_KO 2
@@ -70,7 +72,10 @@
 # define DEC_CODE 1
 # define MONTH_CODE_MAX 31
 # define MONTH_CODE_SHIFT 199
-           
+
+# define EIGHT_SPACES 0x2020202020202020;
+
+/* ============================ Typedef ================================== */
 
 typedef enum {REG, DIREC, CHR, BLK, FIFO, LNK, SOCK, ERROR_TYPE=-1} e_type; 
 
@@ -78,7 +83,6 @@ typedef struct {
 	unsigned int	id;
 	char			*value;
 } t_id;
-
 
 typedef struct {
 	char	*name;
@@ -134,8 +138,6 @@ typedef struct {
 	unsigned int	path;
 } t_format_sizes;
 
-
-
 typedef struct {
 	char			*path;
 	size_t			total_block_size;
@@ -144,7 +146,7 @@ typedef struct {
 } t_directory;
 
 typedef struct s_strategies {
-	bool	(*keepEntry)(struct dirent*);
+	bool	(*keepEntry)(const struct dirent* const);
 	void	(*addlist)(t_list **, t_list*);
 	t_list*		(*sortingalgo)(t_list*, unsigned int, bool(*sorting)(t_data*, t_data*));
 	bool	(*sorting)(t_data*, t_data*);
@@ -165,106 +167,126 @@ typedef struct s_strategies {
 	t_list*	groups[HASH_SIZE];
 }  t_strategies;
 
+/* ================================= Mandatory or Bonus ============================ */
 # ifdef FT_LS_BONUS
 #  include "ft_ls_bonus.h"
 # else
 #  include "ft_ls_mandatory.h"
 # endif // !FT_LS_BONUS 
 
+/*======================================================= functions =========================================================== */
 // data handling
-t_data *add_new_data(t_list **lst, char const * const name, char const * const path, void (*lstadd)(t_list**, t_list*));
-t_data  *new_data();
-void  data_del(void*);
-bool	is_directory_simple(t_data *data);
-bool	is_directory_longlist(t_data *data);
-bool	is_directory_nodir(t_data *data);
+t_data			*add_new_data(t_list **lst, char const * const name, unsigned char d_type, char const * const path, void (*lstadd)(t_list**, t_list*));
+t_data			*new_data();
+void			data_del(void*);
+bool			is_directory_simple(t_data *data);
+bool			is_directory_longlist(t_data *data);
+bool			is_directory_nodir(t_data *data);
+
 // option handler
-int   parse_all_args(t_options *opt, t_list **paths, int argc, char **argv);
-bool  get_option(t_options *opt, char arg);
-int	parse_long_option(t_options *opt, char *arg);
-int	parse_short_option(t_options *opt, char *arg);
-int	parse_option(t_options *opt, char arg);
+int				parse_all_args(t_options *opt, t_list **paths, int argc, char **argv);
+bool			get_option(t_options *opt, char arg);
+int				parse_long_option(t_options *opt, char *arg);
+int				parse_short_option(t_options *opt, char *arg);
+int				parse_option(t_options *opt, char arg);
+
 //strategies
-int set_strategies(t_options *opt, t_strategies *strat);
-void	option_a(t_strategies *strat, t_options *opt);
-void	option_l(t_strategies *strat, t_options *opt);
-void	option_r(t_strategies *strat, t_options *opt);
-void	option_R(t_strategies *strat, t_options *opt); void	option_t(t_strategies *strat, t_options *opt); void	option_time_sorting(t_strategies *strat, t_options *opt);
+int				set_strategies(t_options *opt, t_strategies *strat);
+void			option_a(t_strategies *strat, t_options *opt);
+void			option_l(t_strategies *strat, t_options *opt);
+void			option_r(t_strategies *strat, t_options *opt);
+void			option_R(t_strategies *strat, t_options *opt); void	option_t(t_strategies *strat, t_options *opt);
+void			option_time_sorting(t_strategies *strat, t_options *opt);
+
 //color
-int no_color(e_color_type *color_type, t_file *file);
-const char	*get_color_str(e_color_type color);
+int				no_color(e_color_type *color_type, t_file *file);
+const char		*get_color_str(e_color_type color);
 
 //sorting
-int   bubble_sort(t_list* list, bool(*sorting)(t_data*, t_data*));
-t_list *merge_sort(t_list* lst, unsigned int lst_len, bool(*ordered)(t_data *a, t_data *b));
-t_list		*no_sorting(t_list* lst, unsigned int lst_len, bool(*sorting)(t_data*, t_data*));
-bool	sort_by_func(void *a, void *b, bool(*compare)(t_data *a, t_data *b));
-bool  sort_by_name(t_data *a, t_data *b);
-bool  sort_by_name_reverse(t_data *a, t_data *b);
-bool  sort_by_time(t_data *a, t_data *b);
-bool  sort_by_time_reverse(t_data *a, t_data *b);
-int	ls_strcmp(const char *s1, const char *s2);
+int				bubble_sort(t_list* list, bool(*sorting)(t_data*, t_data*));
+t_list			*merge_sort(t_list* lst, unsigned int lst_len, bool(*ordered)(t_data *a, t_data *b));
+t_list			*no_sorting(t_list* lst, unsigned int lst_len, bool(*sorting)(t_data*, t_data*));
+bool			sort_by_func(void *a, void *b, bool(*compare)(t_data *a, t_data *b));
+bool			sort_by_name(t_data *a, t_data *b);
+bool			sort_by_name_reverse(t_data *a, t_data *b);
+bool			sort_by_time(t_data *a, t_data *b);
+bool			sort_by_time_reverse(t_data *a, t_data *b);
+int				ls_strcmp(const char *s1, const char *s2);
+
 //keepentry
-bool  keep_all(struct dirent* entry);
-bool  skip_dot(struct dirent* entry);
+bool			keep_all(const struct dirent* const entry);
+bool			skip_dot(const struct dirent* const entry);
+
 //recursion
-int no_recursion(t_strategies *strat, t_directory *dir);
-int recursive(t_strategies *strat, t_directory *dir);
+int				no_recursion(t_strategies *strat, t_directory *dir);
+int				recursive(t_strategies *strat, t_directory *dir);
+
 // formating
-int format(t_strategies *strat, t_directory *dir);
+int				format(t_strategies *strat, t_directory *dir);
 unsigned int	format_name(char **buffer, t_data *data);
-void	print_total(t_directory *dir);
-void	no_print_total(t_directory *dir);
+void			print_total(t_directory *dir);
+void			no_print_total(t_directory *dir);
+
 //load format
-int  load_all_format_data(t_strategies *strat, t_directory *dir, t_format_sizes *format_sizes, t_format_data * all_format_data);
+int				load_all_format_data(t_strategies *strat, t_directory *dir, t_format_sizes *format_sizes, t_format_data * all_format_data);
+
 // print format
-int  print_all_format_data(t_strategies *strat, t_directory *dir, t_format_sizes *format_sizes, t_format_data *all_format_data);
-int		print_format_data_long(t_strategies *strat, t_format_data *format_data, t_format_sizes *format_sizes, char *buffer);
-int		print_format_data_short(t_strategies *strat, t_format_data *format_data, t_format_sizes *format_sizes, char *buffer);
+int				print_all_format_data(t_strategies *strat, t_directory *dir, t_format_sizes *format_sizes, t_format_data *all_format_data);
+int				print_format_data_long(t_strategies *strat, t_format_data *format_data, t_format_sizes *format_sizes, char *buffer);
+int				print_format_data_short(t_strategies *strat, t_format_data *format_data, t_format_sizes *format_sizes, char *buffer);
 unsigned int	print_format_user(char *dest, t_format_data *format_data, t_format_sizes *format_sizes, unsigned int offset);
 unsigned int	print_format_group(char *dest, t_format_data *format_data, t_format_sizes *format_sizes, unsigned int offset);
 unsigned int	no_print_format_user(char *dest, t_format_data *format_data, t_format_sizes *format_sizes, unsigned int offset);
 unsigned int	no_print_format_group(char *dest, t_format_data *format_data, t_format_sizes *format_sizes, unsigned int offset);
 unsigned int	print_format_color(char *dest, t_format_data *format_data, unsigned int offset);
 unsigned int	print_format_name(char *dest, t_format_data *format_data, unsigned int offset);
-unsigned int	print_format_color_reset(char *dest, unsigned int offset);
+unsigned int	print_format_color_reset(char *dest, t_format_data *format_data, unsigned int offset);
 unsigned int	print_format_short_ending(char *dest, unsigned int offset);
 
-
 // list_path
-int	process_all_paths(t_strategies *strat, t_list **all_paths, unsigned int len);
-int  default_path(t_strategies *strat);
-int list_all_files(t_strategies *strat, t_list **all_paths);
-int list_all_path(t_strategies *strat, t_list *all_paths);
-int list_path(t_strategies *strats, char* path);
+int				process_all_paths(t_strategies *strat, t_list **all_paths, unsigned int len);
+int				default_path(t_strategies *strat);
+int				list_all_files(t_strategies *strat, t_list **all_paths);
+int				list_all_path(t_strategies *strat, t_list *all_paths);
+int				list_path(t_strategies *strats, char* path);
+
 //directory
-void  free_directory(t_directory *dir);
+void			free_directory(t_directory *dir);
+
 // directory content
-void  init_dir(t_directory *dir);
-int get_dir_content(t_strategies *strat, t_directory *dir);
+void			init_dir(t_directory *dir);
+int				get_dir_content(t_strategies *strat, t_directory *dir);
+
 // recent
-int recent(time_t time, char *time_string);
+int				recent(time_t time, char *time_string);
+
 // time
-time_t  last_modif(struct stat *stat_buffer);
-time_t  access_time(struct stat *stat_buffer);
-char	*get_time_string(time_t *time);
+time_t			last_modif(struct stat *stat_buffer);
+time_t			access_time(struct stat *stat_buffer);
+char			*get_time_string(time_t *time);
+
 // stats
-int add_all_stats(t_strategies *strat, t_list *all_paths);
-int add_stats(t_strategies *strat, t_data *data);
-int  compute_stats(t_strategies *strat, t_data *data);
-int  add_symlink(t_data *data);
+int				add_all_stats(t_strategies *strat, t_list *all_paths);
+int				add_stats(t_strategies *strat, t_data *data);
+int				compute_stats(t_strategies *strat, t_data *data);
+int				add_symlink(t_data *data);
+
 // dictonnary
-int insert_key(t_list *dict[HASH_SIZE], unsigned int key, char *value);
-char* get_value_by_key(t_list * dict[HASH_SIZE], unsigned int key);
-void  init_dict(t_list *dict[HASH_SIZE]);
-void  free_dict(t_list *dict[HASH_SIZE]);
+int				insert_key(t_list *dict[HASH_SIZE], unsigned int key, char *value);
+char*			get_value_by_key(t_list * dict[HASH_SIZE], unsigned int key);
+void			init_dict(t_list *dict[HASH_SIZE]);
+void			free_dict(t_list *dict[HASH_SIZE]);
+
 //ids
-void  init_ids(t_strategies *strat);
-void  free_ids(t_strategies *strat);
-int	get_user_name(t_strategies *strat, char **name, uid_t id);
-int	get_group_name(t_strategies *strat, char **name, gid_t id);
+void			init_ids(t_strategies *strat);
+void			free_ids(t_strategies *strat);
+int				get_user_name(t_strategies *strat, char **name, uid_t id);
+int				get_group_name(t_strategies *strat, char **name, gid_t id);
+
 // error handling
-void  print_char_error(char *message, char param);
-void	print_error_msg(char *message, char *param);
-int	xattr_error(t_data *data);
+void			print_char_error(char *message, char param);
+void			print_error_msg(char *message, char *param);
+int				print_perror_msg(char *message, char *param);
+int				xattr_error(t_data *data);
+
 #endif
