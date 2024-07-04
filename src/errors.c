@@ -33,6 +33,7 @@ void	print_error_msg(char *message, char *param)
 
 int		print_perror_msg(char *message, char *param)
 {
+	ft_putstr_fd("ft_ls: ", 2);
 	ft_putstr_fd(message, 2);
 	ft_putstr_fd(param, 2);
 	perror("'");

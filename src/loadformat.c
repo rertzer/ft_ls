@@ -13,7 +13,7 @@
 #include "ft_ls.h"
 
 static int					load_format_data(t_strategies *strat, t_data *data, t_format_sizes *format_sizes, t_format_data *format_data);
-static int	load_format_data_invalid(t_strategies *strat, t_data *data, t_format_sizes *format_sizes, t_format_data *format_data);
+static int	load_format_data_invalid(t_format_data *format_data);
 static int	load_format_data_valid(t_strategies *strat, t_data *data, t_format_sizes *format_sizes, t_format_data *format_data);
 static inline void			load_block_size(t_directory *dir, t_data *data);
 static unsigned int			format_mode(char *buffer, t_data *data);
@@ -72,7 +72,7 @@ static int	load_format_data(t_strategies *strat, t_data *data, t_format_sizes *f
 {
 	if (data->file.mode == UINT_MAX)
 	{
-		return (load_format_data_invalid(strat, data, format_sizes, format_data));
+		return (load_format_data_invalid(format_data));
 	}
 	else
 	{
@@ -80,42 +80,9 @@ static int	load_format_data(t_strategies *strat, t_data *data, t_format_sizes *f
 	}
 }
 
-static int	load_format_data_invalid(t_strategies *strat, t_data *data, t_format_sizes *format_sizes, t_format_data *format_data)
+static int	load_format_data_invalid(t_format_data *format_data)
 {
-	(void)strat;
-
-	static char	*question_mark = "?";
-
-	format_data->align_user_left = true;
-	format_data->align_group_left = true;
-
-	format_mode_type(format_data->mode, data);
-	for (int i = 1; i < 10; ++i)
-	{
-		format_data->mode[i] = '?';
-	}
-	format_data->mode[10] = '\0';
-	format_data->links[0] = '?';
-	format_data->links[1] = '\0';
-	format_data->user = question_mark;
-	format_data->group = question_mark;
-	format_data->size[0] = '?';
-	format_data->size[1] = '\0';
-	format_data->date[0] = '?';
-	format_data->date[1] = '\0';
-	set_max_size(&format_sizes->mode, 10);
-	set_max_size(&format_sizes->links, 1);
-	set_max_size(&format_sizes->user, 1);
-	set_max_size(&format_sizes->group, 1);
-	set_max_size(&format_sizes->size, 1);
-	set_max_size(&format_sizes->date, 1);
-	
-	unsigned int	size = format_name(&format_data->name, data);
-	set_max_size(&format_sizes->name, size);
-
-	format_symlink(&format_data->target, data);
-
-	strat->color(&format_data->color, &data->file);
+	format_data->mode[0] = '\0';
 
 	return (OK);
 }
@@ -371,14 +338,14 @@ static unsigned int format_time(char *buffer, t_data *data)
 {
 	unsigned int	size = 0;
 	
-	char	*time_string = get_time_string(&data->time);
+	char	*time_string = get_time_string(&data->time.tv_sec);
 	if (time_string == NULL)
 	{
 		return 0;
 	}
-
-	if (recent(data->time, time_string))
+	if (recent(data->time.tv_sec, time_string))
 	{
+
 		size = format_recent_time(buffer, time_string);
 	}
 	else

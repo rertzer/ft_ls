@@ -12,14 +12,14 @@
 
 #include "ft_ls.h"
 
-time_t  last_modif(struct stat *stat_buffer)
+struct timespec  last_modif(struct stat *stat_buffer)
 {
-  return (stat_buffer->st_mtim.tv_sec);
+  return (stat_buffer->st_mtim);
 }
 
-time_t  access_time(struct stat *stat_buffer)
+struct timespec  access_time(struct stat *stat_buffer)
 {
-  return (stat_buffer->st_atim.tv_sec);
+  return (stat_buffer->st_atim);
 }
 
 char	*get_time_string(time_t *time)

@@ -57,7 +57,8 @@ int add_stats(t_strategies *strat, t_data *data)
 	errno = 0;
 	if (lstat(data->path, &stat_buffer) != 0)
 	{
-		ret = print_perror_msg("lstat: '", data->path);
+		print_perror_msg("cannot access '", data->path);
+		ret = MAJOR_KO;
 	}
 	else
 	{

@@ -20,8 +20,11 @@ int main(int argc, char **argv)
 	t_options     opt;
 	t_list        *all_paths = NULL;
 	t_strategies  strat;
-
-	recent(0, NULL);
+	ret = recent(0, NULL);
+	if (ret == INTERNAL_KO)
+	{
+		return (return_reformat(ret));
+	}
 	ret = parse_all_args(&opt, &all_paths, argc, argv);
 	if (ret != OK)
 	{

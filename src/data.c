@@ -83,6 +83,8 @@ t_data  *new_data()
 		data->target.mode = UINT_MAX;
 		data->file.broken = false;
 		data->target.broken = false;
+		data->time.tv_sec = 0;
+		data->time.tv_nsec = 0;
 	}
 	return (data);
 }

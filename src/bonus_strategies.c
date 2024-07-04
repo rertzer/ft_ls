@@ -39,7 +39,12 @@ void	option_f(t_strategies *strat, t_options *opt)
 void	option_g(t_strategies *strat, t_options *opt)
 {
 	if (opt->value[OPT_G] == true)
-	{
+	{	
+		strat->printallformat = print_all_format_data;
+		strat->printformat = print_format_data_long;
+		strat->isdirectory = is_directory_longlist;
+		strat->printtotal = print_total;
+
 		strat->printuser = no_print_format_user;
 	}
 	else

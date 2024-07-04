@@ -32,10 +32,11 @@ int	print_all_format_data(t_strategies *strat, t_directory *dir, t_format_sizes 
 	{
 		offset = 280;
 	}
-
 	for (unsigned int i = 0; i < dir->entry_nb; ++i)
 	{
 		space_feed(buffer, offset);
+		if (all_format_data[i].mode[0] == '\0')
+			continue;
 		offset = strat->printformat(strat, &all_format_data[i], format_sizes, buffer);
 	}
 

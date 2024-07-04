@@ -25,6 +25,19 @@ int	recent(time_t time, char *time_string)
 	static char	now_string[26];
 
 	time_t	now = get_now();
+
+	if (time_string == NULL)
+	{
+		get_now_string(now_string, now);
+		if (now_string[0] == '\0')
+		{
+			return (INTERNAL_KO);
+		}
+		else
+		{
+			return (OK);
+		}
+	}
 	time_t	diff = now - time;
 	if (diff < SIX_MONTH_MIN)
 	{
@@ -36,6 +49,7 @@ int	recent(time_t time, char *time_string)
 	}
 
 	get_now_string(now_string, now);
+
 	if (now_string[0] == '\0')
 	{
 		return (ERROR);
@@ -111,7 +125,6 @@ static int	recent_day(char *time_string, char *now_string)
 	{
 		recent = TRUE;
 	}
-
 	return (recent);
 }
 
@@ -135,7 +148,7 @@ static int	getMonth(char *time)
 		month_index[DEC_CODE] = 11;
 	}
 
-	int	month_code = time[4] + time[5] - MONTH_CODE_SHIFT;
+	int	month_code = time[5] + time[6] - MONTH_CODE_SHIFT;
 
 	return (month_index[month_code]);
 }

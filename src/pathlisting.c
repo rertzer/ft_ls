@@ -57,7 +57,13 @@ int	list_all_files(t_strategies *strat, t_list **all_paths)
 	while (current != NULL)
 	{
 		t_data* data = (t_data*)current->content;
-		if (! strat->isdirectory(data))
+		if (data->file.mode == UINT_MAX)
+		{
+			remove_from_all_paths(all_paths, path_prev, current);
+			reset_next(&next, current);
+			ft_lstdelone(current, data_del);
+		}
+		else if (! strat->isdirectory(data))
 		{
 			add_to_reg_files(&reg_files, &files_prev, current);
 			remove_from_all_paths(all_paths, path_prev, current);
@@ -76,6 +82,7 @@ int	list_all_files(t_strategies *strat, t_list **all_paths)
 
 static inline void	add_to_reg_files(t_directory *reg_files, t_list **files_prev, t_list *current)
 {
+
 	if (*files_prev == NULL)
 	{
 		reg_files->content = current;
@@ -114,6 +121,7 @@ static inline void	next_path(t_list **path_prev, t_list **next, t_list *current)
 static int	handle_reg_files(t_strategies *strat, t_directory *reg_files)
 {
 	int	ret = OK;
+
 	reg_files->content = strat->sortingalgo(reg_files->content, reg_files->entry_nb, strat->sorting);
 	reg_files->content = strat->sortingalgo(reg_files->content, reg_files->entry_nb, strat->othersorting);
 	if (reg_files->content != NULL)
@@ -135,7 +143,7 @@ int	list_all_path(t_strategies *strat, t_list *all_paths)
 		
 		ret = list_path(strat, data->path);
 
-		if (ret ==  INTERNAL_KO)
+		if (ret == INTERNAL_KO)
 		{
 			status = ret;
 			break;
@@ -180,17 +188,17 @@ static int	list_duplicated_path(t_strategies *strat, char *path)
 	ret = get_dir_content(strat, &dir);
 	status = ret > status ? ret : status;
 	
-	if (ret != INTERNAL_KO)
+	if (ret == OK)
 	{
 		dir.content = strat->sortingalgo(dir.content, dir.entry_nb, strat->sorting);
 		dir.content = strat->sortingalgo(dir.content, dir.entry_nb, strat->othersorting);
 		ret = format(strat, &dir);
 		status = ret > status ? ret : status;
-	}
-	if (ret != INTERNAL_KO)
-	{
-		ret = strat->recurse(strat, &dir);
-		status = ret > status ? ret : status;
+		if (ret != INTERNAL_KO)
+		{
+			ret = strat->recurse(strat, &dir);
+			status = ret > status ? ret : status;
+		}
 	}
 
 	free_directory(&dir);

@@ -24,6 +24,7 @@ int get_dir_content(t_strategies *strat, t_directory *dir)
 	if (dir_stream == NULL)
 	{
 		print_perror_msg("cannot open directory '", dir->path);
+		dir->valid = false;
 		ret = MINOR_KO;
 	}
 	else
@@ -46,6 +47,7 @@ int get_dir_content(t_strategies *strat, t_directory *dir)
 		if (errno != 0 && ret == OK)
 		{
 			ret = print_perror_msg("cannot read directory '", dir->path);
+			dir->valid = false;
 		}
 	}
 	closedir(dir_stream);
@@ -78,6 +80,6 @@ static int add_entry(t_strategies *strat, t_directory *dir, struct dirent *dir_e
 	{
 		ret = add_symlink(data);
 	}
-
+ Jan  4 
 	return (ret);
 }

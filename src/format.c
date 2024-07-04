@@ -29,7 +29,7 @@ int format(t_strategies *strat, t_directory *dir)
 	else
 	{
 		ret = load_all_format_data(strat, dir, &format_sizes, all_format_data);
-		if (ret == OK)
+		if (ret == OK && dir->valid == true)
 		{
 			previous_print(strat);
 			print_path(strat, dir->path);

@@ -57,6 +57,7 @@
 
 # define SIX_MONTH_MIN 15638400
 # define SIX_MONTH_MAX 15897600
+# define SIX_MONTH 15700000
 
 # define JAN_CODE 8
 # define FEB_CODE 0
@@ -92,19 +93,19 @@ typedef struct {
 } t_file;
 
 typedef struct {
-	t_file		file;
-	dev_t		dev;
-	dev_t		rdev;
-	bool		xattr;
-	nlink_t		links;
-	uid_t		uid;
-	gid_t		gid;
-	size_t		total_size;
-	size_t		block_size;
-	size_t		block_nb;
-	time_t		time;
-	char		*path;
-	t_file		target;
+	t_file				file;
+	dev_t				dev;
+	dev_t				rdev;
+	bool				xattr;
+	nlink_t				links;
+	uid_t				uid;
+	gid_t				gid;
+	size_t				total_size;
+	size_t				block_size;
+	size_t				block_nb;
+	struct timespec		time;
+	char				*path;
+	t_file				target;
 }  t_data;
 
 typedef struct {
@@ -140,6 +141,7 @@ typedef struct {
 
 typedef struct {
 	char			*path;
+	bool			valid;
 	size_t			total_block_size;
 	unsigned int	entry_nb;
 	t_list			*content;
@@ -153,7 +155,7 @@ typedef struct s_strategies {
 	bool	(*othersorting)(t_data*, t_data*);
 	int		(*strcmp)(const char*, const char*);
 	bool	(*isdirectory)(t_data*);
-	time_t	(*settime)(struct stat*);
+	struct timespec	(*settime)(struct stat*);
 	int		(*recurse)(struct s_strategies*, t_directory*);
 	int		(*printallformat)(struct s_strategies*, t_directory*, t_format_sizes*, t_format_data*);
 	int		(*printformat)(struct s_strategies*, t_format_data*, t_format_sizes *, char *buffer);
@@ -261,8 +263,8 @@ int				get_dir_content(t_strategies *strat, t_directory *dir);
 int				recent(time_t time, char *time_string);
 
 // time
-time_t			last_modif(struct stat *stat_buffer);
-time_t			access_time(struct stat *stat_buffer);
+struct timespec	last_modif(struct stat *stat_buffer);
+struct timespec	access_time(struct stat *stat_buffer);
 char			*get_time_string(time_t *time);
 
 // stats

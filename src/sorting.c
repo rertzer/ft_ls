@@ -41,10 +41,24 @@ bool  sort_by_name_reverse(t_data *a, t_data *b)
 
 bool	sort_by_time(t_data *a, t_data *b)
 {
-	return (a->time >= b->time);
+	if (a->time.tv_sec == b->time.tv_sec)
+	{
+		return (a->time.tv_nsec >= b->time.tv_nsec);
+	}
+	else
+	{
+		return (a->time.tv_sec >= b->time.tv_sec);
+	}
 }
 
 bool	sort_by_time_reverse(t_data *a, t_data *b)
 {
-	return (a->time <= b->time);
+	if (a->time.tv_sec == b->time.tv_sec)
+	{
+		return (a->time.tv_nsec <= b->time.tv_nsec);
+	}
+	else
+	{
+		return (a->time.tv_sec <= b->time.tv_sec);
+	}
 }
