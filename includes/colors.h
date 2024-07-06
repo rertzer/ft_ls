@@ -35,10 +35,10 @@
 #define BG_WHITE   "\x1b[47m"
 
 #define COLOR_DEFT	"\x1b[00;00m"		//default
-#define COLOR_DIRE	"\x1b[34;01m"		//directory
-#define COLOR_LINK	"\x1b[36;01m"		//sym link
-#define COLOR_EXEC	"\x1b[32;01m"		//exec file
-#define COLOR_ARCH	"\x1b[31;01m"		//archive file
+#define COLOR_DIRE	"\x1b[01;34m"		//directory
+#define COLOR_LINK	"\x1b[01;36m"		//sym link
+#define COLOR_EXEC	"\x1b[01;32m"		//exec file
+#define COLOR_ARCH	"\x1b[01;31m"		//archive file
 #define COLOR_FIFO	"\x1b[33;40m"		//fifo
 #define COLOR_BKLN	"\x1b[31;40;01m"	//broken link and missing files
 #define COLOR_SOCK	"\x1b[35;01m"		//socket
