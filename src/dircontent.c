@@ -80,6 +80,6 @@ static int add_entry(t_strategies *strat, t_directory *dir, struct dirent *dir_e
 	{
 		ret = add_symlink(data);
 	}
- Jan  4 
+
 	return (ret);
 }
