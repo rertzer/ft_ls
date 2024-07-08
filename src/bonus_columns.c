@@ -22,6 +22,7 @@ static int	print_format_data_line(char *buffer, int line_index, t_column *column
 static inline unsigned int	get_col_nb_by_line_id(t_column *column, unsigned int line_index);
 static unsigned int	print_format_data_column(char *buffer, unsigned int offset, unsigned int col_size, t_format_data *format_data);
 static unsigned int	get_term_width();
+static int	get_raw_line_size(t_column *column);
 
 int	print_all_format_data_column(t_strategies *strat, t_directory *dir, t_format_sizes *format_sizes, t_format_data *all_format_data)
 {
@@ -37,15 +38,13 @@ int	print_all_format_data_column(t_strategies *strat, t_directory *dir, t_format
 	{
 		return (ret);
 	}
-
 	ret = get_column(dir, &column);
 	if (ret == INTERNAL_KO)
 	{
 		return (ret);
 	}
 
-	unsigned int	buffer_size = column.term_width + column.col_nb * COLOR_CHAR_NB + 1;
-	
+	unsigned int	buffer_size = get_raw_line_size(&column) + column.col_nb * COLOR_CHAR_NB + 1;
 	char	*buffer = ft_malloc(buffer_size + 1);
 	if (buffer == NULL)
 	{
@@ -56,7 +55,6 @@ int	print_all_format_data_column(t_strategies *strat, t_directory *dir, t_format
 	for (unsigned int line_index = 0; line_index < column.line_nb; ++line_index)
 	{
 		ft_memset(buffer, ' ', buffer_size);
-
 		line_entries =  remaining_entries < column.col_nb ? remaining_entries : column.col_nb;
 		remaining_entries -= line_entries;
 
@@ -69,6 +67,17 @@ int	print_all_format_data_column(t_strategies *strat, t_directory *dir, t_format
 	return (ret);
 }
 
+static int	get_raw_line_size(t_column *column)
+{
+	int	size = 0;
+
+	for (unsigned int i = 0; i < column->col_nb; ++i)
+	{
+		size += column->col_sizes[i];
+	}
+	
+	return (size);
+}
 
 static int	get_column(t_directory *dir, t_column *column)
 {
@@ -198,7 +207,6 @@ static int	print_format_data_line(char *buffer, int line_index, t_column *column
 	unsigned int	offset = 0;
 	unsigned int	col_nb = get_col_nb_by_line_id(column, line_index);
 
-
 	for (unsigned int col_index = 0; col_index < col_nb; ++col_index)
 	{
 		unsigned int	file_id = get_file_id(column, line_index, col_index);
@@ -241,6 +249,5 @@ static unsigned int	get_term_width()
 {
 	struct winsize w_size;
 	ioctl(STDOUT_FILENO, TIOCGWINSZ, &w_size);
-
 	return (w_size.ws_col);
 }

@@ -26,6 +26,10 @@ int	process_all_paths(t_strategies *strat, t_list **all_paths, unsigned int len)
 	int	ret = OK;
 	int	status = ret;
 	ret = add_all_stats(strat, *all_paths);
+	if (ret == MINOR_KO)
+	{
+		ret = MAJOR_KO;
+	}
 	status = ret;
 	if (ret != INTERNAL_KO)
 	{

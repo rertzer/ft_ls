@@ -287,7 +287,6 @@ static void	print_format_symlink(t_format_data *format_data)
 		ft_putchar_fd('\n', 1);
 	}
 }
-
 static	void space_feed(void *v, int n)
 {
 	int64_t	*s = (int64_t*)v;	

@@ -55,6 +55,7 @@ int  load_all_format_data(t_strategies *strat, t_directory *dir, t_format_sizes 
 		entry = entry->next;
 		++i;
 	}
+	dir->total_block_size = (dir->total_block_size + 1) / 2;
 	if (format_sizes->minor || format_sizes->major)
 	{
 		set_max_size(&format_sizes->size, format_sizes->minor + format_sizes->major + 2);
@@ -65,7 +66,7 @@ int  load_all_format_data(t_strategies *strat, t_directory *dir, t_format_sizes 
 
 static inline void	load_block_size(t_directory *dir, t_data *data)
 {
-	dir->total_block_size +=  data->block_nb / 2;
+	dir->total_block_size +=  data->block_nb;
 }
 
 static int	load_format_data(t_strategies *strat, t_data *data, t_format_sizes *format_sizes, t_format_data *format_data)

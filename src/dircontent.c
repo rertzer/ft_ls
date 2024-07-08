@@ -51,6 +51,7 @@ int get_dir_content(t_strategies *strat, t_directory *dir)
 		}
 	}
 	closedir(dir_stream);
+
 	return (ret);
 }
      
@@ -59,26 +60,15 @@ static int add_entry(t_strategies *strat, t_directory *dir, struct dirent *dir_e
 	int	ret = OK;
 
 	t_data*	data = add_new_data(&dir->content, dir_entry->d_name, dir_entry->d_type,dir->path, strat->addlist);
+
 	if (data == NULL)
 	{
-		return (INTERNAL_KO);
+		ret = INTERNAL_KO;
 	}
-
-	++dir->entry_nb;
-
-	ret = add_stats(strat, data);
-	if (ret == INTERNAL_KO)
+	else
 	{
-		return (ret);
-	}
-
-	if (ret == OK)
-	{
-		ret = compute_stats(strat, data);
-	}
-	if (ret == OK && data->file.type == LNK)
-	{
-		ret = add_symlink(data);
+		++dir->entry_nb;
+		ret = add_stats(strat, data);
 	}
 
 	return (ret);

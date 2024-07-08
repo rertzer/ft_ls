@@ -53,7 +53,7 @@
 #define COLOR_OWDR	"\x1b[34;42m"		//other writable directory
 #define COLOR_SOWD	"\x1b[30;42m"		//sticky and other directory
 
-#define COLOR_CHAR_NB 15
+#define COLOR_CHAR_NB 16
 #define COLOR_TYPE_NUMBER 18
 typedef enum {
 	COLOR_TYPE_DEFT,	//default

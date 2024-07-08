@@ -14,6 +14,7 @@
 
 static int	set_type(t_data *data);
 static int	get_type(mode_t	mode);
+static int	load_stats(t_strategies *strat, t_data *data);
 static int	add_xattr(t_data *data);
 static int	set_symlink_type(t_data *data);
 
@@ -26,30 +27,39 @@ int	add_all_stats(t_strategies *strat, t_list *all_paths)
 	while (all_paths != NULL)
 	{
 		data = (t_data*)all_paths->content;
-
-		ret = add_stats(strat, data);
+		ret = add_stats(strat, data);	
 		status = ret > status ? ret : status;
+		all_paths = all_paths->next;
+	}
+
+	return (status);
+}
+
+int	add_stats(t_strategies *strat, t_data *data)
+{
+	int	ret = OK;
+
+	ret = load_stats(strat, data);
+
+	if (ret == OK)
+	{
+		ret = compute_stats(strat, data);
 		if (ret == OK)
 		{
-			ret = compute_stats(strat, data);
-			if (ret != OK)
-			{
-				break;
-			}
-			
 			if (data->file.type == LNK)
 			{
 				ret = add_symlink(data);
 			}
+			else
+			{
+				ret = add_xattr(data);
+			}
 		}
-		
-		all_paths = all_paths->next;
 	}
-	status = ret > status ? ret : status;
-	return (status);
+	return (ret);
 }
 
-int add_stats(t_strategies *strat, t_data *data)
+static int load_stats(t_strategies *strat, t_data *data)
 {
 	int			ret = OK;
 	struct stat	stat_buffer;
@@ -58,7 +68,7 @@ int add_stats(t_strategies *strat, t_data *data)
 	if (lstat(data->path, &stat_buffer) != 0)
 	{
 		print_perror_msg("cannot access '", data->path);
-		ret = MAJOR_KO;
+		ret = MINOR_KO;
 	}
 	else
 	{
@@ -72,7 +82,6 @@ int add_stats(t_strategies *strat, t_data *data)
 		data->block_size = stat_buffer.st_blksize;
 		data->block_nb = stat_buffer.st_blocks;
 		data->time = strat->settime(&stat_buffer);
-		ret = add_xattr(data);
 	}
 
 	return (ret);
@@ -82,21 +91,47 @@ static int  add_xattr(t_data *data)
 {
 	int	ret = OK;
 
+	data->xattr = false;
 	errno = 0;
 	ssize_t	xattr_len = listxattr(data->path, NULL, 0);
-	if (xattr_len < 0)
+
+	if (xattr_len > 0)
 	{
-		ret = xattr_error(data);	
-		data->xattr = false;
+		data->xattr = true;
+		char *xattr_str = ft_malloc(sizeof(char) * (xattr_len));
+		if (xattr_str == NULL)
+		{
+			return (INTERNAL_KO);
+		}
+
+		ssize_t	xattrlst_len = listxattr(data->path, xattr_str, xattr_len);
+		if (xattr_len != xattrlst_len)
+		{
+			return (MAJOR_KO);
+		}
+		if (xattr_len == 16 && ! ft_strcmp(xattr_str, "system.nfs4_acl"))
+		{
+			data->xattr = false;
+		}
+		else if (xattr_len == 28 && ! ft_strcmp(xattr_str, "user.random-seed-creditable"))
+		{
+			data->xattr = false;
+		}
+		//system.posix_acl_acces
+		//system.nfs4_acls
+		//printf("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXATTR %zd\n", xattr_len);
+		//write (1, xattr_str, xattr_len);
+		//printf("XX%sXX\n", xattr_str);
+		//printf("XX%sXX\n", "user.random-seed-creditable");
 	}
-	else if (xattr_len == 16 || xattr_len == 0)
+	/*else if (xattr_len == 28 || xattr_len == 16 || xattr_len == 0)
 	{
 		data->xattr = false;
 	}
 	else
 	{
 		data->xattr = true;
-	}
+	}*/
 
 	return (ret); 
 }
@@ -153,8 +188,8 @@ int	add_symlink(t_data *data)
 	ssize_t	size = readlink(data->path, data->target.name, data->total_size);
 	if (size < 0 || size != (ssize_t)data->total_size)
 	{
-		perror("ft_ls: readlink: ");
-		return (MAJOR_KO);
+		//perror("ft_ls: readlink: ");
+		return (ret);
 	}
 
 	data->target.name[data->total_size] = '\0';
