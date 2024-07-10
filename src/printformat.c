@@ -255,7 +255,7 @@ static unsigned int	print_format_long_ending(char *dest, t_format_data *format_d
 {
 	int	shift = 0;
 
-	if (format_data->mode[0] == 'l')
+	if (format_data->mode[0] == 'l' && format_data->target != NULL )
 	{
 		ft_buffercpy(&dest[offset], " -> ");
 		shift = 4;

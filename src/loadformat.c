@@ -337,16 +337,16 @@ static unsigned int format_major(char *buffer, t_data *data)
 
 static unsigned int format_time(char *buffer, t_data *data)
 {
-	unsigned int	size = 0;
+	unsigned int	size;
 	
 	char	*time_string = get_time_string(&data->time.tv_sec);
+
 	if (time_string == NULL)
 	{
-		return 0;
+		size = 0;
 	}
-	if (recent(data->time.tv_sec, time_string))
+	else if (recent(data->time.tv_sec, time_string))
 	{
-
 		size = format_recent_time(buffer, time_string);
 	}
 	else

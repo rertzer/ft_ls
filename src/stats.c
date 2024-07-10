@@ -188,7 +188,9 @@ int	add_symlink(t_data *data)
 	ssize_t	size = readlink(data->path, data->target.name, data->total_size);
 	if (size < 0 || size != (ssize_t)data->total_size)
 	{
-		//perror("ft_ls: readlink: ");
+		print_perror_msg("ft_ls: cannot read symbolic link '", data->file.name); 
+		free(data->target.name);
+		data->target.name = NULL;
 		return (ret);
 	}
 

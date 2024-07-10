@@ -77,6 +77,7 @@ t_data  *new_data()
 		data->file.name = NULL;
 		data->file.type = 0;
 		data->file.mode = UINT_MAX;
+		data->xattr = false;
 		data->path = NULL;
 		data->target.name = NULL;
 		data->target.type = 0;
