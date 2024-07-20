@@ -197,7 +197,7 @@ int	add_symlink(t_data *data)
 		data->target.name = NULL;
 		data->target.type = ERROR_TYPE;
 		data->file.broken = true;
-		return (ret);
+		return (MINOR_KO);
 	}
 
 	data->target.name[data->total_size] = '\0';

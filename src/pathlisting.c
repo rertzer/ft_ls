@@ -192,7 +192,7 @@ static int	list_duplicated_path(t_strategies *strat, char *path)
 	ret = get_dir_content(strat, &dir);
 	status = ret > status ? ret : status;
 	
-	if (ret == OK)
+	if (ret != INTERNAL_KO)
 	{
 		dir.content = strat->sortingalgo(dir.content, dir.entry_nb, strat->sorting);
 		dir.content = strat->sortingalgo(dir.content, dir.entry_nb, strat->othersorting);

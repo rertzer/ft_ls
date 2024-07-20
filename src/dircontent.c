@@ -17,6 +17,7 @@ static int add_entry(t_strategies *strat, t_directory *dir, struct dirent *dir_e
 int get_dir_content(t_strategies *strat, t_directory *dir)
 {
 	int				ret = OK;
+	int				status = ret;
 	struct dirent	*dir_entry = NULL;
 	
 	errno = 0;
@@ -25,7 +26,7 @@ int get_dir_content(t_strategies *strat, t_directory *dir)
 	{
 		print_perror_msg("cannot open directory '", dir->path);
 		dir->valid = false;
-		ret = MINOR_KO;
+		status = MINOR_KO;
 	}
 	else
 	{
@@ -38,6 +39,7 @@ int get_dir_content(t_strategies *strat, t_directory *dir)
 			if (strat->keepEntry(dir_entry))
 			{
 				ret = add_entry(strat, dir, dir_entry);
+				status = status > ret ? status : ret;
 				if (ret == INTERNAL_KO)
 				{
 					break;
@@ -46,13 +48,13 @@ int get_dir_content(t_strategies *strat, t_directory *dir)
 		}
 		if (errno != 0 && ret == OK)
 		{
-			ret = print_perror_msg("cannot read directory '", dir->path);
+			status = print_perror_msg("cannot read directory '", dir->path);
 			dir->valid = false;
 		}
 	}
 	closedir(dir_stream);
 
-	return (ret);
+	return (status);
 }
      
 static int add_entry(t_strategies *strat, t_directory *dir, struct dirent *dir_entry)
