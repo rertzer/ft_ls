@@ -178,6 +178,10 @@ int	add_symlink(t_data *data)
 {
 	int	ret = OK;
 	
+	if (data->total_size == 0)
+	{
+		data->total_size = 128;
+	}
 	data->target.name = ft_malloc(sizeof(char) * (data->total_size + 1));
 	if (data->target.name == NULL)
 	{
@@ -188,9 +192,11 @@ int	add_symlink(t_data *data)
 	ssize_t	size = readlink(data->path, data->target.name, data->total_size);
 	if (size < 0 || size != (ssize_t)data->total_size)
 	{
-		print_perror_msg("ft_ls: cannot read symbolic link '", data->file.name); 
+		print_perror_msg("cannot read symbolic link '", data->path); 
 		free(data->target.name);
 		data->target.name = NULL;
+		data->target.type = ERROR_TYPE;
+		data->file.broken = true;
 		return (ret);
 	}
 
