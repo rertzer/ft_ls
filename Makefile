@@ -68,7 +68,7 @@ OBJS := $(addprefix $(OBJ_DIR), $(OBJ))
 DEPS := $(OBJS:.o=.d)
 
 
-all: $(NAME) $(NAME_BONUS)
+all: $(NAME)
 
 bonus: $(NAME_BONUS)
 

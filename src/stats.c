@@ -107,7 +107,7 @@ static int  add_xattr(t_data *data)
 		ssize_t	xattrlst_len = listxattr(data->path, xattr_str, xattr_len);
 		if (xattr_len != xattrlst_len)
 		{
-			return (MAJOR_KO);
+			return (MINOR_KO);
 		}
 		if (xattr_len == 16 && ! ft_strcmp(xattr_str, "system.nfs4_acl"))
 		{
@@ -153,7 +153,7 @@ static int set_type(t_data *data)
 		ft_putstr_fd("ft_ls: ", 2);
 		ft_putstr_fd(data->file.name, 2);
 		ft_putstr_fd(": invalid file type\n", 2);
-		ret = MAJOR_KO;
+		ret = MINOR_KO;
 	}
 	return (ret); 
 }
@@ -222,7 +222,7 @@ static int	set_symlink_type(t_data *data)
 		}
 		else
 		{
-			ret = MAJOR_KO;
+			ret = MINOR_KO;
 			ft_putstr_fd("ft_ls: stat: ", 2);
 			perror(data->path);
 		}
@@ -236,7 +236,7 @@ static int	set_symlink_type(t_data *data)
 			ft_putstr_fd("ft_ls: ", 2);
 			ft_putstr_fd(data->file.name, 2);
 			ft_putstr_fd(": invalid file type\n", 2);
-			ret = MAJOR_KO;
+			ret = MINOR_KO;
 		}
 	}
 	return (ret);

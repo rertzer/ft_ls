@@ -83,7 +83,7 @@ static int	getpw_username(uid_t id, char **name)
 		if (errno != 0)
 		{
 			perror("ft_ls: getpwuid: ");
-			ret = MAJOR_KO;
+			ret = MINOR_KO;
 		}
 	}
 	else
@@ -110,7 +110,7 @@ static int	getgr_groupname(gid_t id, char **name)
 	{
 		if (errno != 0)
 		{
-			ret = MAJOR_KO;
+			ret = MINOR_KO;
 			perror("ft_ls: getgrgid: ");
 		}
 	}
