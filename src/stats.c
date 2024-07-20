@@ -177,12 +177,13 @@ static int	get_type(mode_t	mode)
 int	add_symlink(t_data *data)
 {
 	int	ret = OK;
+	int	buffer_size = 129;
 	
-	if (data->total_size == 0)
+	if (data->total_size != 0)
 	{
-		data->total_size = 128;
+		buffer_size = data->total_size + 1;
 	}
-	data->target.name = ft_malloc(sizeof(char) * (data->total_size + 1));
+	data->target.name = ft_malloc(sizeof(char) * (buffer_size));
 	if (data->target.name == NULL)
 	{
 		return (INTERNAL_KO);
