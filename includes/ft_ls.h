@@ -271,6 +271,9 @@ char			*get_time_string(time_t *time);
 int				add_all_stats(t_strategies *strat, t_list *all_paths);
 int				add_stats(t_strategies *strat, t_data *data);
 int				compute_stats(t_strategies *strat, t_data *data);
+int				get_type(mode_t	mode);
+
+// symlink
 int				add_symlink(t_data *data);
 
 // dictonnary

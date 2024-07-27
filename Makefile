@@ -36,6 +36,7 @@ SOURCES := \
 	pathlisting.c \
 	recursion.c \
 	stats.c \
+	symlink.c \
 	time.c \
 	dircontent.c \
 	main.c

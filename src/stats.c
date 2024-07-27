@@ -13,10 +13,8 @@
 #include "ft_ls.h"
 
 static int	set_type(t_data *data);
-static int	get_type(mode_t	mode);
 static int	load_stats(t_strategies *strat, t_data *data);
 static int	add_xattr(t_data *data);
-static int	set_symlink_type(t_data *data);
 
 int	add_all_stats(t_strategies *strat, t_list *all_paths)
 {
@@ -117,21 +115,7 @@ static int  add_xattr(t_data *data)
 		{
 			data->xattr = false;
 		}
-		//system.posix_acl_acces
-		//system.nfs4_acls
-		//printf("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXATTR %zd\n", xattr_len);
-		//write (1, xattr_str, xattr_len);
-		//printf("XX%sXX\n", xattr_str);
-		//printf("XX%sXX\n", "user.random-seed-creditable");
 	}
-	/*else if (xattr_len == 28 || xattr_len == 16 || xattr_len == 0)
-	{
-		data->xattr = false;
-	}
-	else
-	{
-		data->xattr = true;
-	}*/
 
 	return (ret); 
 }
@@ -158,7 +142,7 @@ static int set_type(t_data *data)
 	return (ret); 
 }
 
-static int	get_type(mode_t	mode)
+int	get_type(mode_t	mode)
 {
 	mode_t const modes[] = {S_IFREG, S_IFDIR, S_IFCHR, S_IFBLK, S_IFIFO, S_IFLNK, S_IFSOCK};
 	mode &= S_IFMT;
@@ -172,72 +156,4 @@ static int	get_type(mode_t	mode)
 	}
 	
 	return (ERROR_TYPE);
-}
-
-int	add_symlink(t_data *data)
-{
-	int	ret = OK;
-	int	buffer_size = 129;
-	
-	if (data->total_size != 0)
-	{
-		buffer_size = data->total_size + 1;
-	}
-	data->target.name = ft_malloc(sizeof(char) * (buffer_size));
-	if (data->target.name == NULL)
-	{
-		return (INTERNAL_KO);
-	}
-
-	errno = 0;
-	ssize_t	size = readlink(data->path, data->target.name, data->total_size);
-	if (size < 0 || size != (ssize_t)data->total_size)
-	{
-		print_perror_msg("cannot read symbolic link '", data->path); 
-		free(data->target.name);
-		data->target.name = NULL;
-		data->target.type = ERROR_TYPE;
-		data->file.broken = true;
-		return (MINOR_KO);
-	}
-
-	data->target.name[data->total_size] = '\0';
-	ret = set_symlink_type(data);
-
-	return (ret);
-}
-
-static int	set_symlink_type(t_data *data)
-{
-	int			ret = OK;
-	struct stat	stat_buffer;
-    
-	errno = 0;
-	if (stat(data->path, &stat_buffer) != 0)
-	{
-		if (errno == ENOENT)
-		{
-			data->target.type = ERROR_TYPE;
-			data->file.broken = true;
-		}
-		else
-		{
-			ret = MINOR_KO;
-			ft_putstr_fd("ft_ls: stat: ", 2);
-			perror(data->path);
-		}
-	}
-	else 
-	{
-    	data->target.type = get_type(stat_buffer.st_mode);
-		data->target.mode = stat_buffer.st_mode;
-		if (data->target.type == ERROR_TYPE)
-		{
-			ft_putstr_fd("ft_ls: ", 2);
-			ft_putstr_fd(data->file.name, 2);
-			ft_putstr_fd(": invalid file type\n", 2);
-			ret = MINOR_KO;
-		}
-	}
-	return (ret);
 }
