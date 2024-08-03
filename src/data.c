@@ -77,13 +77,21 @@ t_data  *new_data()
 		data->file.name = NULL;
 		data->file.type = 0;
 		data->file.mode = UINT_MAX;
+		data->file.broken = false;
+		data->dev = 0;
+		data->rdev = 0;
 		data->xattr = false;
+		data->links = 0;
+		data->uid = 0;
+		data->gid = 0;
 		data->path = NULL;
 		data->target.name = NULL;
 		data->target.type = 0;
 		data->target.mode = UINT_MAX;
-		data->file.broken = false;
 		data->target.broken = false;
+		data->total_size = 0;
+		data->block_size = 0;
+		data->block_nb = 0;
 		data->time.tv_sec = 0;
 		data->time.tv_nsec = 0;
 	}

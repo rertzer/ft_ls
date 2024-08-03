@@ -11,57 +11,21 @@
 /* ************************************************************************** */
 
 # include "ft_ls.h"
-static int	add_symlink_standard(t_data *data);
-static int	add_symlink_nullsize(t_data *data);
+
 static int	set_symlink_type(t_data *data);
-static int	set_invalid_target_name(t_data *data, int buffer_size);
+//static int	set_invalid_target_name(t_data *data, int buffer_size);
 static int	symlink_error(t_data *data);
 
 int	add_symlink(t_data *data)
 {
-	if (data->total_size == 0)
-	{
-		return (add_symlink_nullsize(data));
-	}
-	else
-	{
-		return (add_symlink_standard(data));
-	}
-}
-
-static int	add_symlink_standard(t_data *data)
-{
 	int	ret = OK;
-	
-	data->target.name = ft_malloc(sizeof(char) * (data->total_size + 1));
-	if (data->target.name == NULL)
+	int	buffer_size = 256;
+
+	if (data->total_size != 0)
 	{
-		return (INTERNAL_KO);
+		buffer_size = data->total_size;
 	}
 
-	errno = 0;
-	ssize_t	size = readlink(data->path, data->target.name, data->total_size);
-	if (size < 0)
-	{
-		return (symlink_error(data));
-	}
-	data->target.name[size] = '\0';
-	ret = set_symlink_type(data);
-	if (size != (ssize_t)data->total_size)
-	{
-		printf("bad size %zu %zd\n", data->total_size, size);
-		printf("%s type is %d\n", data->target.name, data->target.type);
-		ret = set_invalid_target_name(data, size);
-	}
-
-	return (ret);
-}
-
-static int add_symlink_nullsize(t_data *data)
-{
-	int	ret = OK;
-	int	buffer_size = 128;
-	
 	data->target.name = ft_malloc(sizeof(char) * (buffer_size + 1));
 	if (data->target.name == NULL)
 	{
@@ -70,22 +34,26 @@ static int add_symlink_nullsize(t_data *data)
 
 	errno = 0;
 	ssize_t	size = readlink(data->path, data->target.name, buffer_size);
-	if (size < 0 || size > 128)
+	if (size < 0)
 	{
-		printf ("size is %zd\n", size);
 		return (symlink_error(data));
 	}
-
 	data->target.name[size] = '\0';
-	if (data->target.name[0] != '/')
+	if (size != (ssize_t)data->total_size && (data->target.name[0] != '/' || data->target.name[size - 1] == ')'))
 	{
-		ret = set_invalid_target_name(data, size);
+		//printf("bad size %zu %zd\n", data->total_size, size);
+		//printf("%s type is %d\n", data->target.name, data->target.type);
+		data->target.type = ERROR_TYPE;
+		data->file.broken = true;
 	}
-	ret = set_symlink_type(data);
+	else
+	{
+		ret = set_symlink_type(data);
+	}
 
 	return (ret);
 }
-
+/*
 static int	set_invalid_target_name(t_data *data, int buffer_size)
 {
 	char *buffer = data->target.name;
@@ -105,14 +73,20 @@ static int	set_invalid_target_name(t_data *data, int buffer_size)
 
 	return (OK);
 }
-
+*/
 static int	set_symlink_type(t_data *data)
 {
 	int			ret = OK;
 	struct stat	stat_buffer;
-    
+	char	*path_name = data->path;
+    if (data->target.name[0] == '/')
+	{
+		path_name = data->target.name;
+	}
+
 	errno = 0;
-	if (stat(data->path, &stat_buffer) != 0)
+
+	if (stat(path_name, &stat_buffer) != 0)
 	{
 		if (errno == ENOENT)
 		{
@@ -123,6 +97,7 @@ static int	set_symlink_type(t_data *data)
 		{
 			ret = MINOR_KO;
 			data->target.type = ERROR_TYPE;
+			data->file.broken = true;
 			ft_putstr_fd("ft_ls: stat: ", 2);
 			perror(data->path);
 		}
@@ -131,7 +106,6 @@ static int	set_symlink_type(t_data *data)
 	{
     	data->target.type = get_type(stat_buffer.st_mode);
 		data->target.mode = stat_buffer.st_mode;
-		printf("path %s has type %d\n", data->path, data->target.type);
 		if (data->target.type == ERROR_TYPE)
 		{
 			ft_putstr_fd("ft_ls: ", 2);

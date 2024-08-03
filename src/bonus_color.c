@@ -22,7 +22,6 @@ static e_color_type	get_extension_color_type(t_file *file);
 int	format_color(e_color_type *color, t_file *file)
 {
 	*color = get_color_type(file);
-
 	return (OK);
 }
 
@@ -32,19 +31,28 @@ static e_color_type	get_color_type(t_file *file)
 	e_color_type color_type = COLOR_TYPE_DEFT;
 
 	color_type = get_basic_color_type(file);
-	if (color_type == COLOR_TYPE_DEFT)
+	if (file->mode == UINT_MAX)
 	{
-		color_type = get_file_color_type(file);
+		if (color_type == COLOR_TYPE_DEFT)
+		{
+			color_type = get_extension_color_type(file);
+		}
 	}
-	else if (color_type == COLOR_TYPE_DIRE)
+	else
 	{
-		color_type = get_direc_color_type(file);
+		if (color_type == COLOR_TYPE_DEFT)
+		{
+			color_type = get_file_color_type(file);
+		}
+		else if (color_type == COLOR_TYPE_DIRE)
+		{
+			color_type = get_direc_color_type(file);
+		}
+		else if (color_type == COLOR_TYPE_LINK)
+		{
+			color_type = get_symlink_color_type(file);
+		}
 	}
-	else if (color_type == COLOR_TYPE_LINK)
-	{
-		color_type = get_symlink_color_type(file);
-	}
-
 	return (color_type);
 }
 
@@ -74,8 +82,6 @@ static e_color_type	get_file_color_type(t_file *file)
 {
 	e_color_type color_type = COLOR_TYPE_DEFT;
 
-	//TODO: capabilites
-	
 	if (file->mode & S_ISUID)
 	{
 		color_type = COLOR_TYPE_SUID;

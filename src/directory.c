@@ -21,7 +21,8 @@ void  init_dir(t_directory *dir)
 	dir->entry_nb = 0;
 	dir->content = NULL;
 }
-  void  free_directory(t_directory *dir)
+
+void  free_directory(t_directory *dir)
 {
 	free(dir->path);
 	dir->path = NULL;

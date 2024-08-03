@@ -13,7 +13,7 @@
 #include "ft_ls.h"
 
 static int					load_format_data(t_strategies *strat, t_data *data, t_format_sizes *format_sizes, t_format_data *format_data);
-static int	load_format_data_invalid(t_format_data *format_data);
+static int	load_format_data_invalid(t_strategies *strat, t_data *data, t_format_sizes * format_sizes, t_format_data *format_data);
 static int	load_format_data_valid(t_strategies *strat, t_data *data, t_format_sizes *format_sizes, t_format_data *format_data);
 static inline void			load_block_size(t_directory *dir, t_data *data);
 static unsigned int			format_mode(char *buffer, t_data *data);
@@ -73,7 +73,7 @@ static int	load_format_data(t_strategies *strat, t_data *data, t_format_sizes *f
 {
 	if (data->file.mode == UINT_MAX)
 	{
-		return (load_format_data_invalid(format_data));
+		return (load_format_data_invalid(strat, data, format_sizes, format_data));
 	}
 	else
 	{
@@ -81,9 +81,50 @@ static int	load_format_data(t_strategies *strat, t_data *data, t_format_sizes *f
 	}
 }
 
-static int	load_format_data_invalid(t_format_data *format_data)
+static int	load_format_data_invalid(t_strategies *strat, t_data *data, t_format_sizes *format_sizes, t_format_data *format_data)
 {
-	format_data->mode[0] = '\0';
+	static char question_mark[2] = "?\0";
+
+	format_data->align_user_left = true;
+	format_data->align_group_left = true;
+	format_mode_type(format_data->mode, data);
+	format_data->mode[10] = '\0';
+	for (int i = 0; i < 9; ++i)
+	{
+		format_data->mode[i+1] = '?';
+	}
+	set_max_size(&format_sizes->mode, 11);
+	
+	format_data->links[0] = '?';
+	format_data->links[1] = '\0';
+	set_max_size(&format_sizes->links, 1);
+	
+	format_data->user = question_mark;
+	set_max_size(&format_sizes->user, 1);
+
+	format_data->group = question_mark;
+	set_max_size(&format_sizes->group, 1);
+
+	format_data->size[0] = '?';
+	format_data->size[1] = '\0';
+	set_max_size(&format_sizes->size, 1);
+
+	for(int i = 0; i < 10; ++i)
+	{
+		format_data->date[i] = ' ';
+	}
+
+	format_data->date[10] = '?';
+	format_data->date[11] = '\0';
+	set_max_size(&format_sizes->date, 11);
+
+	unsigned int size = format_name(&format_data->name, data);
+	set_max_size(&format_sizes->name, size);
+
+
+	format_data->target = NULL;
+	strat->color(&format_data->color, &data->file);
+	
 
 	return (OK);
 }
@@ -159,7 +200,6 @@ static int	load_format_data_valid(t_strategies *strat, t_data *data, t_format_si
 	{
 		strat->color(&format_data->target_color, &data->target);
 	}
-
 	return (ret);
 }
 
