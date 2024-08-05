@@ -115,6 +115,14 @@ static int  add_xattr(t_data *data)
 		{
 			data->xattr = false;
 		}
+		else if (xattr_len == 20 && ! ft_strcmp(xattr_str, "security.capability"))
+		{
+			data->xattr = false;
+		}
+		else if (xattr_len == 24 && ! ft_strcmp(xattr_str, "user.xdg.inactive-since"))
+		{
+			data->xattr = false;
+		}
 	}
 
 	return (ret); 

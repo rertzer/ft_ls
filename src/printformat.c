@@ -137,7 +137,7 @@ unsigned int	print_format_group(char *dest, t_format_data *format_data, t_format
 	}
 	else
 	{
-		offset += format_sizes->group - ft_strlen(format_data->user);	
+		offset += format_sizes->group - ft_strlen(format_data->user) + 1;	
 		ft_buffercpy(&dest[offset], format_data->group);
 		free(format_data->group);
 		format_data->group = NULL;

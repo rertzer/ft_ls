@@ -19,9 +19,13 @@ static int	symlink_error(t_data *data);
 int	add_symlink(t_data *data)
 {
 	int	ret = OK;
-	int	buffer_size = 256;
+	int	buffer_size;
 
-	if (data->total_size != 0)
+	if ((data->total_size == 0 || data->total_size == 64) && ((! ft_strncmp("/proc/", data->path, 6)) || (! ft_strncmp("/sys/", data->path, 5))))
+	{
+		buffer_size = 4096;
+	}
+	else
 	{
 		buffer_size = data->total_size;
 	}
@@ -39,7 +43,7 @@ int	add_symlink(t_data *data)
 		return (symlink_error(data));
 	}
 	data->target.name[size] = '\0';
-	if (size != (ssize_t)data->total_size && (data->target.name[0] != '/' || data->target.name[size - 1] == ')'))
+	if (size != (ssize_t)buffer_size && (data->target.name[0] != '/' || data->target.name[size - 1] == ')'))
 	{
 		//printf("bad size %zu %zd\n", data->total_size, size);
 		//printf("%s type is %d\n", data->target.name, data->target.type);

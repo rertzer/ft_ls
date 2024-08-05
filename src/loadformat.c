@@ -13,8 +13,8 @@
 #include "ft_ls.h"
 
 static int					load_format_data(t_strategies *strat, t_data *data, t_format_sizes *format_sizes, t_format_data *format_data);
-static int	load_format_data_invalid(t_strategies *strat, t_data *data, t_format_sizes * format_sizes, t_format_data *format_data);
-static int	load_format_data_valid(t_strategies *strat, t_data *data, t_format_sizes *format_sizes, t_format_data *format_data);
+static int					load_format_data_invalid(t_strategies *strat, t_data *data, t_format_sizes * format_sizes, t_format_data *format_data);
+static int					load_format_data_valid(t_strategies *strat, t_data *data, t_format_sizes *format_sizes, t_format_data *format_data);
 static inline void			load_block_size(t_directory *dir, t_data *data);
 static unsigned int			format_mode(char *buffer, t_data *data);
 static inline void			format_mode_type(char *buffer, t_data *data);
@@ -93,7 +93,7 @@ static int	load_format_data_invalid(t_strategies *strat, t_data *data, t_format_
 	{
 		format_data->mode[i+1] = '?';
 	}
-	set_max_size(&format_sizes->mode, 11);
+	set_max_size(&format_sizes->mode, 10);
 	
 	format_data->links[0] = '?';
 	format_data->links[1] = '\0';
@@ -109,14 +109,14 @@ static int	load_format_data_invalid(t_strategies *strat, t_data *data, t_format_
 	format_data->size[1] = '\0';
 	set_max_size(&format_sizes->size, 1);
 
-	for(int i = 0; i < 10; ++i)
+	for(int i = 0; i < 11; ++i)
 	{
 		format_data->date[i] = ' ';
 	}
 
-	format_data->date[10] = '?';
-	format_data->date[11] = '\0';
-	set_max_size(&format_sizes->date, 11);
+	format_data->date[11] = '?';
+	format_data->date[12] = '\0';
+	set_max_size(&format_sizes->date, 12);
 
 	unsigned int size = format_name(&format_data->name, data);
 	set_max_size(&format_sizes->name, size);
