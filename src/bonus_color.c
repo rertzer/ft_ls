@@ -31,6 +31,7 @@ static e_color_type	get_color_type(t_file *file)
 	e_color_type color_type = COLOR_TYPE_DEFT;
 
 	color_type = get_basic_color_type(file);
+	
 	if (file->mode == UINT_MAX)
 	{
 		if (color_type == COLOR_TYPE_DEFT)
@@ -40,19 +41,22 @@ static e_color_type	get_color_type(t_file *file)
 	}
 	else
 	{
-		if (color_type == COLOR_TYPE_DEFT)
+		switch (color_type)
 		{
-			color_type = get_file_color_type(file);
-		}
-		else if (color_type == COLOR_TYPE_DIRE)
-		{
-			color_type = get_direc_color_type(file);
-		}
-		else if (color_type == COLOR_TYPE_LINK)
-		{
-			color_type = get_symlink_color_type(file);
+			case COLOR_TYPE_DEFT:
+				color_type = get_file_color_type(file);
+				break;
+			case COLOR_TYPE_DIRE:
+				color_type = get_direc_color_type(file);
+				break;
+			case COLOR_TYPE_LINK:
+				color_type = get_symlink_color_type(file);
+				break;
+			default:
+				break;
 		}
 	}
+
 	return (color_type);
 }
 
@@ -125,10 +129,12 @@ static e_color_type	get_direc_color_type(t_file *file)
 static e_color_type	get_symlink_color_type(t_file *file)
 {
 	e_color_type color_type = COLOR_TYPE_LINK;
+
 	if (file->broken == true)
 	{
 		color_type = COLOR_TYPE_BKLN;
 	}
+	
 	return (color_type);
 }
 

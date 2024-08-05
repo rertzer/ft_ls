@@ -123,6 +123,7 @@ static int  add_xattr(t_data *data)
 		{
 			data->xattr = false;
 		}
+		free(xattr_str);
 	}
 
 	return (ret); 

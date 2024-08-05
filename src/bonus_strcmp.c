@@ -14,8 +14,8 @@
 #include "ft_ls.h"
 
 static inline size_t	skip_dots(const char **s);
-static int case_insensitive_alphanum_compare(const char *s1, const char *s2, bool *isalnum);
-static int	alphanum_compare(const char *s1, const char *s2);
+static int				case_insensitive_alphanum_compare(const char *s1, const char *s2, bool *isalnum);
+static int				alphanum_compare(const char *s1, const char *s2);
 
 int	ls_strcmp(const char *s1, const char *s2)
 {

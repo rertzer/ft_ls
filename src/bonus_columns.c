@@ -12,17 +12,19 @@
 
 #include "ft_ls.h"
 
-static unsigned int	*get_file_sizes(t_directory *dir);
-static int	get_column(t_directory *dir, t_column *column);
-static int	set_columns(t_column *column, unsigned int *file_sizes, unsigned int nb);
-static int	set_column_number(t_column *column, unsigned int *file_sizes, unsigned int file_nb, unsigned int col_nb);
-static void	init_column(t_column *column, unsigned int file_nb, unsigned int line_nb);
-static unsigned int	get_col_id(t_column *column, unsigned int i);
-static int	print_format_data_line(char *buffer, int line_index, t_column *column, t_format_data *all_format_data);
+static unsigned int			*get_file_sizes(t_directory *dir);
+static char*				init_buffer(unsigned int *buffer_size, t_column *column);
+static int					get_column(t_directory *dir, t_column *column);
+static int					set_columns(t_column *column, unsigned int *file_sizes, unsigned int nb);
+static int					set_column_number(t_column *column, unsigned int *file_sizes, unsigned int file_nb, unsigned int col_nb);
+static void					init_column(t_column *column, unsigned int file_nb, unsigned int line_nb);
+static unsigned int			get_col_id(t_column *column, unsigned int i);
+static int					print_format_data_line(char *buffer, int line_index, t_column *column, t_format_data *all_format_data);
 static inline unsigned int	get_col_nb_by_line_id(t_column *column, unsigned int line_index);
-static unsigned int	print_format_data_column(char *buffer, unsigned int offset, unsigned int col_size, t_format_data *format_data);
-static unsigned int	get_term_width();
-static int	get_raw_line_size(t_column *column);
+static unsigned int			print_format_data_column(char *buffer, unsigned int offset, unsigned int col_size, t_format_data *format_data);
+static int					print_all_format_data_by_column(t_directory *dir, t_format_data *all_format_data, t_column *column);
+static unsigned int			get_term_width();
+static int					get_raw_line_size(t_column *column);
 
 int	print_all_format_data_column(t_strategies *strat, t_directory *dir, t_format_sizes *format_sizes, t_format_data *all_format_data)
 {
@@ -30,8 +32,6 @@ int	print_all_format_data_column(t_strategies *strat, t_directory *dir, t_format
 	(void)format_sizes;
 
 	int				ret = OK;
-	unsigned int	line_entries = 0;
-	unsigned int	remaining_entries = dir->entry_nb;
 	t_column		column;
 
 	if (dir->entry_nb == 0)
@@ -39,32 +39,55 @@ int	print_all_format_data_column(t_strategies *strat, t_directory *dir, t_format
 		return (ret);
 	}
 	ret = get_column(dir, &column);
-	if (ret == INTERNAL_KO)
+	if (ret != INTERNAL_KO)
 	{
-		return (ret);
-	}
-
-	unsigned int	buffer_size = get_raw_line_size(&column) + column.col_nb * COLOR_CHAR_NB + 1;
-	char	*buffer = ft_malloc(buffer_size + 1);
-	if (buffer == NULL)
-	{
-		free(column.col_sizes);
-		return (INTERNAL_KO);
-	}
-	buffer[buffer_size] = '\0';
-	for (unsigned int line_index = 0; line_index < column.line_nb; ++line_index)
-	{
-		ft_memset(buffer, ' ', buffer_size);
-		line_entries =  remaining_entries < column.col_nb ? remaining_entries : column.col_nb;
-		remaining_entries -= line_entries;
-
-		ret = print_format_data_line(buffer, line_index, &column, all_format_data);
-		if (ret == INTERNAL_KO)
-			break;
+		ret = print_all_format_data_by_column(dir, all_format_data, &column);
 	}
 	free(column.col_sizes);
-	free(buffer);
 	return (ret);
+}
+
+static int	print_all_format_data_by_column(t_directory *dir, t_format_data *all_format_data, t_column *column)
+{
+	int				ret = OK;
+	unsigned int	line_entries = 0;
+	unsigned int	buffer_size = 0;
+	unsigned int	remaining_entries = dir->entry_nb;
+
+	char 			*buffer = init_buffer(&buffer_size, column);
+
+	if (buffer == NULL)
+	{
+		ret = INTERNAL_KO;
+	}
+	else
+	{
+		for (unsigned int line_index = 0; line_index < column->line_nb; ++line_index)
+		{
+			ft_memset(buffer, ' ', buffer_size);
+			line_entries =  remaining_entries < column->col_nb ? remaining_entries : column->col_nb;
+			remaining_entries -= line_entries;
+
+			ret = print_format_data_line(buffer, line_index, column, all_format_data);
+			if (ret == INTERNAL_KO)
+				break;
+		}
+		free(buffer);
+	}
+	return (ret);
+}
+
+static char*	init_buffer(unsigned int *buffer_size, t_column *column)
+{
+	*buffer_size = get_raw_line_size(column) + column->col_nb * COLOR_CHAR_NB + 1;
+
+	char	*buffer = ft_malloc(*buffer_size + 1);
+	if (buffer != NULL)
+	{
+		buffer[*buffer_size] = '\0';
+	}
+
+	return (buffer);
 }
 
 static int	get_raw_line_size(t_column *column)
@@ -89,11 +112,14 @@ static int	get_column(t_directory *dir, t_column *column)
 
 	unsigned int	*file_sizes = get_file_sizes(dir);
 	if (file_sizes == NULL)
-		return (INTERNAL_KO);
-
-	ret = set_columns(column, file_sizes, dir->entry_nb);
-
-	free(file_sizes);
+	{
+		ret = INTERNAL_KO;
+	}
+	else
+	{
+		ret = set_columns(column, file_sizes, dir->entry_nb);
+		free(file_sizes);
+	}
 
 	return (ret);
 }
@@ -104,16 +130,15 @@ static unsigned int	*get_file_sizes(t_directory *dir)
 	t_list	*lst = dir->content;
 
 	unsigned int	*file_sizes = ft_malloc(sizeof(unsigned int) * dir->entry_nb);
-	if (file_sizes == NULL)
-	{
-		return (NULL);
-	}
 
-	for (unsigned int i = 0; i < dir->entry_nb; ++i)
+	if (file_sizes != NULL)
 	{
-		data = (t_data*)lst->content;
-		file_sizes[i] = ft_strlen(data->file.name);
-		lst = lst->next;
+		for (unsigned int i = 0; i < dir->entry_nb; ++i)
+		{
+			data = (t_data*)lst->content;
+			file_sizes[i] = ft_strlen(data->file.name);
+			lst = lst->next;
+		}
 	}
 
 	return (file_sizes);

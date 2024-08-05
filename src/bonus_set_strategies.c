@@ -13,7 +13,18 @@
 
 #include "ft_ls.h"
 
+static void init_strategies(t_strategies *strat);
+static void	set_options(t_options *opt, t_strategies *strat);
+
 int set_strategies(t_options *opt, t_strategies *strat)
+{
+	init_strategies(strat);
+	set_options(opt, strat);
+
+	return OK;
+}
+
+static void init_strategies(t_strategies *strat)
 {
 	strat->settime = last_modif;
 	strat->othersorting = NULL;
@@ -23,7 +34,10 @@ int set_strategies(t_options *opt, t_strategies *strat)
 	strat->previous_print = false;
 	strat->print_path_name = true;
 	strat->strcmp = ft_strcmp_local;
+}
 
+static void	set_options(t_options *opt, t_strategies *strat)
+{
  	option_a(strat, opt);
 
 	option_l(strat, opt);
@@ -38,7 +52,4 @@ int set_strategies(t_options *opt, t_strategies *strat)
 	option_G(strat, opt);
 	option_u(strat, opt);
 	option_color(strat, opt);
-
-	return OK;
 }
-
