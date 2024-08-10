@@ -51,9 +51,10 @@ static e_type	get_e_type(unsigned char d_type)
 	return (types[d_type]);
 }
 
-static  int add_data_path(t_data *data, char const * const name, char const * const path)
+static int	add_data_path(t_data *data, char const * const name, char const * const path)
 {
 	int ret = OK;
+
 	if (path == NULL)
 	{
 		data->path = ft_longdup(name);

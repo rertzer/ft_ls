@@ -74,14 +74,9 @@ int	print_format_data_long(t_strategies *strat, t_format_data *format_data, t_fo
 {
 	unsigned int	offset = 0;
 
-	//printf("%s\n", buffer);
 	offset += print_format_mode(buffer, format_data, format_sizes, offset);
-
-	//printf("%s\n", buffer);
 	offset += print_format_links(buffer, format_data, format_sizes, offset);
-	//printf("%s\n", buffer);
 	offset += strat->printuser(buffer, format_data, format_sizes, offset);
-	//printf("%s\n", buffer);
 	offset += strat->printgroup(buffer, format_data, format_sizes, offset);
 	offset += print_format_size_field(buffer, format_data, format_sizes, offset);
 	offset += print_format_date(buffer, format_data, format_sizes, offset);

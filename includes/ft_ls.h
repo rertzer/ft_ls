@@ -38,7 +38,6 @@
 # include "../libft/libft.h"
 # include "colors.h"
 
-
 /*================================ define =============================================*/
 # define	OK 0
 # define	MINOR_KO 1
