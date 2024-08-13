@@ -81,6 +81,7 @@ typedef enum {REG, DIREC, CHR, BLK, FIFO, LNK, SOCK, ERROR_TYPE=-1} e_type;
 
 typedef struct {
 	unsigned int	id;
+	unsigned int	len;
 	char			*value;
 } t_id;
 
@@ -242,8 +243,10 @@ int				load_format_data_invalid(t_strategies *strat, t_data *data, t_format_size
 //format user
 int				format_user(t_strategies *strat, t_format_data *format_data, unsigned int *size, t_data *data);
 
-// format group
-int				format_group(t_strategies *strat, t_format_data *format_data, unsigned int *size, t_data *data);
+//format group
+int				format_group(t_strategies *strat, t_format_data *format_data, unsigned int *len, t_data *data);
+
+
 //format data
 unsigned int	format_mode(char *buffer, t_data *data);
 void			format_mode_type(char *buffer, t_data *data);
@@ -302,16 +305,16 @@ int				get_type(mode_t	mode);
 int				add_symlink(t_data *data);
 
 // dictonnary
-int				insert_key(t_list *dict[HASH_SIZE], unsigned int key, char *value);
-char*			get_value_by_key(t_list * dict[HASH_SIZE], unsigned int key);
+int				insert_key(t_list *dict[HASH_SIZE], unsigned int key, char *value, unsigned int len);
+t_id			*get_id_by_key(t_list * dict[HASH_SIZE], unsigned int key);
 void			init_dict(t_list *dict[HASH_SIZE]);
 void			free_dict(t_list *dict[HASH_SIZE]);
 
 //ids
 void			init_ids(t_strategies *strat);
 void			free_ids(t_strategies *strat);
-int				get_user_name(t_strategies *strat, char **name, uid_t id);
-int				get_group_name(t_strategies *strat, char **name, gid_t id);
+int				get_user_name(t_strategies *strat, char **name, unsigned int *len, uid_t id);
+int				get_group_name(t_strategies *strat, char **name, unsigned int *len, gid_t id);
 
 // error handling
 void			print_char_error(char *message, char param);

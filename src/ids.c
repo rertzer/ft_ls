@@ -12,8 +12,8 @@
 
 #include "ft_ls.h"
 
-static int	add_user_name(t_strategies *strat, char **name, uid_t id);
-static int	add_group_name(t_strategies *strat, char **name, gid_t id);
+static int	add_user_name(t_strategies *strat, char **name, unsigned int *len, uid_t id);
+static int	add_group_name(t_strategies *strat, char **name, unsigned int *len, gid_t id);
 static int	getpw_username(uid_t id, char **name);
 static int	get_passwd_struct(uid_t id, struct passwd **psw);
 static int	getgr_groupname(gid_t id, char **name);
@@ -31,53 +31,77 @@ void  free_ids(t_strategies *strat)
 	free_dict(strat->groups);
 }
 
-int	get_user_name(t_strategies *strat, char **name, uid_t id)
+int	get_user_name(t_strategies *strat, char **name, unsigned int *len, uid_t id)
 {
 	int	ret = OK;
-	*name = get_value_by_key(strat->users, id);
+	t_id *uid = get_id_by_key(strat->users, id);
 
-	if (*name == NULL)
+	if (uid != NULL)
 	{
-		ret = add_user_name(strat, name, id);
+		*name = uid->value;
+		*len = uid->len;
+	}
+	else
+	{
+		*name = NULL;
+		*len = 0;
+		ret = add_user_name(strat, name, len, id);
 	}
 
 	return (ret);
 }
 
-static int	add_user_name(t_strategies *strat, char **name, uid_t id)
+static int	add_user_name(t_strategies *strat, char **name, unsigned int *len, uid_t id)
 {
 	int	ret = getpw_username(id, name);
-	if (*name != NULL && insert_key(strat->users, id, *name) == INTERNAL_KO)
+	if (*name != NULL)
 	{
-		free(*name);
-		ret = INTERNAL_KO;
+		*len = ft_strlen(*name);
+		if (insert_key(strat->users, id, *name, *len) == INTERNAL_KO)
+		{
+			free(*name);
+			*name = NULL;
+			ret = INTERNAL_KO;
+		}
 	}
 
 	return (ret);
 }
 
-int	get_group_name(t_strategies *strat, char **name, gid_t id)
+int	get_group_name(t_strategies *strat, char **name, unsigned int *len, gid_t id)
 {
 	int	ret = OK;
 
-	*name = get_value_by_key(strat->groups, id);
+	t_id *gid = get_id_by_key(strat->groups, id);
 
-	if (*name == NULL)
+	if (gid != NULL)
 	{
-		ret = add_group_name(strat, name, id);		
+		*name = gid->value;
+		*len = gid->len;
+	}
+	else
+	{
+		*name = NULL;
+		*len = 0;
+		ret = add_group_name(strat, name, len, id);		
 	}
 
 	return (ret);
 }
 
-static int	add_group_name(t_strategies *strat, char **name, gid_t id)
+static int	add_group_name(t_strategies *strat, char **name, unsigned int *len, gid_t id)
 {
 	int	ret = getgr_groupname(id, name);
 	
-	if (*name != NULL && insert_key(strat->groups, id, *name))
+	if (*name != NULL)
 	{
-		free(*name);
-		ret = INTERNAL_KO;
+		*len = ft_strlen(*name);
+		if (insert_key(strat->groups, id, *name, *len) == INTERNAL_KO)
+		{
+			free(*name);
+			*name = NULL;
+			ret = INTERNAL_KO;
+		}
 	}
 
 	return (ret);

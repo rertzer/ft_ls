@@ -12,18 +12,29 @@
 
 #include "ft_ls.h"
 
+static int	loop_all_format_data(t_strategies *strat, t_directory *dir, t_format_sizes *format_sizes, t_format_data *all_format_data);
 static int					load_format_data(t_strategies *strat, t_data *data, t_format_sizes *format_sizes, t_format_data *format_data);
 static inline void			load_block_size(t_directory *dir, t_data *data);
+static void	compute_block_size(t_directory *dir);
+static void	compute_size_size(t_format_sizes *format_sizes);
 
-void					set_max_size(unsigned int *max, unsigned int size);
+int  load_all_format_data(t_strategies *strat, t_directory *dir, t_format_sizes *format_sizes, t_format_data *all_format_data)
+{
+	int		ret = OK;
 
-int  load_all_format_data(t_strategies *strat, t_directory *dir, t_format_sizes *format_sizes, t_format_data * all_format_data)
+	loop_all_format_data(strat, dir, format_sizes, all_format_data);
+	compute_block_size(dir);
+	compute_size_size(format_sizes);
+
+	return (ret);
+}
+
+static int	loop_all_format_data(t_strategies *strat, t_directory *dir, t_format_sizes *format_sizes, t_format_data *all_format_data)
 {
 	int		ret = OK;
 	int		i = 0;
-	t_list	*entry = dir->content;
 
-	while (entry != NULL)
+	for (t_list *entry = dir->content; entry != NULL;entry = entry->next, ++i)
 	{
 		t_data	*data = (t_data*)entry->content;
 
@@ -33,13 +44,6 @@ int  load_all_format_data(t_strategies *strat, t_directory *dir, t_format_sizes 
 		{
 			break;
 		}
-		entry = entry->next;
-		++i;
-	}
-	dir->total_block_size = (dir->total_block_size + 1) / 2;
-	if (format_sizes->minor || format_sizes->major)
-	{
-		set_max_size(&format_sizes->size, format_sizes->minor + format_sizes->major + 2);
 	}
 
 	return (ret);
@@ -59,6 +63,19 @@ static int	load_format_data(t_strategies *strat, t_data *data, t_format_sizes *f
 	else
 	{
 		return (load_format_data_valid(strat, data, format_sizes, format_data));
+	}
+}
+
+static void	compute_block_size(t_directory *dir)
+{
+	dir->total_block_size = (dir->total_block_size + 1) / 2;
+}
+
+static void	compute_size_size(t_format_sizes *format_sizes)
+{
+	if (format_sizes->minor || format_sizes->major)
+	{
+		set_max_size(&format_sizes->size, format_sizes->minor + format_sizes->major + 2);
 	}
 }
 

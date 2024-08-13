@@ -40,15 +40,8 @@ static int format_user_user(t_strategies *strat, char **buffer, unsigned int *le
 {
 	int	ret = OK;
 
-	ret = get_user_name(strat, buffer, data->uid);
-	if (ret == OK && *buffer != NULL)
-	{
-		*len = ft_strlen(*buffer);
-	}
-	else
-	{
-		*len = 0;
-	}
+	ret = get_user_name(strat, buffer, len, data->uid);
+
 	return (ret);
 }
 

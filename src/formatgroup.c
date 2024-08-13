@@ -38,15 +38,8 @@ int format_group(t_strategies *strat, t_format_data *format_data, unsigned int *
 static int format_group_group(t_strategies *strat, char **buffer, unsigned int *len, t_data *data)
 {
 	int	ret = OK;
-	ret = get_group_name(strat, buffer, data->gid);
-	if (ret == OK && *buffer != NULL)
-	{
-		*len = ft_strlen(*buffer);
-	}
-	else
-	{
-		*len = 0;
-	}
+	ret = get_group_name(strat, buffer, len, data->gid);
+
 	return (ret);
 }
 
@@ -60,3 +53,4 @@ static unsigned int format_group_id(char **buffer, t_data *data)
 	}
 	return (len);
 }
+
