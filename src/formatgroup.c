@@ -15,23 +15,24 @@
 static int			format_group_group(t_strategies *strat, char **buffer, unsigned int *len, t_data *data);
 static unsigned int format_group_id(char **buffer, t_data *data);
 
-int format_group(t_strategies *strat, t_format_data *format_data, unsigned int *size, t_data *data)
+int format_group(t_strategies *strat, t_format_data *format_data, unsigned int *format_size, t_data *data)
 {
-	int ret = format_group_group(strat, &format_data->group, size, data);
+	unsigned int	size;
+	int ret = format_group_group(strat, &format_data->group, &size, data);
 	if (ret == INTERNAL_KO)
 	{
 		return (ret);
 	}
-	if (*size == 0)
+	if (size == 0)
 	{
-		*size = format_group_id(&format_data->group, data);
+		size = format_group_id(&format_data->group, data);
 		if (size == 0)
 		{
 			return (INTERNAL_KO);
 		}
 		format_data->align_group_left = false;
 	}
-
+	set_max_size(format_size, size);
 	return (ret);
 }
 

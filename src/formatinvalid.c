@@ -43,8 +43,7 @@ int	load_format_data_invalid(t_strategies *strat, t_data *data, t_format_sizes *
 	size = format_date_invalid(format_data->date);	
 	set_max_size(&format_sizes->date, size);
 
-	size = format_name(&format_data->name, data);
-	set_max_size(&format_sizes->name, size);
+	format_name(&format_data->name, &format_sizes->name, data);
 
 	format_data->target = NULL;
 	strat->color(&format_data->color, &data->file);

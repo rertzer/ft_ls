@@ -12,12 +12,16 @@
 
 #include "ft_ls.h"
 
-unsigned int	format_links(char *buffer, t_data *data)
+static unsigned int format_recent_time(char *buffer, char *time_string);
+static unsigned int format_late_time(char *buffer, char *time_string);
+
+void	format_links(char *buffer, unsigned int *format_size, t_data *data)
 {
-	return (ft_itoa_dec(data->links, buffer));
+	unsigned int size = ft_itoa_dec(data->links, buffer);
+	set_max_size(format_size, size);
 }
 
-unsigned int format_size(char *buffer, t_data *data)
+void format_size(char *buffer, unsigned int *format_size, t_data *data)
 {
 	unsigned int	size = 0;
 
@@ -26,10 +30,10 @@ unsigned int format_size(char *buffer, t_data *data)
 		size = ft_itoa_dec(data->total_size, buffer);
 	}
 
-	return (size);
+	set_max_size(format_size, size);
 }
 
-unsigned int format_minor(char *buffer, t_data *data)
+void format_minor(char *buffer, unsigned int *format_size, t_data *data)
 {
 	unsigned int	size = 0;
 
@@ -38,10 +42,10 @@ unsigned int format_minor(char *buffer, t_data *data)
 		size = ft_itoa_dec(minor(data->rdev), buffer);
 	}
 
-	return (size);
+	set_max_size(format_size, size);
 }
 
-unsigned int format_major(char *buffer, t_data *data)
+void format_major(char *buffer, unsigned int *format_size, t_data *data)
 {
 	unsigned int	size = 0;
 
@@ -50,11 +54,12 @@ unsigned int format_major(char *buffer, t_data *data)
 		size = ft_itoa_dec(major(data->rdev), buffer);
 	}
 
-	return (size);
+	set_max_size(format_size, size);
 }
 
-unsigned int format_time(char *buffer, t_data *data)
+int	format_time(char *buffer, unsigned int *format_size, t_data *data)
 {
+	int				ret = OK;
 	unsigned int	size;
 	
 	char	*time_string = get_time_string(&data->time.tv_sec);
@@ -62,6 +67,7 @@ unsigned int format_time(char *buffer, t_data *data)
 	if (time_string == NULL)
 	{
 		size = 0;
+		ret = INTERNAL_KO;
 	}
 	else if (recent(data->time.tv_sec, time_string))
 	{
@@ -72,17 +78,19 @@ unsigned int format_time(char *buffer, t_data *data)
 		size = format_late_time(buffer, time_string);
 	}
 
-	return (size);
+	set_max_size(format_size, size);
+
+	return (ret);
 }
 
-unsigned int format_recent_time(char *buffer, char *time_string)
+static unsigned int format_recent_time(char *buffer, char *time_string)
 {
 	ft_bufferncpy(&buffer[0], &time_string[4], 12);
 	buffer[12] = '\0';
 	return (12);
 }
 
-unsigned int format_late_time(char *buffer, char *time_string)
+static unsigned int format_late_time(char *buffer, char *time_string)
 {
 	ft_bufferncpy(&buffer[0], &time_string[4], 7);
 	ft_bufferncpy(&buffer[8], &time_string[20], 4);
@@ -91,10 +99,10 @@ unsigned int format_late_time(char *buffer, char *time_string)
 	return (12);
 }
 
-unsigned int	format_name(char **buffer, t_data *data)
+void	format_name(char **buffer, unsigned int *format_size, t_data *data)
 {
 	*buffer = data->file.name;
-	return (ft_strlen(*buffer));
+	set_max_size(format_size, ft_strlen(*buffer));
 }
 
 void	format_symlink(char **buffer, t_data *data)

@@ -225,7 +225,6 @@ int				recursive(t_strategies *strat, t_directory *dir);
 
 // format
 int				format(t_strategies *strat, t_directory *dir);
-unsigned int	format_name(char **buffer, t_data *data);
 void			print_total(t_directory *dir);
 void			no_print_total(t_directory *dir);
 
@@ -248,17 +247,16 @@ int				format_group(t_strategies *strat, t_format_data *format_data, unsigned in
 
 
 //format data
-unsigned int	format_mode(char *buffer, t_data *data);
+void			format_mode(char *buffer, unsigned int *format_size, t_data *data);
 void			format_mode_type(char *buffer, t_data *data);
 
 //format miscellaneous
-unsigned int		format_links(char *buffer, t_data *data);
-unsigned int		format_size(char *buffer, t_data *data);
-unsigned int		format_minor(char *buffer, t_data *data);
-unsigned int		format_major(char *buffer, t_data *data);
-unsigned int		format_time(char *buffer, t_data *data);
-unsigned int		format_recent_time(char *buffer, char *time_string);
-unsigned int		format_late_time(char *buffer, char *time_string);
+void		format_links(char *buffer, unsigned int *format_size, t_data *data);
+void		format_size(char *buffer, unsigned int *format_size, t_data *data);
+void		format_minor(char *buffer, unsigned int *format_size, t_data *data);
+void		format_major(char *buffer, unsigned int *format_size, t_data *data);
+int		format_time(char *buffer, unsigned int *format_size, t_data *data);
+void		format_name(char **buffer, unsigned int *format_size, t_data *data);
 void				format_symlink(char **buffer, t_data *data);
 // print format
 int				print_all_format_data(t_strategies *strat, t_directory *dir, t_format_sizes *format_sizes, t_format_data *all_format_data);

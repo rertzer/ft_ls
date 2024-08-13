@@ -17,7 +17,7 @@ static inline void			format_mode_group(char *buffer, t_data *data);
 static inline void			format_mode_other(char *buffer, t_data *data);
 static inline unsigned int	format_mode_xattr(char *buffer, t_data *data, unsigned int size);
 
-unsigned int	format_mode(char *buffer, t_data *data)
+void	format_mode(char *buffer, unsigned int *format_size, t_data *data)
 {
 	unsigned int	size = 10;
 
@@ -29,7 +29,7 @@ unsigned int	format_mode(char *buffer, t_data *data)
 	
 	buffer[size] = '\0';
 
-	return (size);
+	set_max_size(format_size, size);
 }
 
 void	format_mode_type(char *buffer, t_data *data)
