@@ -12,62 +12,79 @@
 
 #include "ft_ls.h"
 
+static DIR*	get_dir_stream(t_directory	*dir);
+static int	add_dir_entries(t_strategies *strat, t_directory *dir, DIR* dir_stream);
 static int add_entry(t_strategies *strat, t_directory *dir, struct dirent *dir_entry);
 
 int get_dir_content(t_strategies *strat, t_directory *dir)
 {
 	int				ret = OK;
-	int				status = ret;
-	struct dirent	*dir_entry = NULL;
-	
-	errno = 0;
-	DIR	*dir_stream = opendir(dir->path);
+
+	DIR	*dir_stream = get_dir_stream(dir);
 	if (dir_stream == NULL)
 	{
-		print_perror_msg("cannot open directory '", dir->path);
-		dir->valid = false;
-		status = MINOR_KO;
+		ret = MINOR_KO;
 	}
 	else
 	{
-		while (true)
-		{
-			errno = 0;
-			dir_entry = readdir(dir_stream);
-			if (dir_entry == NULL)
-				break;
-			if (strat->keepEntry(dir_entry))
-			{
-				ret = add_entry(strat, dir, dir_entry);
-				status = status > ret ? status : ret;
-				if (ret == INTERNAL_KO)
-				{
-					break;
-				}
-			}
-		}
+		ret = add_dir_entries(strat, dir, dir_stream);
 		if (errno != 0 && ret == OK)
 		{
-			status = print_perror_msg("cannot read directory '", dir->path);
+			ret = print_perror_msg("cannot read directory '", dir->path);
 			dir->valid = false;
 		}
 	}
 	closedir(dir_stream);
 
+	return (ret);
+}
+
+static DIR*	get_dir_stream(t_directory	*dir)
+{
+    errno = 0;
+	DIR	*dir_stream = opendir(dir->path);
+	if (dir_stream == NULL)
+	{
+		print_perror_msg("cannot open directory '", dir->path);
+		dir->valid = false;
+	}
+
+	return (dir_stream);
+}
+
+static int	add_dir_entries(t_strategies *strat, t_directory *dir, DIR* dir_stream)
+{
+	int				ret = OK;
+	int				status = ret;
+	struct dirent	*dir_entry = NULL;
+
+	while (true)
+	{
+		errno = 0;
+		dir_entry = readdir(dir_stream);
+		if (dir_entry == NULL)
+			break;
+		if (strat->keepEntry(dir_entry))
+		{
+			ret = add_entry(strat, dir, dir_entry);
+			status = status > ret ? status : ret;
+			if (ret == INTERNAL_KO)
+			{
+				break;
+			}
+		}
+	}
+
 	return (status);
 }
-     
+
 static int add_entry(t_strategies *strat, t_directory *dir, struct dirent *dir_entry)
 {
-	int	ret = OK;
+	int	ret = INTERNAL_KO;
 
 	t_data*	data = add_new_data(&dir->content, dir_entry->d_name, dir_entry->d_type,dir->path, strat->addlist);
 
-	if (data == NULL)
-	{
-		ret = INTERNAL_KO;
-	}
-	else
+	if (data != NULL)
 	{
 		++dir->entry_nb;
 		ret = add_stats(strat, data);

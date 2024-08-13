@@ -12,37 +12,56 @@
 
 #include "ft_ls.h"
 
+static t_id	*get_new_id(unsigned int key, char *value);
+static inline char*	get_value_from_list_by_key(t_list *lst, unsigned int key);
 static inline unsigned int	get_hash(unsigned int key);
 static void					del_ids(void *ids);
 
 int insert_key(t_list *dict[HASH_SIZE], unsigned int key, char *value)
 {
 	unsigned int	hash = get_hash(key);
-	t_id			*newid = ft_malloc(sizeof(t_id));
-
-	if (newid == NULL)
+	t_id			*new_id = get_new_id(key, value);
+	
+	if (new_id == NULL)
 	{
 		return (INTERNAL_KO);
 	}
-
-	newid->id = key;
-	newid->value = value;
-
-	t_list *newlst = ft_lstnew(newid);
-	if (newlst == NULL)
+	
+	t_list *new_lst = ft_lstnew(new_id);
+	if (new_lst == NULL)
 	{
-		free(newid);
+		free(new_id);
 		return (INTERNAL_KO);
 	}
-	ft_lstadd_front(&dict[hash], newlst);
+	ft_lstadd_front(&dict[hash], new_lst);
 
 	return (OK);
+}
+
+static t_id	*get_new_id(unsigned int key, char *value)
+{
+	t_id	*new_id = ft_malloc(sizeof(t_id));
+
+	if (new_id != NULL)
+	{
+		new_id->id = key;
+		new_id->value = value;
+	}
+
+	return (new_id);
 }
 
 char* get_value_by_key(t_list * dict[HASH_SIZE], unsigned int key)
 {
 	unsigned int	hash = get_hash(key);
 	t_list			*lst = dict[hash];
+	char		 	*value = get_value_from_list_by_key(lst, key);
+
+	return (value);	
+}
+
+static inline char*	get_value_from_list_by_key(t_list *lst, unsigned int key)
+{
 	char		 	*value = NULL;
 
 	while (lst)
@@ -61,8 +80,7 @@ char* get_value_by_key(t_list * dict[HASH_SIZE], unsigned int key)
 
 static inline unsigned int  get_hash(unsigned int key)
 {
-	unsigned int hash = HASH_A * key;
-	return (hash >> HASH_SHIFT);
+	return ((unsigned int)(HASH_A * key) >> HASH_SHIFT);
 }
 
 void  init_dict(t_list *dict[HASH_SIZE])

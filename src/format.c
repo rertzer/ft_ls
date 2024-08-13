@@ -12,33 +12,39 @@
 
 #include "ft_ls.h"
 
+static int	print_directory(t_strategies *strat, t_directory *dir, t_format_sizes *format_sizes, t_format_data *all_format_data);
 static void	previous_print(t_strategies *strat);
 static void	print_path(t_strategies *strat, char *path);
 static void	init_format_sizes(t_format_sizes *format_sizes);
 
 int format(t_strategies *strat, t_directory *dir)
 {
-	int ret = OK;
+	int 			ret = INTERNAL_KO;
 	t_format_sizes  format_sizes;
+
 	init_format_sizes(&format_sizes);
 	t_format_data *all_format_data = ft_malloc(sizeof(t_format_data) * dir->entry_nb);
-	if (all_format_data == NULL)
+
+	if (all_format_data != NULL)
 	{
-		ret = INTERNAL_KO;
-	}
-	else
-	{
-		ret = load_all_format_data(strat, dir, &format_sizes, all_format_data);
-		if (ret == OK && dir->valid == true)
-		{
-			previous_print(strat);
-			print_path(strat, dir->path);
-			strat->printtotal(dir);
-			ret = strat->printallformat(strat, dir, &format_sizes, all_format_data);
-		}
+		ret = print_directory(strat, dir, &format_sizes, all_format_data);
 	}
 
 	free(all_format_data);
+	return (ret);
+}
+
+static int	print_directory(t_strategies *strat, t_directory *dir, t_format_sizes *format_sizes, t_format_data *all_format_data)
+{
+	int	ret = load_all_format_data(strat, dir, format_sizes, all_format_data);
+	if (ret == OK && dir->valid == true)
+	{
+		previous_print(strat);
+		print_path(strat, dir->path);
+		strat->printtotal(dir);
+		ret = strat->printallformat(strat, dir, format_sizes, all_format_data);
+	}
+
 	return (ret);
 }
 
@@ -54,7 +60,7 @@ static void init_format_sizes(t_format_sizes *format_sizes)
 	format_sizes->date = 0;
 	format_sizes->name = 0;
 	format_sizes->path = 0;
-  }
+}
 
 static void  previous_print(t_strategies *strat)
 {

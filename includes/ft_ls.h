@@ -222,15 +222,41 @@ bool			skip_dot(const struct dirent* const entry);
 int				no_recursion(t_strategies *strat, t_directory *dir);
 int				recursive(t_strategies *strat, t_directory *dir);
 
-// formating
+// format
 int				format(t_strategies *strat, t_directory *dir);
 unsigned int	format_name(char **buffer, t_data *data);
 void			print_total(t_directory *dir);
 void			no_print_total(t_directory *dir);
 
 //load format
-int				load_all_format_data(t_strategies *strat, t_directory *dir, t_format_sizes *format_sizes, t_format_data * all_format_data);
+int				load_all_format_data(t_strategies *strat, t_directory *dir, t_format_sizes *format_sizes, t_format_data * all_format_data);  
+void set_max_size(unsigned int *max, unsigned int size);
 
+//format data valid
+int				load_format_data_valid(t_strategies *strat, t_data *data, t_format_sizes *format_sizes, t_format_data *format_data);
+
+//format data invalid
+int				load_format_data_invalid(t_strategies *strat, t_data *data, t_format_sizes *format_sizes, t_format_data *format_data);
+
+
+//format user
+int				format_user(t_strategies *strat, t_format_data *format_data, unsigned int *size, t_data *data);
+
+// format group
+int				format_group(t_strategies *strat, t_format_data *format_data, unsigned int *size, t_data *data);
+//format data
+unsigned int	format_mode(char *buffer, t_data *data);
+void			format_mode_type(char *buffer, t_data *data);
+
+//format miscellaneous
+unsigned int		format_links(char *buffer, t_data *data);
+unsigned int		format_size(char *buffer, t_data *data);
+unsigned int		format_minor(char *buffer, t_data *data);
+unsigned int		format_major(char *buffer, t_data *data);
+unsigned int		format_time(char *buffer, t_data *data);
+unsigned int		format_recent_time(char *buffer, char *time_string);
+unsigned int		format_late_time(char *buffer, char *time_string);
+void				format_symlink(char **buffer, t_data *data);
 // print format
 int				print_all_format_data(t_strategies *strat, t_directory *dir, t_format_sizes *format_sizes, t_format_data *all_format_data);
 int				print_format_data_long(t_strategies *strat, t_format_data *format_data, t_format_sizes *format_sizes, char *buffer);

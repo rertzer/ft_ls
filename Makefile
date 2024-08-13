@@ -27,6 +27,12 @@ SOURCES := \
 	errors.c \
 	keepentry.c \
 	loadformat.c \
+	loadformatdatavalid.c \
+	formatmode.c \
+	formatmiscellaneous.c \
+	formatuser.c \
+	formatgroup.c \
+	formatinvalid.c \
 	mergesort.c \
 	options.c \
 	parseoption.c \
