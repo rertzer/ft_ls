@@ -13,7 +13,7 @@
 #include "ft_ls.h"
 
 static time_t	get_now();
-static void		get_now_string(char *now_string, time_t now);
+static char		*get_now_string(time_t now);
 static int		recent_month(char *time_string, char *now_string, int year_offset);
 static int		recent_day(char *time_string, char *now_string);
 static int		getMonth(char *time);
@@ -22,13 +22,12 @@ static int		getDay(char *time);
 
 int	recent(time_t time, char *time_string)
 {
-	static char	now_string[26];
-
+	int		recent = FALSE;
 	time_t	now = get_now();
+	char 	*now_string = get_now_string(now);
 
 	if (time_string == NULL)
 	{
-		get_now_string(now_string, now);
 		if (now_string[0] == '\0')
 		{
 			return (INTERNAL_KO);
@@ -38,26 +37,23 @@ int	recent(time_t time, char *time_string)
 			return (OK);
 		}
 	}
+
 	time_t	diff = now - time;
+	
 	if (diff < SIX_MONTH_MIN)
 	{
-		return (true);
+		recent = TRUE;
 	}
 	else if (diff > SIX_MONTH_MAX)
 	{
-		return (false);
+		recent = FALSE;
 	}
-
-	get_now_string(now_string, now);
-
-	if (now_string[0] == '\0')
+	else
 	{
-		return (ERROR);
+		int	time_year = getYear(time_string);
+		int	now_year = getYear(now_string);
+		recent = recent_month(time_string, now_string, now_year - time_year);
 	}
-
-	int	time_year = getYear(time_string);
-	int	now_year = getYear(now_string);
-	int	recent = recent_month(time_string, now_string, now_year - time_year);
 
 	return (recent);
 }
@@ -78,12 +74,13 @@ static	time_t	get_now()
 	return (now);
 }
 
-static void	get_now_string(char *now_string, time_t now)
+static char	*get_now_string(time_t now)
 {
-	errno = 0;
+	static char	now_string[CTIME_BUFFER_SIZE];
 
 	if (now_string[0] == '\0')
 	{
+		errno = 0;
 		char *now_tmp = ctime(&now);
 		if (now_tmp == NULL)
 		{
@@ -94,6 +91,7 @@ static void	get_now_string(char *now_string, time_t now)
 			ft_strcpy(now_string, now_tmp);
 		}
 	}
+	return (now_string);
 }
 
 static int	recent_month(char *time_string, char *now_string, int year_offset)

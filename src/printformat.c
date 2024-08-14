@@ -20,23 +20,25 @@ static unsigned int	print_format_device(char *dest, t_format_data *format_data, 
 static unsigned int	print_format_date(char *dest, t_format_data *format_data, t_format_sizes *format_sizes, unsigned int offset);
 static unsigned int	print_format_long_ending(char *dest, t_format_data *format_data, unsigned int offset);
 static void			print_format_symlink(t_format_data *format_data);
-static	void		space_feed(void *v, int n);
-//static unsigned int	get_end_pos(t_format_sizes *format_sizes);
+static void			space_feed(void *v, int n);
+static void	clean_up_right_align(t_format_data *format_data);
 
 int	print_all_format_data(t_strategies *strat, t_directory *dir, t_format_sizes *format_sizes, t_format_data *all_format_data)
 {
-	char			buffer[1024];
-	unsigned int	offset = 1024;
+	char			buffer[MAX_LONG_LINE];
+	unsigned int	offset = MAX_LONG_LINE;
 
 	if (strat->printformat == print_format_data_short)
 	{
-		offset = 280;
+		offset = MAX_SHORT_LINE;
 	}
 	for (unsigned int i = 0; i < dir->entry_nb; ++i)
 	{
 		space_feed(buffer, offset);
 		if (all_format_data[i].mode[0] == '\0')
+		{
 			continue;
+		}
 		offset = strat->printformat(strat, &all_format_data[i], format_sizes, buffer);
 	}
 
@@ -56,6 +58,13 @@ int	print_format_data_short(t_strategies *strat, t_format_data *format_data, t_f
 	offset += print_format_short_ending(buffer, offset);
 
 	write(1, buffer, offset);
+	clean_up_right_align(format_data);
+
+	return (offset);
+}
+
+static void	clean_up_right_align(t_format_data *format_data)
+{
 	if (format_data->align_user_left == false)
 	{
 		free(format_data->user);
@@ -66,8 +75,6 @@ int	print_format_data_short(t_strategies *strat, t_format_data *format_data, t_f
 		free(format_data->group);
 		format_data->group = NULL;
 	}
-
-	return (offset);
 }
 
 int	print_format_data_long(t_strategies *strat, t_format_data *format_data, t_format_sizes *format_sizes, char *buffer)
@@ -87,6 +94,7 @@ int	print_format_data_long(t_strategies *strat, t_format_data *format_data, t_fo
 
 	write(1, buffer, offset);
 	print_format_symlink(format_data);
+	clean_up_right_align(format_data);
 
 	return (offset);
 }
@@ -118,8 +126,6 @@ unsigned int	print_format_user(char *dest, t_format_data *format_data, t_format_
 	{
 		offset += format_sizes->user - ft_strlen(format_data->user);	
 		ft_buffercpy(&dest[offset], format_data->user);
-		free(format_data->user);
-		format_data->user = NULL;
 	}
 	return (format_sizes->user + 1);
 }
@@ -134,8 +140,6 @@ unsigned int	print_format_group(char *dest, t_format_data *format_data, t_format
 	{
 		offset += format_sizes->group - ft_strlen(format_data->user) + 1;	
 		ft_buffercpy(&dest[offset], format_data->group);
-		free(format_data->group);
-		format_data->group = NULL;
 	}
 
 		return (format_sizes->group + 1);
@@ -282,12 +286,12 @@ static void	print_format_symlink(t_format_data *format_data)
 		ft_putchar_fd('\n', 1);
 	}
 }
+
 static	void space_feed(void *v, int n)
 {
 	int64_t	*s = (int64_t*)v;	
 
-	int	r = n % 8;
-	if (r != 0)
+	if (n % 8 != 0)
 	{
 		n += 8;
 	}

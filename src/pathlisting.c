@@ -1,4 +1,4 @@
-/* ************************************************************************** */
+/* *********hhh**************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   pathlisting.c                                      :+:      :+:    :+:   */
@@ -53,6 +53,7 @@ static int	list_all_files(t_strategies *strat, t_list **all_paths)
 {
 	int			ret = OK;
 	t_directory	reg_files;
+
 	init_dir(&reg_files);
 	sort_apart_files_and_dirs(strat, all_paths, &reg_files);
 	ret = handle_reg_files(strat, &reg_files);
@@ -90,7 +91,7 @@ static void	move_to_reg_files(t_directory *reg_files, t_list **files_prev, t_lis
 {
 	add_to_reg_files(reg_files, files_prev, current);
 	remove_from_all_paths(all_paths, path_prev, current);
-	++(reg_files->entry_nb);
+	++reg_files->entry_nb;
 }
 
 static inline void	add_to_reg_files(t_directory *reg_files, t_list **files_prev, t_list *current)
@@ -136,8 +137,6 @@ static int	handle_reg_files(t_strategies *strat, t_directory *reg_files)
 	int	ret = OK;
 
 	sort_paths(strat, &reg_files->content, reg_files->entry_nb);
-	//reg_files->content = strat->sortingalgo(reg_files->content, reg_files->entry_nb, strat->sorting);
-	//reg_files->content = strat->sortingalgo(reg_files->content, reg_files->entry_nb, strat->othersorting);
 	if (reg_files->content != NULL)
 	{
 		ret = format(strat, reg_files);
