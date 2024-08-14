@@ -16,15 +16,16 @@ static int	return_reformat(int ret);
 
 int main(int argc, char **argv)
 {
-	int           ret = OK;
 	t_options     opt;
 	t_list        *all_paths = NULL;
 	t_strategies  strat;
-	ret = recent(0, NULL);
+
+	int	ret = recent(0, NULL);
 	if (ret == INTERNAL_KO)
 	{
 		return (return_reformat(ret));
 	}
+
 	ret = parse_all_args(&opt, &all_paths, argc, argv);
 	if (ret != OK)
 	{

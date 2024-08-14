@@ -38,6 +38,7 @@ SOURCES := \
 	parseoption.c \
 	printformat.c \
 	recent.c \
+	status.c \
 	strategies.c \
 	pathlisting.c \
 	recursion.c \

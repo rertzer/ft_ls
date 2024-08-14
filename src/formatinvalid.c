@@ -12,37 +12,23 @@
 
 #include "ft_ls.h"
 
-static unsigned int			format_mode_invalid(char *buffer, t_data *data);
-static inline unsigned int	format_links_invalid(char *buffer);
-static unsigned int			format_user_or_group_invalid(char **buffer);
-static inline unsigned int	format_size_invalid(char *buffer);
-static inline unsigned int	format_date_invalid(char *buffer);
+static void	format_mode_invalid(char *buffer, unsigned int *format_size, t_data *data);
+static void	format_links_invalid(char *buffer, unsigned int *format_size);
+static void	format_user_or_group_invalid(char **buffer, unsigned int *format_size);
+static void	format_size_invalid(char *buffer, unsigned int *format_size);
+static void	format_date_invalid(char *buffer, unsigned int *format_size);
 
 int	load_format_data_invalid(t_strategies *strat, t_data *data, t_format_sizes *format_sizes, t_format_data *format_data)
 {
-	unsigned int	size = 0;
-
 	format_data->align_user_left = true;
 	format_data->align_group_left = true;
 	
-	size = format_mode_invalid(format_data->mode, data);
-	set_max_size(&format_sizes->mode, size);
-	
-	size = format_links_invalid(format_data->links);
-	set_max_size(&format_sizes->links, size);
-	
-	size = format_user_or_group_invalid(&format_data->user);
-	set_max_size(&format_sizes->user, size);
-
-	size = format_user_or_group_invalid(&format_data->group);
-	set_max_size(&format_sizes->group, size);
-
-	size = format_size_invalid(format_data->size);
-	set_max_size(&format_sizes->size, size);
-
-	size = format_date_invalid(format_data->date);	
-	set_max_size(&format_sizes->date, size);
-
+	format_mode_invalid(format_data->mode, &format_sizes->mode, data);
+	format_links_invalid(format_data->links, &format_sizes->links);
+	format_user_or_group_invalid(&format_data->user, &format_sizes->user);
+	format_user_or_group_invalid(&format_data->group, &format_sizes->group);
+	format_size_invalid(format_data->size, &format_sizes->size);
+	format_date_invalid(format_data->date, &format_sizes->date);	
 	format_name(&format_data->name, &format_sizes->name, data);
 
 	format_data->target = NULL;
@@ -51,7 +37,7 @@ int	load_format_data_invalid(t_strategies *strat, t_data *data, t_format_sizes *
 	return (OK);
 }
 
-static unsigned int	format_mode_invalid(char *buffer, t_data *data)
+static void	format_mode_invalid(char *buffer, unsigned int *format_size, t_data *data)
 {
 	unsigned int	size = 10;
 
@@ -61,40 +47,40 @@ static unsigned int	format_mode_invalid(char *buffer, t_data *data)
 	{
 		buffer[i] = '?';
 	}
-	return (size);
+	set_max_size(format_size, size);
 }
 
-static inline unsigned int	format_links_invalid(char *buffer)
+static void	format_links_invalid(char *buffer, unsigned int *format_size)
 {
 	unsigned int	size = 1;
 
 	buffer[0] = '?';
 	buffer[1] = '\0';
 
-	return (size);
+	set_max_size(format_size, size);
 }
 
-static unsigned int	format_user_or_group_invalid(char **buffer)
+static void	format_user_or_group_invalid(char **buffer, unsigned int *format_size)
 {
 	static char		question_mark[2] = "?\0";
 	unsigned int	size = 1;
 
 	*buffer = question_mark;
 
-	return (size);
+	set_max_size(format_size, size);
 }
 
-static inline unsigned int	format_size_invalid(char *buffer)
+static void	format_size_invalid(char *buffer, unsigned int *format_size)
 {
 	unsigned int	size = 1;
 
 	buffer[0] = '?';
 	buffer[1] = '\0';
 
-	return (size);
+	set_max_size(format_size, size);
 }
 
-static inline unsigned int	format_date_invalid(char *buffer)
+static void	format_date_invalid(char *buffer, unsigned int *format_size)
 {
 	unsigned int	size = 12;
 
@@ -106,5 +92,5 @@ static inline unsigned int	format_date_invalid(char *buffer)
 	buffer[size - 1] = '?';
 	buffer[size] = '\0';
 
-	return (size);
+	set_max_size(format_size, size);
 }

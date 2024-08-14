@@ -63,11 +63,13 @@ static int	add_dir_entries(t_strategies *strat, t_directory *dir, DIR* dir_strea
 		errno = 0;
 		dir_entry = readdir(dir_stream);
 		if (dir_entry == NULL)
+		{
 			break;
+		}
 		if (strat->keepEntry(dir_entry))
 		{
 			ret = add_entry(strat, dir, dir_entry);
-			status = status > ret ? status : ret;
+			status = worst(status, ret);
 			if (ret == INTERNAL_KO)
 			{
 				break;

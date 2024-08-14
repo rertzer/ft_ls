@@ -140,3 +140,8 @@ bool	is_directory_nodir(t_data *data)
 
 	return (false);
 }
+
+bool	is_device_file(t_data *data)
+{
+	return (data->file.type == CHR || data->file.type == BLK);
+}

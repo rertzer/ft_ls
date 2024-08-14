@@ -1,30 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mandatory_parseoption.c                            :+:      :+:    :+:   */
+/*   status.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rertzer <rertzer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/22 10:17:48 by rertzer           #+#    #+#             */
-/*   Updated: 2024/05/22 10:17:59 by rertzer          ###   ########.fr       */
+/*   Created: 2024/08/14 09:19:05 by rertzer           #+#    #+#             */
+/*   Updated: 2024/08/14 09:20:33 by rertzer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-int	parse_option(t_options *opt, char arg)
+
+int	worst(int ret1, int ret2)
 {
-	int	ret = MAJOR_KO;
-
-	for (int i = 0; i < SHORT_OPTIONS_NUMBER; ++i)
-	{
-		if (arg == opt->name[i])
-		{
-			opt->value[i] = true;
-			ret = OK;
-			break;
-		}
-	}
-
-	return (ret);
+	return (ret1 > ret2 ? ret1 : ret2);
 }

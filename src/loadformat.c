@@ -12,11 +12,11 @@
 
 #include "ft_ls.h"
 
-static int	loop_all_format_data(t_strategies *strat, t_directory *dir, t_format_sizes *format_sizes, t_format_data *all_format_data);
-static int					load_format_data(t_strategies *strat, t_data *data, t_format_sizes *format_sizes, t_format_data *format_data);
-static inline void			load_block_size(t_directory *dir, t_data *data);
-static void	compute_block_size(t_directory *dir);
-static void	compute_size_size(t_format_sizes *format_sizes);
+static int			loop_all_format_data(t_strategies *strat, t_directory *dir, t_format_sizes *format_sizes, t_format_data *all_format_data);
+static int			load_format_data(t_strategies *strat, t_data *data, t_format_sizes *format_sizes, t_format_data *format_data);
+static inline void	load_block_size(t_directory *dir, t_data *data);
+static void			compute_block_size(t_directory *dir);
+static void			compute_size_size(t_format_sizes *format_sizes);
 
 int  load_all_format_data(t_strategies *strat, t_directory *dir, t_format_sizes *format_sizes, t_format_data *all_format_data)
 {
@@ -34,7 +34,7 @@ static int	loop_all_format_data(t_strategies *strat, t_directory *dir, t_format_
 	int		ret = OK;
 	int		i = 0;
 
-	for (t_list *entry = dir->content; entry != NULL;entry = entry->next, ++i)
+	for (t_list *entry = dir->content; entry != NULL; entry = entry->next, ++i)
 	{
 		t_data	*data = (t_data*)entry->content;
 

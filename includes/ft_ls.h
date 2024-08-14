@@ -75,6 +75,12 @@
 
 # define EIGHT_SPACES 0x2020202020202020;
 
+
+# define CTIME_MONTH_OFFSET	4
+# define CTIME_YEAR_OFFSET	20
+# define LS_MONTH_OFFSET 0
+# define LS_YEAR_OFFSET 8
+
 /* ============================ Typedef ================================== */
 
 typedef enum {REG, DIREC, CHR, BLK, FIFO, LNK, SOCK, ERROR_TYPE=-1} e_type; 
@@ -183,7 +189,8 @@ t_data			*new_data();
 void			data_del(void*);
 bool			is_directory_simple(t_data *data);
 bool			is_directory_longlist(t_data *data);
-bool			is_directory_nodir(t_data *data);
+bool			is_directory_nodir(t_data *data); 
+bool			is_device_file(t_data *data);
 
 // option handler
 int				parse_all_args(t_options *opt, t_list **paths, int argc, char **argv);
@@ -314,6 +321,8 @@ void			free_ids(t_strategies *strat);
 int				get_user_name(t_strategies *strat, char **name, unsigned int *len, uid_t id);
 int				get_group_name(t_strategies *strat, char **name, unsigned int *len, gid_t id);
 
+// status
+int				worst(int ret1, int ret2);
 // error handling
 void			print_char_error(char *message, char param);
 void			print_error_msg(char *message, char *param);

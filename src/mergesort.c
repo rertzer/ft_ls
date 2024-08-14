@@ -15,7 +15,6 @@
 static t_list 			*merge(t_list *l_lst, t_list *r_lst, unsigned int l_len, unsigned int r_len, bool(*ordered)(t_data *a, t_data *b));
 static inline t_list	*append_remaining(t_list **dest, t_list *src, unsigned int src_len);
 
-
 t_list *merge_sort(t_list *lst, unsigned int len, bool(*ordered)(t_data *a, t_data *b))
 {
 	if (len < 2 || ordered == NULL)

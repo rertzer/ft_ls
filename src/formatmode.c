@@ -32,6 +32,15 @@ void	format_mode(char *buffer, unsigned int *format_size, t_data *data)
 	set_max_size(format_size, size);
 }
 
+/*
+	mode format: TUUUGGGOOOX
+	T: type
+	U: user
+	G: group
+	O: other
+	X: xattr
+*/
+
 void	format_mode_type(char *buffer, t_data *data)
 {
 	char	types[] = {'-', 'd', 'c', 'b', 'p', 'l', 's'};
@@ -94,4 +103,3 @@ static inline unsigned int	format_mode_xattr(char *buffer, t_data *data, unsigne
 	
 	return (size);
 }
-

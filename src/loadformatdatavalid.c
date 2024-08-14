@@ -14,7 +14,7 @@
 
 int	load_format_data_valid(t_strategies *strat, t_data *data, t_format_sizes *format_sizes, t_format_data *format_data)
 {
-	int				ret = OK;
+	int	ret = OK;
 
 	format_data->align_user_left = true;
 	format_data->align_group_left = true;
@@ -53,4 +53,3 @@ int	load_format_data_valid(t_strategies *strat, t_data *data, t_format_sizes *fo
 
 	return (ret);
 }
-

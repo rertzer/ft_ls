@@ -27,24 +27,23 @@ int format(t_strategies *strat, t_directory *dir)
 
 	if (all_format_data != NULL)
 	{
-		ret = print_directory(strat, dir, &format_sizes, all_format_data);
+		ret = load_all_format_data(strat, dir, &format_sizes, all_format_data);
+		if (ret == OK && dir->valid == true)
+		{
+			ret = print_directory(strat, dir, &format_sizes, all_format_data);
+		}
+		free(all_format_data);
 	}
-
-	free(all_format_data);
 	return (ret);
 }
 
 static int	print_directory(t_strategies *strat, t_directory *dir, t_format_sizes *format_sizes, t_format_data *all_format_data)
 {
-	int	ret = load_all_format_data(strat, dir, format_sizes, all_format_data);
-	if (ret == OK && dir->valid == true)
-	{
-		previous_print(strat);
-		print_path(strat, dir->path);
-		strat->printtotal(dir);
-		ret = strat->printallformat(strat, dir, format_sizes, all_format_data);
-	}
+	previous_print(strat);
+	print_path(strat, dir->path);
+	strat->printtotal(dir);
 
+	int		ret = strat->printallformat(strat, dir, format_sizes, all_format_data);
 	return (ret);
 }
 
