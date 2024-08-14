@@ -13,52 +13,59 @@
 #include "ft_ls.h"
 
 
+static void			sort_apart_files_and_dirs(t_strategies *strat, t_list **all_paths, t_directory *reg_files);
+static void			move_to_reg_files(t_directory *reg_files, t_list **files_prev, t_list **all_paths, t_list *path_prev, t_list *current);
 static inline void	add_to_reg_files(t_directory *reg_files, t_list **files_prev, t_list *current);
 static inline void	remove_from_all_paths(t_list **all_paths, t_list *path_prev, t_list *current);
 static inline void	reset_next(t_list **next,t_list *current);
 static inline void	next_path(t_list **path_prev, t_list **next, t_list *current);
+static int			list_all_files(t_strategies *strat, t_list **all_paths);
 static int			handle_reg_files(t_strategies *strat, t_directory *reg_files);
-static int			list_duplicated_path(t_strategies *strat, char *path);
 
 int	process_all_paths(t_strategies *strat, t_list **all_paths, unsigned int len)
 {
-	
 	int	ret = OK;
 	int	status = ret;
+
+	sort_paths(strat, all_paths, len);
 	ret = add_all_stats(strat, *all_paths);
-	if (ret == MINOR_KO)
-	{
-		ret = MAJOR_KO;
-	}
-	status = ret;
+	status = major_status(ret);
 	if (ret != INTERNAL_KO)
 	{
-		*all_paths = strat->sortingalgo(*all_paths, len, strat->sorting);
-		*all_paths = strat->sortingalgo(*all_paths, len, strat->othersorting);
 		ret = list_all_files(strat, all_paths);
-		if (ret == OK)
+		if (ret != INTERNAL_KO)
 		{
 			ret = list_all_path(strat, *all_paths);
 		}
-		status = ret > status ? ret : status;
+		status = worst(status, ret);
 	}
 
 	return (status);
 }
 
-int	list_all_files(t_strategies *strat, t_list **all_paths)
+void sort_paths(t_strategies *strat, t_list **all_paths, unsigned int len)
 {
-	
+	*all_paths = strat->sortingalgo(*all_paths, len, strat->sorting);
+	*all_paths = strat->sortingalgo(*all_paths, len, strat->othersorting);
+}
+
+static int	list_all_files(t_strategies *strat, t_list **all_paths)
+{
 	int			ret = OK;
 	t_directory	reg_files;
-	t_list		*current = *all_paths;
+	init_dir(&reg_files);
+	sort_apart_files_and_dirs(strat, all_paths, &reg_files);
+	ret = handle_reg_files(strat, &reg_files);
+	return (ret);
+}
+
+static void	sort_apart_files_and_dirs(t_strategies *strat, t_list **all_paths, t_directory *reg_files)
+{
 	t_list		*files_prev = NULL;
 	t_list		*path_prev = NULL;
 	t_list		*next = NULL;
 
-	init_dir(&reg_files);
-
-	while (current != NULL)
+	for (t_list *current = *all_paths; current != NULL; current = next)
 	{
 		t_data* data = (t_data*)current->content;
 		if (data->file.mode == UINT_MAX)
@@ -69,19 +76,21 @@ int	list_all_files(t_strategies *strat, t_list **all_paths)
 		}
 		else if (! strat->isdirectory(data))
 		{
-			add_to_reg_files(&reg_files, &files_prev, current);
-			remove_from_all_paths(all_paths, path_prev, current);
+			move_to_reg_files(reg_files, &files_prev, all_paths, path_prev, current);	
 			reset_next(&next, current);
-			++reg_files.entry_nb;
 		}
 		else
 		{
 			next_path(&path_prev, &next, current);
 		}
-		current = next;
 	}
-	ret = handle_reg_files(strat, &reg_files);
-	return (ret);
+}
+
+static void	move_to_reg_files(t_directory *reg_files, t_list **files_prev, t_list **all_paths, t_list *path_prev, t_list *current)
+{
+	add_to_reg_files(reg_files, files_prev, current);
+	remove_from_all_paths(all_paths, path_prev, current);
+	++(reg_files->entry_nb);
 }
 
 static inline void	add_to_reg_files(t_directory *reg_files, t_list **files_prev, t_list *current)
@@ -126,8 +135,9 @@ static int	handle_reg_files(t_strategies *strat, t_directory *reg_files)
 {
 	int	ret = OK;
 
-	reg_files->content = strat->sortingalgo(reg_files->content, reg_files->entry_nb, strat->sorting);
-	reg_files->content = strat->sortingalgo(reg_files->content, reg_files->entry_nb, strat->othersorting);
+	sort_paths(strat, &reg_files->content, reg_files->entry_nb);
+	//reg_files->content = strat->sortingalgo(reg_files->content, reg_files->entry_nb, strat->sorting);
+	//reg_files->content = strat->sortingalgo(reg_files->content, reg_files->entry_nb, strat->othersorting);
 	if (reg_files->content != NULL)
 	{
 		ret = format(strat, reg_files);
@@ -162,50 +172,4 @@ int	list_all_path(t_strategies *strat, t_list *all_paths)
 int	default_path(t_strategies *strat)
 {
 	return (list_path(strat, "."));
-}
-
-int	list_path(t_strategies *strat, char* path)
-{
-	int	ret = OK;
-
-	char	*dup_path = ft_longdup(path);
-	if (dup_path == NULL)
-	{
-		ret = INTERNAL_KO;
-	}
-	else
-	{
-		ret = list_duplicated_path(strat, dup_path);
-	}
-
-	return (ret);
-}
-
-static int	list_duplicated_path(t_strategies *strat, char *path)
-{
-	int			ret = OK;
-	int			status = ret;
-	t_directory	dir;
-
-	init_dir(&dir);
-	dir.path = path;
-	ret = get_dir_content(strat, &dir);
-	status = ret > status ? ret : status;
-	
-	if (ret != INTERNAL_KO)
-	{
-		dir.content = strat->sortingalgo(dir.content, dir.entry_nb, strat->sorting);
-		dir.content = strat->sortingalgo(dir.content, dir.entry_nb, strat->othersorting);
-		ret = format(strat, &dir);
-		status = ret > status ? ret : status;
-		if (ret != INTERNAL_KO)
-		{
-			ret = strat->recurse(strat, &dir);
-			status = ret > status ? ret : status;
-		}
-	}
-
-	free_directory(&dir);
-
-	return (status);
 }

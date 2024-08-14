@@ -26,6 +26,7 @@ SOURCES := \
 	sorting.c \
 	errors.c \
 	keepentry.c \
+	listpath.c \
 	loadformat.c \
 	loadformatdatavalid.c \
 	formatmode.c \

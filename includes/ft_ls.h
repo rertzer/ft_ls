@@ -194,7 +194,7 @@ bool			is_device_file(t_data *data);
 
 // option handler
 int				parse_all_args(t_options *opt, t_list **paths, int argc, char **argv);
-bool			get_option(t_options *opt, char arg);
+bool			get_short_option(t_options *opt, char arg);
 int				parse_long_option(t_options *opt, char *arg);
 int				parse_short_option(t_options *opt, char *arg);
 int				parse_option(t_options *opt, char arg);
@@ -281,9 +281,9 @@ unsigned int	print_format_short_ending(char *dest, unsigned int offset);
 // list_path
 int				process_all_paths(t_strategies *strat, t_list **all_paths, unsigned int len);
 int				default_path(t_strategies *strat);
-int				list_all_files(t_strategies *strat, t_list **all_paths);
 int				list_all_path(t_strategies *strat, t_list *all_paths);
 int				list_path(t_strategies *strats, char* path);
+void	 		sort_paths(t_strategies *strat, t_list **all_paths, unsigned int len);
 
 //directory
 void			free_directory(t_directory *dir);
@@ -323,6 +323,7 @@ int				get_group_name(t_strategies *strat, char **name, unsigned int *len, gid_t
 
 // status
 int				worst(int ret1, int ret2);
+int				major_status(int ret);
 // error handling
 void			print_char_error(char *message, char param);
 void			print_error_msg(char *message, char *param);

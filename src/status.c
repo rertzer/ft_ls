@@ -17,3 +17,13 @@ int	worst(int ret1, int ret2)
 {
 	return (ret1 > ret2 ? ret1 : ret2);
 }
+
+int	major_status(int ret)
+{
+	if (ret == MINOR_KO)
+	{
+		ret = MAJOR_KO;
+	}
+
+	return (ret);
+}

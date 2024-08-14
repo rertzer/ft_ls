@@ -80,11 +80,11 @@ static int	parse_arg(t_options *opt, t_list **paths, char *arg)
 	return (ret);
 }
 
-bool	get_option(t_options *opt, char arg)
+bool	get_short_option(t_options *opt, char arg)
 {
 	bool	value = false;
 
-	for (int i = 0; i < OPTIONS_NUMBER; ++i)
+	for (int i = 0; i < SHORT_OPTIONS_NUMBER; ++i)
 	{
 		if (opt->name[i] == arg)
 		{
