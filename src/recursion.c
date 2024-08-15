@@ -23,24 +23,21 @@ int	no_recursion(t_strategies *strat, t_directory *dir)
 
 int	recursive(t_strategies *strat, t_directory *dir)
 {
-	t_list	*lst = dir->content;
 	int		ret = OK;
 	int		status = OK;
 
-	while (lst)
+	for (t_list *lst = dir->content; lst != NULL; lst = lst->next)
 	{
 		t_data *data = (t_data*)lst->content;
 		if (data->file.type == DIREC && not_a_dot(data->file.name))
 		{
 			ret = list_path(strat, data->path);
-			if (ret == INTERNAL_KO)
+			status = worst(status, ret);
+			if (status == INTERNAL_KO)
 			{
-				status = ret;
 				break;
 			}
 		}
-		lst = lst->next;
-		status = ret > status ? ret : status;
 	}
 	return (status);
 }

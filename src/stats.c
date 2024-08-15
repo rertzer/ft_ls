@@ -22,12 +22,11 @@ int	add_all_stats(t_strategies *strat, t_list *all_paths)
 	int		status = ret;
 	t_data	*data = NULL;
 
-	while (all_paths != NULL)
+	for (; all_paths != NULL; all_paths = all_paths->next)
 	{
 		data = (t_data*)all_paths->content;
 		ret = add_stats(strat, data);	
-		status = ret > status ? ret : status;
-		all_paths = all_paths->next;
+		status = worst(ret, status);
 	}
 
 	return (status);
@@ -54,6 +53,7 @@ int	add_stats(t_strategies *strat, t_data *data)
 			}
 		}
 	}
+
 	return (ret);
 }
 

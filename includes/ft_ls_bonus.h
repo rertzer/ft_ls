@@ -18,8 +18,7 @@
 # include "ft_ls.h"
 # include "bonus_parse_option.h"
 
-
-#define COLUMN_MIN_SPACE 2
+# define COLUMN_MIN_SPACE 2
 
 
 typedef struct	{

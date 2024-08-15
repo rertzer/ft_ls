@@ -26,7 +26,4 @@ typedef struct {
 	bool	value[OPTIONS_NUMBER];
 } t_options;
 
-
-
 #endif // MANDATORY_PARSE_OPTION_H
-

@@ -15,6 +15,4 @@
 
 # include "mandatory_parse_option.h"
 
-
 #endif // !FT_LS_MANDATORY
-# define FT_LS_MANDATORY

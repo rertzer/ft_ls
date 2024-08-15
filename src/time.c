@@ -14,7 +14,7 @@
 
 struct timespec  last_modif(struct stat *stat_buffer)
 {
-  return (stat_buffer->st_mtim);
+	return (stat_buffer->st_mtim);
 }
 
 struct timespec  access_time(struct stat *stat_buffer)
@@ -33,8 +33,5 @@ char	*get_time_string(time_t *time)
 		return (NULL);
 	}
 
-//	char  *time_string = ft_longdup(tmp);
-
-//	return (time_string);
 	return (tmp);
 }

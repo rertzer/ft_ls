@@ -23,38 +23,38 @@
 # define WHT "\x1b[0;37m"
 # define RESET "\x1b[0m"
 
-#define RESET_SIZE 4
+# define RESET_SIZE 4
 
-#define BG_BLACK   "\x1b[40m"
-#define BG_RED     "\x1b[41m"
-#define BG_GREEN   "\x1b[42m"
-#define BG_YELLOW  "\x1b[43m"
-#define BG_BLUE    "\x1b[44m"
-#define BG_MAGENTA "\x1b[45m"
-#define BG_CYAN    "\x1b[46m"
-#define BG_WHITE   "\x1b[47m"
+# define BG_BLACK   "\x1b[40m"
+# define BG_RED     "\x1b[41m"
+# define BG_GREEN   "\x1b[42m"
+# define BG_YELLOW  "\x1b[43m"
+# define BG_BLUE    "\x1b[44m"
+# define BG_MAGENTA "\x1b[45m"
+# define BG_CYAN    "\x1b[46m"
+# define BG_WHITE   "\x1b[47m"
 
-#define COLOR_DEFT	"\x1b[00;00m"		//default
-#define COLOR_DIRE	"\x1b[01;34m"		//directory
-#define COLOR_LINK	"\x1b[01;36m"		//sym link
-#define COLOR_EXEC	"\x1b[01;32m"		//exec file
-#define COLOR_ARCH	"\x1b[01;31m"		//archive file
-#define COLOR_FIFO	"\x1b[33;40m"		//fifo
-#define COLOR_BKLN	"\x1b[40;31;01m"	//broken link and missing files
-#define COLOR_SOCK	"\x1b[35;01m"		//socket
-#define COLOR_IMAG	"\x1b[35;01m"		//image, video files...
-#define COLOR_AUDI	"\x1b[36;00m"		//audio files...
-#define COLOR_BLCK	"\x1b[33;40;01m"	//block device
-#define COLOR_CHAR	"\x1b[33;40;01m"	//char device
-#define COLOR_SUID	"\x1b[37;41m"		//set uid
-#define COLOR_SGID	"\x1b[30;43m"		//set gid
-#define COLOR_CAPA	"\x1b[30;41m"		//files whith capabilities
-#define COLOR_SKDR	"\x1b[37;44m"		//sticky directory
-#define COLOR_OWDR	"\x1b[34;42m"		//other writable directory
-#define COLOR_SOWD	"\x1b[30;42m"		//sticky and other directory
+# define COLOR_DEFT	"\x1b[00;00m"		//default
+# define COLOR_DIRE	"\x1b[01;34m"		//directory
+# define COLOR_LINK	"\x1b[01;36m"		//sym link
+# define COLOR_EXEC	"\x1b[01;32m"		//exec file
+# define COLOR_ARCH	"\x1b[01;31m"		//archive file
+# define COLOR_FIFO	"\x1b[33;40m"		//fifo
+# define COLOR_BKLN	"\x1b[40;31;01m"	//broken link and missing files
+# define COLOR_SOCK	"\x1b[35;01m"		//socket
+# define COLOR_IMAG	"\x1b[35;01m"		//image, video files...
+# define COLOR_AUDI	"\x1b[36;00m"		//audio files...
+# define COLOR_BLCK	"\x1b[33;40;01m"	//block device
+# define COLOR_CHAR	"\x1b[33;40;01m"	//char device
+# define COLOR_SUID	"\x1b[37;41m"		//set uid
+# define COLOR_SGID	"\x1b[30;43m"		//set gid
+# define COLOR_CAPA	"\x1b[30;41m"		//files whith capabilities
+# define COLOR_SKDR	"\x1b[37;44m"		//sticky directory
+# define COLOR_OWDR	"\x1b[34;42m"		//other writable directory
+# define COLOR_SOWD	"\x1b[30;42m"		//sticky and other directory
 
-#define COLOR_CHAR_NB 16
-#define COLOR_TYPE_NUMBER 18
+# define COLOR_CHAR_NB 16
+# define COLOR_TYPE_NUMBER 18
 typedef enum {
 	COLOR_TYPE_DEFT,	//default
 	COLOR_TYPE_DIRE,	//directory
@@ -75,5 +75,19 @@ typedef enum {
 	COLOR_TYPE_OWDR,	//other writable directory
 	COLOR_TYPE_SOWD 	//sticky and other directory
 } e_color_type;
+
+# define ARCHIVE_EXT "tar", "tgz", "arc", "arj", "taz", "lha", "lz4", "lzh", "lzma", "tlz", "txz", \
+		"tzo", "t7z", "zip", "z", "dz", "gz", "lrz", "lz", "lzo", "xz", "zst", "tzst", \
+		"bz2", "bz", "tbz", "tbz2", "tz", "deb", "rpm", "jar", "war", "ear", "sar", \
+		"rar", "alz", "ace", "zoo", "cpio", "7z", "rz", "cab", "wim", "swm", "dwm", "esd"
+
+# define IMAGE_EXT "jpg", "jpeg", "mjpg", "mjpeg", "gif", "bmp", "pbm", "pgm", "ppm", "tga", \
+		"xbm", "xpm", "tif", "svg", "svgz", "mng", "pcx", "mov", "mpg", "m2v", \
+		"mkv", "webm", "ogm", "mp4", "m4v", "mp4v", "vob", "qt", "wmv", "asf", \
+		"rm", "rmvb", "flc", "avi", "fli", "flv", "gl", "dl", "xcf", "xwd", \
+		"yuv", "cgm", "emf", "ogv", "ogx" 
+
+# define AUDIO_EXT "aac", "au", "flac", "m4a", "mid", "midi", "mka", "mp3", "mpc", "ogg", \
+		"ra", "wav", "oga", "opus", "spx", "xspf"
 
 #endif

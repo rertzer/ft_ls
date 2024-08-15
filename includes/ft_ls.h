@@ -13,12 +13,6 @@
 #ifndef FT_LS_H
 # define FT_LS_H
 
-/*debug */
-# include <stdio.h>
-
-#define DP printf("%s %d\n", __FILE__, __LINE__);
-/*------*/
-
 # include <dirent.h>
 # include <errno.h>
 # include <fcntl.h>
@@ -46,8 +40,6 @@
 # define	ERROR -1
 # define	TRUE 1
 # define	FALSE 0
-
-# define  FT_LS_BLOCK_SIZE 16384
 
 # define MODES_NB 7
 # define HASH_SIZE 512
@@ -157,25 +149,25 @@ typedef struct {
 } t_directory;
 
 typedef struct s_strategies {
-	bool	(*keepEntry)(const struct dirent* const);
-	void	(*addlist)(t_list **, t_list*);
-	t_list*		(*sortingalgo)(t_list*, unsigned int, bool(*sorting)(t_data*, t_data*));
-	bool	(*sorting)(t_data*, t_data*);
-	bool	(*othersorting)(t_data*, t_data*);
-	int		(*strcmp)(const char*, const char*);
-	bool	(*isdirectory)(t_data*);
+	bool			(*keepEntry)(const struct dirent* const);
+	void			(*addlist)(t_list **, t_list*);
+	t_list*			(*sortingalgo)(t_list*, unsigned int, bool(*sorting)(t_data*, t_data*));
+	bool			(*sorting)(t_data*, t_data*);
+	bool			(*othersorting)(t_data*, t_data*);
+	int				(*strcmp)(const char*, const char*);
+	bool			(*isdirectory)(t_data*);
 	struct timespec	(*settime)(struct stat*);
-	int		(*recurse)(struct s_strategies*, t_directory*);
-	int		(*printallformat)(struct s_strategies*, t_directory*, t_format_sizes*, t_format_data*);
-	int		(*printformat)(struct s_strategies*, t_format_data*, t_format_sizes *, char *buffer);
-	void	(*printtotal)(t_directory *dir);
-	int		(*color)(e_color_type*, t_file *file);
+	int				(*recurse)(struct s_strategies*, t_directory*);
+	int				(*printallformat)(struct s_strategies*, t_directory*, t_format_sizes*, t_format_data*);
+	int				(*printformat)(struct s_strategies*, t_format_data*, t_format_sizes *, char *buffer);
+	void			(*printtotal)(t_directory *dir);
+	int				(*color)(e_color_type*, t_file *file);
 	unsigned int	(*printuser)(char *dest, t_format_data*, t_format_sizes*, unsigned int);
 	unsigned int	(*printgroup)(char *dest, t_format_data*, t_format_sizes*, unsigned int);
-	bool	print_path_name;
-	bool	previous_print;
-	t_list*	users[HASH_SIZE];
-	t_list*	groups[HASH_SIZE];
+	bool				print_path_name;
+	bool				previous_print;
+	t_list*				users[HASH_SIZE];
+	t_list*				groups[HASH_SIZE];
 }  t_strategies;
 
 /* ================================= Mandatory or Bonus ============================ */
@@ -240,7 +232,7 @@ void			no_print_total(t_directory *dir);
 
 //load format
 int				load_all_format_data(t_strategies *strat, t_directory *dir, t_format_sizes *format_sizes, t_format_data * all_format_data);  
-void set_max_size(unsigned int *max, unsigned int size);
+void			set_max_size(unsigned int *max, unsigned int size);
 
 //format data valid
 int				load_format_data_valid(t_strategies *strat, t_data *data, t_format_sizes *format_sizes, t_format_data *format_data);
@@ -248,26 +240,25 @@ int				load_format_data_valid(t_strategies *strat, t_data *data, t_format_sizes 
 //format data invalid
 int				load_format_data_invalid(t_strategies *strat, t_data *data, t_format_sizes *format_sizes, t_format_data *format_data);
 
-
 //format user
 int				format_user(t_strategies *strat, t_format_data *format_data, unsigned int *size, t_data *data);
 
 //format group
 int				format_group(t_strategies *strat, t_format_data *format_data, unsigned int *len, t_data *data);
 
-
 //format data
 void			format_mode(char *buffer, unsigned int *format_size, t_data *data);
 void			format_mode_type(char *buffer, t_data *data);
 
 //format miscellaneous
-void		format_links(char *buffer, unsigned int *format_size, t_data *data);
-void		format_size(char *buffer, unsigned int *format_size, t_data *data);
-void		format_minor(char *buffer, unsigned int *format_size, t_data *data);
-void		format_major(char *buffer, unsigned int *format_size, t_data *data);
-int		format_time(char *buffer, unsigned int *format_size, t_data *data);
-void		format_name(char **buffer, unsigned int *format_size, t_data *data);
-void				format_symlink(char **buffer, t_data *data);
+void			format_links(char *buffer, unsigned int *format_size, t_data *data);
+void			format_size(char *buffer, unsigned int *format_size, t_data *data);
+void			format_minor(char *buffer, unsigned int *format_size, t_data *data);
+void			format_major(char *buffer, unsigned int *format_size, t_data *data);
+int				format_time(char *buffer, unsigned int *format_size, t_data *data);
+void			format_name(char **buffer, unsigned int *format_size, t_data *data);
+void			format_symlink(char **buffer, t_data *data);
+
 // print format
 int				print_all_format_data(t_strategies *strat, t_directory *dir, t_format_sizes *format_sizes, t_format_data *all_format_data);
 int				print_format_data_long(t_strategies *strat, t_format_data *format_data, t_format_sizes *format_sizes, char *buffer);
