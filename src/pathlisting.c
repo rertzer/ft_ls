@@ -150,19 +150,15 @@ int	list_all_path(t_strategies *strat, t_list *all_paths)
 	int		ret = OK;
 	int		status = ret;
 
-	while (all_paths != NULL)
+	for (;all_paths != NULL; all_paths = all_paths->next)
 	{
 		t_data	*data = (t_data*)all_paths->content;
-		
 		ret = list_path(strat, data->path);
-
+		status = worst(ret, status);
 		if (ret == INTERNAL_KO)
 		{
-			status = ret;
 			break;
 		}
-		status = ret > status ? ret : status;
-		all_paths = all_paths->next;
 	}
 
 	return (status);

@@ -168,8 +168,11 @@ static int	stat_error(t_data *data)
 {
 		data->target.type = ERROR_TYPE;
 		data->file.broken = true;
-		ft_putstr_fd("ft_ls: stat: ", 2);
-		perror(data->path);
+		if (errno != ELOOP)
+		{
+			ft_putstr_fd("ft_ls: stat: ", 2);
+			perror(data->path);
+		}
 
 		return (MINOR_KO);
 }

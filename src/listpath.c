@@ -46,11 +46,11 @@ static int	list_copied_path(t_strategies *strat, char *path)
 	{
 		sort_paths(strat, &dir.content, dir.entry_nb);
 		ret = format(strat, &dir);
-		status = ret > status ? ret : status;
+		status = worst(ret , status);
 		if (ret != INTERNAL_KO)
 		{
 			ret = strat->recurse(strat, &dir);
-			status = ret > status ? ret : status;
+			status = worst(ret, status);
 		}
 	}
 
