@@ -12,9 +12,11 @@
 
 #include "ft_ls.h"
 
-static unsigned int format_recent_time(char *buffer, char *time_string);
-static unsigned int format_late_time(char *buffer, char *time_string);
-bool	is_device_file(t_data *data);
+static inline size_t	ft_minor(dev_t rdev);
+static inline size_t	ft_major (dev_t rdev);
+static unsigned int		format_recent_time(char *buffer, char *time_string);
+static unsigned int 	format_late_time(char *buffer, char *time_string);
+bool					is_device_file(t_data *data);
 
 void	format_links(char *buffer, unsigned int *format_size, t_data *data)
 {
@@ -40,10 +42,15 @@ void format_minor(char *buffer, unsigned int *format_size, t_data *data)
 
 	if (is_device_file(data) == true)
 	{
-		size = ft_itoa_dec(minor(data->rdev), buffer);
+		size = ft_itoa_dec(ft_minor(data->rdev), buffer);
 	}
 
 	set_max_size(format_size, size);
+}
+
+static inline size_t	ft_minor(dev_t rdev)
+{
+  return (rdev & 0xff) | ((unsigned int) (rdev >> 12) & ~0xff);
 }
 
 void format_major(char *buffer, unsigned int *format_size, t_data *data)
@@ -52,10 +59,15 @@ void format_major(char *buffer, unsigned int *format_size, t_data *data)
 
 	if (is_device_file(data) == true)
 	{
-		size = ft_itoa_dec(major(data->rdev), buffer);
+		size = ft_itoa_dec(ft_major(data->rdev), buffer);
 	}
 
 	set_max_size(format_size, size);
+}
+
+static inline size_t ft_major (dev_t rdev)
+{
+  return ((rdev >> 8) & 0xfff) | ((unsigned int) (rdev >> 32) & ~0xfff);
 }
 
 int	format_time(char *buffer, unsigned int *format_size, t_data *data)
