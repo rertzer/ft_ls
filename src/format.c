@@ -42,7 +42,6 @@ static int	print_directory(t_strategies *strat, t_directory *dir, t_format_sizes
 	previous_print(strat);
 	print_path(strat, dir->path);
 	strat->printtotal(dir);
-
 	int		ret = strat->printallformat(strat, dir, format_sizes, all_format_data);
 	return (ret);
 }
