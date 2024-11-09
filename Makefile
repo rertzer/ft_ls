@@ -1,5 +1,5 @@
 CC := cc
-FLAGS := -Wall -Wextra -Werror -g3
+FLAGS := -Wall -Wextra -Werror -o3
 
 NAME := ft_ls 
 
