@@ -1,5 +1,5 @@
 CC := cc
-FLAGS := -Wall -Wextra -Werror -o3
+FLAGS := -Wall -Wextra -Werror -g3
 
 NAME := ft_ls 
 
@@ -13,6 +13,7 @@ OBJ_DIR := obj/
 OBJ_DIR_BONUS := obj_bonus/
 
 INC_DIR := includes/
+INC := -I ../includes/
 
 LIBFT := $(LIBFT_DIR)libft.a
 

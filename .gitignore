@@ -1,6 +1,11 @@
+# nvim lsp 
+.clangd
+.clang-format
+
 # valgrind
 callgrind.out.*
 cachegrind.out.*
+
 # vim files
 *.swp
 

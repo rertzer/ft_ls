@@ -12,30 +12,24 @@
 
 #include "libft.h"
 
-char	*ft_pathdup(const char *src)
-{
-	size_t	len;
-	char	*dup;
+char* ft_pathdup(const char* src) {
+	size_t len;
+	char*  dup;
 
 	len = ft_strlen(src);
- 	errno = 0;
-	dup = malloc(sizeof(char) *(len + 1));
- 	if (dup == NULL)
-	{
+	errno = 0;
+	dup = malloc(sizeof(char) * (len + 1));
+	if (dup == NULL) {
 		perror("ft_ls: malloc: ");
-	}
-	else
-	{
-		size_t	i;
+	} else {
+		size_t i;
 
 		i = 0;
-		while (src[i] != '\0')
-		{
+		while (src[i] != '\0') {
 			dup[i] = src[i];
 			++i;
 		}
-		while (i > 2 && dup[i - 1] == '/')
-		{
+		while (i > 2 && dup[i - 1] == '/') {
 			--i;
 		}
 

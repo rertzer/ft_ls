@@ -13,16 +13,15 @@
 #include "libft.h"
 
 static int			ft_get_sign(int nb);
-static unsigned int	ft_get_len(unsigned int unb, int sign);
-static char			*add_digits(char *str, unsigned int unb, unsigned int len);
-static char			*add_sign(char *str, int sign);
+static unsigned int ft_get_len(unsigned int unb, int sign);
+static char*		add_digits(char* str, unsigned int unb, unsigned int len);
+static char*		add_sign(char* str, int sign);
 
-char	*ft_itoa(int nb)
-{
-	unsigned int	unb;
-	unsigned int	len;
-	int				sign;
-	char			*str;
+char* ft_itoa(int nb) {
+	unsigned int unb;
+	unsigned int len;
+	int			 sign;
+	char*		 str;
 
 	sign = ft_get_sign(nb);
 	unb = nb * sign;
@@ -36,29 +35,23 @@ char	*ft_itoa(int nb)
 	return (str);
 }
 
-static int	ft_get_sign(int nb)
-{
-	int	sign;
+static int ft_get_sign(int nb) {
+	int sign;
 
-	if (nb < 0)
-	{
+	if (nb < 0) {
 		sign = -1;
-	}
-	else
-	{
+	} else {
 		sign = 1;
 	}
 	return (sign);
 }
 
-static unsigned int	ft_get_len(unsigned int unb, int sign)
-{
-	unsigned int	len;
+static unsigned int ft_get_len(unsigned int unb, int sign) {
+	unsigned int len;
 
 	len = 1;
 	unb /= 10;
-	while (unb)
-	{
+	while (unb) {
 		++len;
 		unb /= 10;
 	}
@@ -67,14 +60,11 @@ static unsigned int	ft_get_len(unsigned int unb, int sign)
 	return (len);
 }
 
-static char	*add_digits(char *str, unsigned int unb, unsigned int len)
-{
-	if (unb == 0)
-	{
+static char* add_digits(char* str, unsigned int unb, unsigned int len) {
+	if (unb == 0) {
 		str[0] = '0';
 	}
-	while (unb)
-	{
+	while (unb) {
 		len--;
 		str[len] = (unb % 10) + '0';
 		unb /= 10;
@@ -82,8 +72,7 @@ static char	*add_digits(char *str, unsigned int unb, unsigned int len)
 	return (str);
 }
 
-static char	*add_sign(char *str, int sign)
-{
+static char* add_sign(char* str, int sign) {
 	if (sign < 0)
 		str[0] = '-';
 	return (str);
